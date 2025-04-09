@@ -7,15 +7,10 @@
         <groupId>com.testinprod</groupId>
         <artifactId>aicruter</artifactId>
         <version>0.0.1-SNAPSHOT</version>
-        <relativePath>../</relativePath>
     </parent>
 
-    <artifactId>aicruter-company-domain</artifactId>
-    <name>AICruiter Company Domain Module</name>
-
-    <properties>
-        <java.version>21</java.version>
-    </properties>
+    <groupId>com.testinprod</groupId>
+    <artifactId>aicruter-shared</artifactId>
 
     <dependencies>
         <dependency>
@@ -25,16 +20,6 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.testinprod</groupId>
-            <artifactId>aicruter-auth-domain</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.testinprod</groupId>
-            <artifactId>aicruter-shared</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-            <scope>compile</scope>
         </dependency>
     </dependencies>
 

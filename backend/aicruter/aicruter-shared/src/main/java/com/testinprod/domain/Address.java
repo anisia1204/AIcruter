@@ -1,4 +1,4 @@
-package com.testinprod.entity;
+package com.testinprod.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;

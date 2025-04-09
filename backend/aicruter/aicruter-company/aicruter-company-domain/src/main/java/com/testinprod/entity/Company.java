@@ -1,5 +1,6 @@
 package com.testinprod.entity;
 
+import com.testinprod.domain.Address;
 import jakarta.persistence.*;
 
 import java.util.List;
