@@ -23,6 +23,11 @@
 		<module>aicruter-company/aicruter-company-web</module>
 		<module>aicruter-company/aicruter-company-service</module>
 		<module>aicruter-company/aicruter-company-domain</module>
+
+		<module>aicruter-applicant/aicruter-applicant-web</module>
+		<module>aicruter-applicant/aicruter-applicant-service</module>
+		<module>aicruter-applicant/aicruter-applicant-domain</module>
+
 		<module>aicruter-shared</module>
 	</modules>
 
