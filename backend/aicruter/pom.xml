@@ -15,9 +15,14 @@
 	<name>aicruter</name>
 	<modules>
 		<module>aicruter-web</module>
+
 		<module>aicruter-auth/aicruter-auth-web</module>
 		<module>aicruter-auth/aicruter-auth-service</module>
 		<module>aicruter-auth/aicruter-auth-domain</module>
+
+		<module>aicruter-company/aicruter-company-web</module>
+		<module>aicruter-company/aicruter-company-service</module>
+		<module>aicruter-company/aicruter-company-domain</module>
 	</modules>
 
 	<properties>
@@ -31,6 +36,7 @@
 				<artifactId>aicruter-web</artifactId>
 				<version>0.0.1-SNAPSHOT</version>
 			</dependency>
+
 			<dependency>
 				<groupId>com.testinprod</groupId>
 				<artifactId>aicruter-auth-web</artifactId>
@@ -44,6 +50,22 @@
 			<dependency>
 				<groupId>com.testinprod</groupId>
 				<artifactId>aicruter-auth-domain</artifactId>
+				<version>0.0.1-SNAPSHOT</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.testinprod</groupId>
+				<artifactId>aicruter-company-web</artifactId>
+				<version>0.0.1-SNAPSHOT</version>
+			</dependency>
+			<dependency>
+				<groupId>com.testinprod</groupId>
+				<artifactId>aicruter-company-service</artifactId>
+				<version>0.0.1-SNAPSHOT</version>
+			</dependency>
+			<dependency>
+				<groupId>com.testinprod</groupId>
+				<artifactId>aicruter-company-domain</artifactId>
 				<version>0.0.1-SNAPSHOT</version>
 			</dependency>
 		</dependencies>
