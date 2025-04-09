@@ -10,8 +10,8 @@
         <relativePath>../</relativePath>
     </parent>
 
-    <artifactId>aicruter-auth-web</artifactId>
-    <name>AICruiter Auth Web Module</name>
+    <artifactId>aicruter-auth-service</artifactId>
+    <name>AICruiter Auth Service Module</name>
 
     <properties>
         <java.version>21</java.version>
@@ -20,21 +20,7 @@
     <dependencies>
         <dependency>
             <groupId>com.testinprod</groupId>
-            <artifactId>aicruter-auth-service</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-actuator</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
+            <artifactId>aicruter-auth-domain</artifactId>
         </dependency>
     </dependencies>
 

@@ -16,6 +16,8 @@
 	<modules>
 		<module>aicruter-web</module>
 		<module>aicruter-auth/aicruter-auth-web</module>
+		<module>aicruter-auth/aicruter-auth-service</module>
+		<module>aicruter-auth/aicruter-auth-domain</module>
 	</modules>
 
 	<properties>
@@ -32,6 +34,16 @@
 			<dependency>
 				<groupId>com.testinprod</groupId>
 				<artifactId>aicruter-auth-web</artifactId>
+				<version>0.0.1-SNAPSHOT</version>
+			</dependency>
+			<dependency>
+				<groupId>com.testinprod</groupId>
+				<artifactId>aicruter-auth-service</artifactId>
+				<version>0.0.1-SNAPSHOT</version>
+			</dependency>
+			<dependency>
+				<groupId>com.testinprod</groupId>
+				<artifactId>aicruter-auth-domain</artifactId>
 				<version>0.0.1-SNAPSHOT</version>
 			</dependency>
 		</dependencies>
