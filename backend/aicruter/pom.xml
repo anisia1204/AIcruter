@@ -23,6 +23,7 @@
 		<module>aicruter-company/aicruter-company-web</module>
 		<module>aicruter-company/aicruter-company-service</module>
 		<module>aicruter-company/aicruter-company-domain</module>
+		<module>aicruter-shared</module>
 	</modules>
 
 	<properties>
@@ -66,6 +67,22 @@
 			<dependency>
 				<groupId>com.testinprod</groupId>
 				<artifactId>aicruter-company-domain</artifactId>
+				<version>0.0.1-SNAPSHOT</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.testinprod</groupId>
+				<artifactId>aicruter-applicant-web</artifactId>
+				<version>0.0.1-SNAPSHOT</version>
+			</dependency>
+			<dependency>
+				<groupId>com.testinprod</groupId>
+				<artifactId>aicruter-applicant-service</artifactId>
+				<version>0.0.1-SNAPSHOT</version>
+			</dependency>
+			<dependency>
+				<groupId>com.testinprod</groupId>
+				<artifactId>aicruter-applicant-domain</artifactId>
 				<version>0.0.1-SNAPSHOT</version>
 			</dependency>
 		</dependencies>

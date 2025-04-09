@@ -10,8 +10,8 @@
         <relativePath>../</relativePath>
     </parent>
 
-    <artifactId>aicruter-web</artifactId>
-    <name>AICruiter Web Module</name>
+    <artifactId>aicruter-applicant-web</artifactId>
+    <name>AICruiter Applicant Web Module</name>
 
     <properties>
         <java.version>21</java.version>
@@ -20,24 +20,11 @@
     <dependencies>
         <dependency>
             <groupId>com.testinprod</groupId>
-            <artifactId>aicruter-auth-web</artifactId>
+            <artifactId>aicruter-applicant-service</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.testinprod</groupId>
-            <artifactId>aicruter-company-web</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.testinprod</groupId>
-            <artifactId>aicruter-applicant-web</artifactId>
-        </dependency>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -49,21 +36,6 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <scope>runtime</scope>
-        </dependency>
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
 
 </project>
