@@ -1,4 +1,4 @@
-package com.testinprod.aicruter;
+package com.testinprod;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
