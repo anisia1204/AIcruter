@@ -7,6 +7,12 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/user-account")
 @CrossOrigin
 public class UserAccountController {
+    private UserAccountService userAccountService;
+
+    public UserAccountController(UserAccountService userAccountService) {
+        this.userAccountService = userAccountService;
+    }
+
     @GetMapping
     @ResponseBody
     public ResponseEntity<?> test() {

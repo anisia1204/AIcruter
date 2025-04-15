@@ -17,6 +17,9 @@ public class Resume {
     @Column(name = "content", columnDefinition = "BYTEA", nullable = false)
     private byte[] content;
 
+    public Resume() {
+    }
+
     public Long getId() {
         return id;
     }

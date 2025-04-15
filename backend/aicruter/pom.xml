@@ -90,6 +90,11 @@
 				<artifactId>aicruter-applicant-domain</artifactId>
 				<version>0.0.1-SNAPSHOT</version>
 			</dependency>
+			<dependency>
+				<groupId>com.testinprod</groupId>
+				<artifactId>aicruter-shared</artifactId>
+				<version>0.0.1-SNAPSHOT</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 

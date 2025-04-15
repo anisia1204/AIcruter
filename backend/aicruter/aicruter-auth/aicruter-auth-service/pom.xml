@@ -7,11 +7,12 @@
         <groupId>com.testinprod</groupId>
         <artifactId>aicruter</artifactId>
         <version>0.0.1-SNAPSHOT</version>
-        <relativePath>../</relativePath>
+        <relativePath>../../</relativePath>
     </parent>
 
     <artifactId>aicruter-auth-service</artifactId>
     <name>AICruiter Auth Service Module</name>
+    <packaging>jar</packaging>
 
     <properties>
         <java.version>21</java.version>
