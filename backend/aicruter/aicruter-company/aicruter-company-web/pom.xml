@@ -37,6 +37,10 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.testinprod</groupId>
+            <artifactId>aicruter-auth-web</artifactId>
+        </dependency>
     </dependencies>
 
 </project>
