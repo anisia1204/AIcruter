@@ -13,9 +13,9 @@ public class UserAccountController {
         this.userAccountService = userAccountService;
     }
 
-    @GetMapping
-    @ResponseBody
-    public ResponseEntity<?> test() {
-        return ResponseEntity.ok("hello");
+    @GetMapping("/confirm")
+    public ResponseEntity<?> confirmUser(@RequestParam("token") String token) {
+        userAccountService.confirmUser(token);
+        return ResponseEntity.ok("Te-ai inregistrat cu succes!");
     }
 }
