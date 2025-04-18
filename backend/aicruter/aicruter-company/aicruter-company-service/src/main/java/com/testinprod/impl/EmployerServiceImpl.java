@@ -53,7 +53,6 @@ public class EmployerServiceImpl implements EmployerService {
             employer.setRole(EmployeeRole.OWNER);
         }
         employer.setCompany(company);
-        company.getEmployees().add(employer);
         return persist(employer);
     }
 

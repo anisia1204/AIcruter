@@ -26,7 +26,7 @@ public class EmployerController {
         this.employerValidator = employerValidator;
     }
 
-    @PostMapping
+    @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody EmployerDTO employerDTO, BindingResult bindingResult) {
         userAccountValidator.validate(employerDTO.getUserAccountDTO(), bindingResult);
         employerValidator.validate(employerDTO, bindingResult);
