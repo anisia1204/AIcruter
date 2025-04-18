@@ -15,7 +15,20 @@
 	<name>aicruter</name>
 	<modules>
 		<module>aicruter-web</module>
+
 		<module>aicruter-auth/aicruter-auth-web</module>
+		<module>aicruter-auth/aicruter-auth-service</module>
+		<module>aicruter-auth/aicruter-auth-domain</module>
+
+		<module>aicruter-company/aicruter-company-web</module>
+		<module>aicruter-company/aicruter-company-service</module>
+		<module>aicruter-company/aicruter-company-domain</module>
+
+		<module>aicruter-applicant/aicruter-applicant-web</module>
+		<module>aicruter-applicant/aicruter-applicant-service</module>
+		<module>aicruter-applicant/aicruter-applicant-domain</module>
+
+		<module>aicruter-shared</module>
 	</modules>
 
 	<properties>
@@ -29,9 +42,57 @@
 				<artifactId>aicruter-web</artifactId>
 				<version>0.0.1-SNAPSHOT</version>
 			</dependency>
+
 			<dependency>
 				<groupId>com.testinprod</groupId>
 				<artifactId>aicruter-auth-web</artifactId>
+				<version>0.0.1-SNAPSHOT</version>
+			</dependency>
+			<dependency>
+				<groupId>com.testinprod</groupId>
+				<artifactId>aicruter-auth-service</artifactId>
+				<version>0.0.1-SNAPSHOT</version>
+			</dependency>
+			<dependency>
+				<groupId>com.testinprod</groupId>
+				<artifactId>aicruter-auth-domain</artifactId>
+				<version>0.0.1-SNAPSHOT</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.testinprod</groupId>
+				<artifactId>aicruter-company-web</artifactId>
+				<version>0.0.1-SNAPSHOT</version>
+			</dependency>
+			<dependency>
+				<groupId>com.testinprod</groupId>
+				<artifactId>aicruter-company-service</artifactId>
+				<version>0.0.1-SNAPSHOT</version>
+			</dependency>
+			<dependency>
+				<groupId>com.testinprod</groupId>
+				<artifactId>aicruter-company-domain</artifactId>
+				<version>0.0.1-SNAPSHOT</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.testinprod</groupId>
+				<artifactId>aicruter-applicant-web</artifactId>
+				<version>0.0.1-SNAPSHOT</version>
+			</dependency>
+			<dependency>
+				<groupId>com.testinprod</groupId>
+				<artifactId>aicruter-applicant-service</artifactId>
+				<version>0.0.1-SNAPSHOT</version>
+			</dependency>
+			<dependency>
+				<groupId>com.testinprod</groupId>
+				<artifactId>aicruter-applicant-domain</artifactId>
+				<version>0.0.1-SNAPSHOT</version>
+			</dependency>
+			<dependency>
+				<groupId>com.testinprod</groupId>
+				<artifactId>aicruter-shared</artifactId>
 				<version>0.0.1-SNAPSHOT</version>
 			</dependency>
 		</dependencies>

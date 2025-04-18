@@ -7,9 +7,15 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/user-account")
 @CrossOrigin
 public class UserAccountController {
-    @GetMapping
-    @ResponseBody
-    public ResponseEntity<?> test() {
-        return ResponseEntity.ok("hello");
+    private UserAccountService userAccountService;
+
+    public UserAccountController(UserAccountService userAccountService) {
+        this.userAccountService = userAccountService;
+    }
+
+    @GetMapping("/confirm")
+    public ResponseEntity<?> confirmUser(@RequestParam("token") String token) {
+        userAccountService.confirmUser(token);
+        return ResponseEntity.ok("Te-ai inregistrat cu succes!");
     }
 }
