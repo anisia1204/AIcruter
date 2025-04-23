@@ -1,9 +1,6 @@
 "use client";
 
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Form,
   FormControl,
@@ -14,18 +11,31 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import {
-  Command,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+} from "@/components/ui/command";
+import { cn } from "@/lib/utils";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Check, ChevronsUpDown } from "lucide-react";
+import { Card, CardContent } from "./ui/card";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+
+type Company = {
+  id: number;
+  name: string;
+};
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -33,30 +43,50 @@ const formSchema = z.object({
   lastName: z.string().min(2),
   password: z.string().min(6),
   telephone: z.string().optional(),
-  company: z.string().min(2),
+  company: z.string().min(1),
   companyDetails: z
     .object({
       name: z.string().min(2),
       country: z.string().min(2),
-      state: z.string().min(2),
       city: z.string().min(2),
+      postalCode: z.string().min(2),
       addressLine: z.string().min(2),
-      zipCode: z.string().min(2),
+      state: z.string().min(2),
     })
     .optional()
-    .refine((data) => {
-      if (data) {
-        return Object.values(data).every((value) => !!value);
-      }
-      return true;
-    }, "All company details are required when adding a new company."),
+    .nullable(),
+});
+
+const otherSchema = z.object({
+  email: z.string().email(),
+  firstName: z.string().min(2),
+  lastName: z.string().min(2),
+  password: z.string().min(6),
+  telephone: z.string().optional(),
+  company: z.string().min(1),
+  companyDetails: z
+    .object({
+      name: z.string(),
+      country: z.string(),
+      city: z.string(),
+      postalCode: z.string(),
+      addressLine: z.string(),
+      state: z.string(),
+    })
+    .optional()
+    .nullable(),
 });
 
 type FormData = z.infer<typeof formSchema>;
 
-export default function RegisterForm() {
+export default function RegistrationForm() {
+  const [companies, setCompanies] = useState<Company[]>([]);
+  const [isNewCompany, setIsNewCompany] = useState(false);
+  const [open, setOpen] = useState(false);
+  const router = useRouter();
+
   const form = useForm<FormData>({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(isNewCompany ? formSchema : otherSchema),
     defaultValues: {
       email: "",
       firstName: "",
@@ -67,40 +97,87 @@ export default function RegisterForm() {
       companyDetails: {
         name: "",
         country: "",
-        state: "",
         city: "",
+        postalCode: "",
         addressLine: "",
-        zipCode: "",
+        state: "",
       },
     },
   });
 
-  const [companies, setCompanies] = useState<string[]>([]);
-  const [customCompany, setCustomCompany] = useState("");
-  const [showCompanyForm, setShowCompanyForm] = useState(false);
-
   useEffect(() => {
-    // Replace with your backend fetch
-    const fetchCompanies = () => {
-      setCompanies([
-        "Didn’t find your company? Add a new one...",
-        "Google",
-        "Meta",
-        "Netflix",
-      ]);
+    const loadCompanies = async () => {
+      const mockCompanies = [
+        { id: 1, name: "TechCorp" },
+        { id: 2, name: "SoftServe" },
+      ];
+      setCompanies(mockCompanies);
     };
 
-    fetchCompanies();
+    loadCompanies();
   }, []);
 
-  const onSubmit = (data: FormData) => {
-    const selectedCompany = companies.includes(data.company)
-      ? data.company
-      : customCompany || data.company;
+  const onSubmit = async (data: FormData) => {
+    const payload = {
+      userAccountDTO: {
+        email: data.email,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        password: data.password,
+        telephone: data.telephone,
+        role: "EMPLOYER",
+      },
+      companyDTO: {
+        id: isNewCompany ? null : parseInt(data.company as string),
+        name: isNewCompany ? data.companyDetails?.name : "",
+        legalAddressDTO: isNewCompany
+          ? {
+              country: data.companyDetails?.country,
+              city: data.companyDetails?.city,
+              postalCode: data.companyDetails?.postalCode,
+              addressLine: data.companyDetails?.addressLine,
+              state: data.companyDetails?.state,
+            }
+          : null,
+      },
+      role: null,
+    };
 
-    console.log("Submitted:", { ...data, company: selectedCompany });
+    try {
+      const response = await fetch(
+        "http://localhost:8080/api/employer/register",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
+        }
+      );
 
-    if (!companies.includes(selectedCompany) && data.companyDetails) {
+      if (!response.ok) {
+        const errors = await response.json();
+        console.error("Registration failed:", errors);
+        toast.error(errors.globalError);
+
+        if (errors) {
+          Object.keys(errors).forEach((key) => {
+            form.setError(key as keyof FormData, {
+              type: "server",
+              message: errors.globalError,
+            });
+          });
+        } else {
+          toast.error(errors.globalError);
+          console.error("Registration failed with an unknown error.");
+        }
+        return;
+      }
+
+      router.push("/");
+      toast.success("Success!");
+    } catch (err) {
+      console.error("Error submitting registration form", err);
     }
   };
 
@@ -109,12 +186,143 @@ export default function RegisterForm() {
       <CardContent className="p-6">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            {/* ... (rest of the form remains the same) */}
+            <FormField
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input type="email" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-            {showCompanyForm && (
+            <FormField
+              name="firstName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>First Name</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              name="lastName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Last Name</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <Input type="password" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              name="telephone"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Telephone</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              name="company"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Company</FormLabel>
+                  <Popover open={open} onOpenChange={setOpen}>
+                    <PopoverTrigger asChild>
+                      <FormControl>
+                        <Button
+                          variant="outline"
+                          role="combobox"
+                          className={cn(
+                            "w-full justify-between",
+                            !field.value && "text-muted-foreground"
+                          )}
+                        >
+                          {companies.find(
+                            (c) => c.id.toString() === field.value.toString()
+                          )?.name || "Select a company"}
+                          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-full p-0">
+                      <Command>
+                        <CommandInput placeholder="Search company..." />
+                        <CommandEmpty>No company found.</CommandEmpty>
+                        <CommandGroup>
+                          <CommandItem
+                            value="new"
+                            onSelect={() => {
+                              field.onChange("new");
+                              setIsNewCompany(true);
+                              setOpen(false);
+                            }}
+                          >
+                            + New company...
+                          </CommandItem>
+                          {companies.map((company) => (
+                            <CommandItem
+                              key={company.id}
+                              value={company.id.toString()} // Set the value to the company ID
+                              onSelect={() => {
+                                field.onChange(company.id.toString()); // Store the ID in the form
+                                setIsNewCompany(false);
+                                setOpen(false);
+                              }}
+                              className="flex justify-start"
+                            >
+                              <Check
+                                className={cn(
+                                  "mr-2 h-4 w-4",
+                                  company.id === field.value
+                                    ? "opacity-100"
+                                    : "opacity-0"
+                                )}
+                              />
+                              {company.name} {/* Display the company name */}
+                            </CommandItem>
+                          ))}
+                        </CommandGroup>
+                      </Command>
+                    </PopoverContent>
+                  </Popover>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {isNewCompany && (
               <>
                 <FormField
-                  control={form.control}
                   name="companyDetails.name"
                   render={({ field }) => (
                     <FormItem>
@@ -126,13 +334,72 @@ export default function RegisterForm() {
                     </FormItem>
                   )}
                 />
-                <div className="grid grid-cols-2 gap-4">
-                  {/* ... (rest of the companyDetails fields) */}
-                </div>
+                <FormField
+                  name="companyDetails.country"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Country</FormLabel>
+                      <FormControl>
+                        <Input {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  name="companyDetails.city"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>City</FormLabel>
+                      <FormControl>
+                        <Input {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  name="companyDetails.postalCode"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Postal Code</FormLabel>
+                      <FormControl>
+                        <Input {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  name="companyDetails.addressLine"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Address Line</FormLabel>
+                      <FormControl>
+                        <Input {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  name="companyDetails.state"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>State</FormLabel>
+                      <FormControl>
+                        <Input {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               </>
             )}
 
-            {/* ... (rest of the form) */}
+            <Button type="submit" className="w-full cursor-pointer mt-4">
+              Register
+            </Button>
           </form>
         </Form>
       </CardContent>
