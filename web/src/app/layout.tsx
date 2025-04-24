@@ -3,6 +3,8 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Link from "next/link";
 import { Toaster } from "@/components/ui/sonner";
+import logoImage from "@/public/AIcruterLOGO.webp";
+import Image from "next/image";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,9 +23,20 @@ export default function RootLayout({
       <body className={inter.className}>
         <nav className="fixed top-0 left-0 w-full z-50 bg-white/10 backdrop-blur-xs py-4 px-6 shadow-sm">
           <div className="container mx-auto flex items-center justify-between">
-            <Link href="/" className="text-xl font-bold text-gray-800">
+            <Link
+              href="/"
+              className="flex items-center text-xl font-bold text-gray-800"
+            >
+              <Image
+                src={logoImage}
+                alt="AIcruter Logo"
+                width={40}
+                height={40}
+                className="mr-2"
+              />
               AIcruter
             </Link>
+
             <div>
               <Link
                 href="/register"
@@ -34,7 +47,7 @@ export default function RootLayout({
             </div>
           </div>
         </nav>
-        <main className="pt-20">{children}</main>
+        <main className="mt-24">{children}</main>
         <Toaster />
       </body>
     </html>
