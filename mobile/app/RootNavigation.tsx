@@ -1,6 +1,7 @@
 import { Stack, useRouter } from 'expo-router';
 import { useAuth } from '@/providers/AuthContext';
 import { useEffect } from 'react';
+import "../global.css";
 
 const RootNavigation = () => {
   const { isAuthenticated, loading } = useAuth();

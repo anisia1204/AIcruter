@@ -1,8 +1,13 @@
-import { View, TextInput, Button, Text } from 'react-native';
-import { useState } from 'react';
-import { apiPost } from '@/lib/api';
-import { useAuth } from '@/providers/AuthContext';
+import { View, StyleSheet, SafeAreaView } from 'react-native'; 
 import { router } from 'expo-router';
+import { useState } from 'react';
+
+import { useAuth } from '@/providers/AuthContext';
+import { apiPost } from '@/lib/api';
+import { ThemedText } from '@/components/ThemedText';
+import MainView from '@/components/templates/MainView';
+import FormField from '@/components/atoms/FormField';
+import { StyledButton } from '@/components/atoms/StyledButton';
 
 const SignInScreen = () => {
   const { signIn } = useAuth();
@@ -19,14 +24,57 @@ const SignInScreen = () => {
   };
 
   return (
-    <View style={{ padding: 16 }}>
-      <Text>Text</Text>
-      <Button title="Sign In" onPress={handleSignIn} />
-      <Button title="Sign UP HERE" onPress={() => router.replace("../sign-up")} />
-    </View>
+      <SafeAreaView style={styles.container}>
+          <ThemedText type="title" style={styles.title}>
+            AiCruter
+          </ThemedText>
+
+          <FormField
+            label="Email"
+            placeholder="Enter your email"
+            value={email}
+            onChangeText={setEmail}
+          />
+
+          <FormField
+            label="Password"
+            placeholder="Enter your password"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry
+          />
+
+          <View style={styles.buttonContainer}>
+            <StyledButton label="Sign In" onPress={handleSignIn} />
+            <StyledButton
+              label="Sign Up Here"
+              variant="outline"
+              onPress={() => router.replace('../sign-up')}
+            />
+          </View>
+      </SafeAreaView>
   );
 };
 
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    marginHorizontal: 15,
+    marginVertical: 10,
+    justifyContent: 'center',
+    paddingHorizontal: 24,
+    gap: 12,
+  },
+  title: {
+    textAlign: 'center',
+    fontSize: 32,
+    fontWeight: '700',
+    marginBottom: 24,
+  },
+  buttonContainer: {
+    marginTop: 16,
+    gap: 12,
+  },
+});
+
 export default SignInScreen;
-
-

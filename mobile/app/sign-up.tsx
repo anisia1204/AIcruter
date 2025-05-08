@@ -1,4 +1,4 @@
-import { View, TextInput, Button } from 'react-native';
+import { View, TextInput, Button, Text } from 'react-native';
 import { useState } from 'react';
 import { apiPost } from '@/lib/api';
 import { useAuth } from '@/providers/AuthContext';
@@ -20,6 +20,7 @@ export default function SignUpScreen() {
 
   return (
     <View style={{ padding: 16 }}>
+      <Text>Register Page</Text>
       <TextInput placeholder="Email" value={email} onChangeText={setEmail} />
       <TextInput placeholder="Password" secureTextEntry value={password} onChangeText={setPassword} />
       <Button title="Sign up" onPress={handleSignIn} />
