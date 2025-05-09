@@ -1,17 +1,16 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import Animated from 'react-native-reanimated';
-import { ThemedView } from '@/components/ThemedView';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '@react-navigation/native';
 
 const MainView = ({children}: any) => {
     const { colors } = useTheme();
     return (
-        <ThemedView style={[styles.main, { backgroundColor: colors.background }]}>
+        <SafeAreaView style={[styles.main, { backgroundColor: colors.background }]}>
             <Animated.ScrollView>
                 {children}
             </Animated.ScrollView>
-        </ThemedView>
+        </SafeAreaView>
     );
 };
 

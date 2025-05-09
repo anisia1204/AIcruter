@@ -1,70 +1,102 @@
-import { View, StyleSheet, SafeAreaView } from 'react-native'; 
+import { View, StyleSheet, Text } from 'react-native'; 
 import { router } from 'expo-router';
 import { useState } from 'react';
 
 import { useAuth } from '@/providers/AuthContext';
 import { apiPost } from '@/lib/api';
-import { ThemedText } from '@/components/ThemedText';
-import MainView from '@/components/templates/MainView';
 import FormField from '@/components/atoms/FormField';
 import { StyledButton } from '@/components/atoms/StyledButton';
+import { useTheme } from '@react-navigation/native';
+import { ThemedText } from '@/components/ThemedText';
+import AuthView from '@/components/templates/AuthView';
 
 const SignInScreen = () => {
+  const { colors } = useTheme();
+  
   const { signIn } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  const [emailError, setEmailError] = useState<string | null>(null);
+  const [passwordError, setPasswordError] = useState<string | null>(null);
+
   const handleSignIn = async () => {
+    setEmailError(null);
+    setPasswordError(null);
+    let hasError = false;
+
+    if (!email) {
+      setEmailError('Email is required.');
+      hasError = true;
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setEmailError('Enter a valid email address.');
+      hasError = true;
+    }
+
+    if (!password) {
+      setPasswordError('Password is required.');
+      hasError = true;
+    } else if (password.length < 6) {
+      setPasswordError('Password must be at least 6 characters.');
+      hasError = true;
+    }
+
+    if (hasError) return;
     try {
-      const response = await apiPost('/auth/login', { email, password });
-      signIn(response.token);
+      if (!email || !password) return;
+      console.log("email", email);
+      console.log("password", password);
+      // const response = await apiPost('/auth/login', { email, password });
+      // signIn(response.token);
+      // router.replace('../')
     } catch (err) {
       console.warn('Login failed', err);
     }
   };
 
   return (
-      <SafeAreaView style={styles.container}>
-          <ThemedText type="title" style={styles.title}>
-            AiCruter
-          </ThemedText>
+    <AuthView>
+      <ThemedText type="title" style={styles.title}>AiCruter</ThemedText>
 
-          <FormField
-            label="Email"
-            placeholder="Enter your email"
-            value={email}
-            onChangeText={setEmail}
-          />
+      <FormField
+        label="Email"
+        placeholder="Email..."
+        value={email}
+        onChangeText={setEmail}
+        keyboardType="email-address"
+        autoCapitalize="none"
+        error={emailError}
+      />
 
-          <FormField
-            label="Password"
-            placeholder="Enter your password"
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry
-          />
+      <FormField
+        label="Password"
+        placeholder="Password..."
+        value={password}
+        onChangeText={setPassword}
+        secureTextEntry
+        autoCapitalize="none"
+        error={passwordError}
+      />
 
-          <View style={styles.buttonContainer}>
-            <StyledButton label="Sign In" onPress={handleSignIn} />
-            <StyledButton
-              label="Sign Up Here"
-              variant="outline"
+      <View style={styles.buttonContainer}>
+        <StyledButton label="Sign In" onPress={handleSignIn} />
+        <View style={styles.signUpTextContainer}>
+          <Text style={styles.signUpText}>
+            Don't have an account?{' '}
+            <Text
+              style={[styles.signUpLink, { color: colors.primary }]}
               onPress={() => router.replace('../sign-up')}
-            />
-          </View>
-      </SafeAreaView>
+            >
+              Sign up here.
+            </Text>
+          </Text>
+        </View>
+      </View>
+    </AuthView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    marginHorizontal: 15,
-    marginVertical: 10,
-    justifyContent: 'center',
-    paddingHorizontal: 24,
-    gap: 12,
-  },
   title: {
     textAlign: 'center',
     fontSize: 32,
@@ -74,6 +106,18 @@ const styles = StyleSheet.create({
   buttonContainer: {
     marginTop: 16,
     gap: 12,
+  },
+  signUpTextContainer: {
+    marginTop: 16,
+    alignItems: 'center',
+  },
+  signUpText: {
+    fontSize: 16,
+    color: '#333',
+  },
+  signUpLink: {
+    fontWeight: 'bold',
+    textDecorationLine: 'underline',
   },
 });
 
