@@ -1,0 +1,23 @@
+import { PropsWithChildren } from "react";
+import { DefaultTheme, ThemeProvider as RNThemeProvider } from "@react-navigation/native";
+
+export const CustomTheme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    background: '#F9FAFB',       // soft light gray
+    primary: '#3B82F6',          // blue-500
+    card: '#FFFFFF',             // white card background
+    text: '#111827',             // gray-900
+    border: '#E5E7EB',           // gray-200
+    notification: '#EF4444',     // red-500
+  },
+};
+  
+export const ThemeProvider = ({ children }: PropsWithChildren) => {
+  return (
+    <RNThemeProvider value={CustomTheme}>
+      {children}
+    </RNThemeProvider>
+  );
+};
