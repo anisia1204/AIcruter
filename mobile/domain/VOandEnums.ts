@@ -1,8 +1,3 @@
-export type LegalDetails = {
-    name: string;
-    cui: string;
-};
-
 export enum UserRole {
     EMPLOYER = "EMPLOYER",
     APPLICANT = "APPLICANT",
