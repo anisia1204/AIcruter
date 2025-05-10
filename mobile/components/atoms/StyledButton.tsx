@@ -5,29 +5,48 @@ type StyledButtonProps = {
   label: string;
   onPress: () => void;
   variant?: 'solid' | 'outline';
+  disabled?: boolean;
 };
 
-export const StyledButton = ({ label, onPress, variant = 'solid' }: StyledButtonProps) => {
-
- const { colors } = useTheme();
+export const StyledButton = ({
+  label,
+  onPress,
+  variant = 'solid',
+  disabled = false,
+}: StyledButtonProps) => {
+  const { colors } = useTheme();
   const isOutline = variant === 'outline';
 
+  const backgroundColor = disabled
+    ? '#ccc'
+    : isOutline
+    ? 'transparent'
+    : colors.primary;
+
+  const borderColor = disabled ? '#ccc' : colors.primary;
+
+  const textColor = disabled
+    ? '#888'
+    : isOutline
+    ? colors.primary
+    : '#FFFFFF';
+
   return (
-    <TouchableOpacity onPress={onPress} activeOpacity={0.8}>
+    <TouchableOpacity onPress={onPress} activeOpacity={0.8} disabled={disabled}>
       <View
         style={{
           paddingVertical: 14,
           paddingHorizontal: 24,
           borderRadius: 12,
-          backgroundColor: isOutline ? 'transparent' : colors.primary,
-          borderColor: colors.primary,
+          backgroundColor,
+          borderColor,
           borderWidth: isOutline ? 2 : 0,
           alignItems: 'center',
         }}
       >
         <Text
           style={{
-            color: isOutline ? colors.primary : '#FFFFFF',
+            color: textColor,
             fontWeight: 'bold',
             fontSize: 16,
           }}
@@ -38,3 +57,4 @@ export const StyledButton = ({ label, onPress, variant = 'solid' }: StyledButton
     </TouchableOpacity>
   );
 };
+

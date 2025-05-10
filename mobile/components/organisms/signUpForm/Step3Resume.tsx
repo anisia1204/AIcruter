@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View } from 'react-native';
 import { Controller, useFormContext } from 'react-hook-form';
 import FormField from '@/components/atoms/FormField';
 
@@ -6,7 +6,7 @@ export const Step3Resume = () => {
  const { control } = useFormContext();
 
   return (
-    <View style={{ gap: 12 }}>
+    <View>
       <Controller
         name="resume.summary"
         control={control}

@@ -6,7 +6,7 @@ export const Step1UserAccount = () => {
   const { control } = useFormContext();
 
 return (
-    <View style={{ gap: 12 }}>
+    <View>
       <Controller
         name="userAccount.firstName"
         control={control}
