@@ -1,9 +1,8 @@
-import { Address, AIMatchingType, EmployeeRole, EmploymentType, JobApplicationStatus, JobLocationType, JobStatus, LegalDetails, UserRole } from "./VOandEnums";
+import { Address, AIMatchingType, EmployeeRole, EmploymentType, JobApplicationStatus, JobLocationType, JobStatus, UserRole } from "./VOandEnums";
 
 export type Company = {
     id: number;
     legalAddress: Address;
-    legalDetails: LegalDetails;
     displayedName: string;
     picture: string;
 };
@@ -38,8 +37,8 @@ export type Applicant = {
 export type Resume = {
     id: number;
     file_name: string;
-    file_size: string;
-    content: string; // change these with the correct types when needed
+    file_size: number;
+    content: any; // change these with the correct types when needed
 };
 
 export type Job = {
