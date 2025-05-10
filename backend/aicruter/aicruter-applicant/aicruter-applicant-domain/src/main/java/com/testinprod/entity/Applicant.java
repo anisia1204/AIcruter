@@ -20,7 +20,7 @@ public class Applicant {
     private Resume resume;
 
     @Embedded
-    private Address legalAddress;
+    private Address address;
 
     @Column(name = "description")
     private String description;
@@ -55,12 +55,12 @@ public class Applicant {
         this.resume = resume;
     }
 
-    public Address getLegalAddress() {
-        return legalAddress;
+    public Address getAddress() {
+        return address;
     }
 
-    public void setLegalAddress(Address legalAddress) {
-        this.legalAddress = legalAddress;
+    public void setAddress(Address address) {
+        this.address = address;
     }
 
     public String getDescription() {

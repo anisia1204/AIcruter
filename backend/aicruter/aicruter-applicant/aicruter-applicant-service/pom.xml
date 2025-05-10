@@ -23,6 +23,10 @@
             <groupId>com.testinprod</groupId>
             <artifactId>aicruter-applicant-domain</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.testinprod</groupId>
+            <artifactId>aicruter-auth-service</artifactId>
+        </dependency>
     </dependencies>
 
 </project>
