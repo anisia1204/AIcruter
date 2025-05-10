@@ -12,6 +12,7 @@ import { Step2Address } from '@/components/organisms/signUpForm/Step2Address';
 import { Step3Resume } from '@/components/organisms/signUpForm/Step3Resume';
 import { fullApplicantSchema } from '@/schemas/applicantSchema';
 import { useTheme } from '@react-navigation/native';
+import MultiStepForm from '@/components/atoms/MultiStepForm';
 
 const steps = [
   { title: 'Account', component: Step1UserAccount },
@@ -108,6 +109,12 @@ const SignUpScreen = () => {
 
   return (
     <FormProvider {...formData}>
+      
+      <MultiStepForm 
+        activeStep={currentStep}
+        steps={steps}
+      />
+
       <AuthView>
         <ThemedText type="title" style={styles.title}>
           {steps[currentStep].title} Info

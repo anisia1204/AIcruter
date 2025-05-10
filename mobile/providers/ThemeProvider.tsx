@@ -6,7 +6,7 @@ export const CustomTheme = {
   colors: {
     ...DefaultTheme.colors,
     background: '#F9FAFB',       // soft light gray
-    primary: '#3B82F6',          // blue-500
+    primary: '#3F51B5',          // indigo-500
     card: '#FFFFFF',             // white card background
     text: '#111827',             // gray-900
     border: '#E5E7EB',           // gray-200
