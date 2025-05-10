@@ -14,7 +14,7 @@ export type UserAccount = {
     email: string;
     passwordHash: string;
     picture: string;
-    phoneNumber: string;
+    telephone: string;
     userRole: UserRole;
 };
 
