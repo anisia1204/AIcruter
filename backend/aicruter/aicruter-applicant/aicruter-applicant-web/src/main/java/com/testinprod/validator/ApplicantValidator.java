@@ -6,9 +6,10 @@ import org.springframework.validation.Validator;
 
 @Component
 public class ApplicantValidator implements Validator {
-
     @Override
-    public boolean supports(Class<?> clazz) { return false; }
+    public boolean supports(Class<?> clazz) {
+        return false;
+    }
 
     @Override
     public void validate(Object target, Errors errors) {

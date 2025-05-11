@@ -1,9 +1,10 @@
 package com.testinprod;
 
-import com.testinprod.dto.ResumeDTO;
 import com.testinprod.entity.Resume;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 public interface ResumeService {
-    Resume getById(Long id);
-    Resume save(ResumeDTO resumeDTO);
+    Resume save(MultipartFile resume) throws IOException;
 }

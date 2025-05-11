@@ -13,7 +13,6 @@ public class Resume {
     private String name;
     @Column(name = "size")
     private Long size;
-    @Lob
     @Column(name = "content", columnDefinition = "BYTEA", nullable = false)
     private byte[] content;
 

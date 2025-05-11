@@ -13,51 +13,51 @@ import com.testinprod.exception.ApplicantNotFoundException;
 import com.testinprod.repository.ApplicantJPARepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @Service
 public class ApplicantServiceImpl implements ApplicantService {
-
-    private final ApplicantJPARepository applicantJPARepository;
+    private final ApplicantJPARepository jpaRepository;
     private final UserAccountService userAccountService;
-    private final ApplicantDTOMapper applicantDTOMapper;
     private final ConfirmationTokenService confirmationTokenService;
+    private final ApplicantDTOMapper applicantDTOMapper;
     private final ResumeService resumeService;
 
-    public ApplicantServiceImpl(ApplicantJPARepository applicantJPARepository, UserAccountService userAccountService, ApplicantDTOMapper applicantDTOMapper, ConfirmationTokenService confirmationTokenService, ResumeService resumeService) {
-        this.applicantJPARepository = applicantJPARepository;
+    public ApplicantServiceImpl(ApplicantJPARepository jpaRepository, UserAccountService userAccountService, ConfirmationTokenService confirmationTokenService, ApplicantDTOMapper applicantDTOMapper, ResumeService resumeService) {
+        this.jpaRepository = jpaRepository;
         this.userAccountService = userAccountService;
-        this.applicantDTOMapper = applicantDTOMapper;
         this.confirmationTokenService = confirmationTokenService;
+        this.applicantDTOMapper = applicantDTOMapper;
         this.resumeService = resumeService;
     }
 
     @Override
     public Applicant getById(Long id) {
-        return applicantJPARepository.findById(id).orElseThrow(ApplicantNotFoundException::new);
+        return jpaRepository.findById(id).orElseThrow(ApplicantNotFoundException::new);
     }
 
     @Override
     @Transactional
-    public ApplicantDTO register(ApplicantDTO applicantDTO)
-    {
+    public ApplicantDTO register(ApplicantDTO applicantDTO, MultipartFile file) throws IOException {
+        Resume resume = resumeService.save(file);
         UserAccount userAccount = userAccountService.save(applicantDTO.getUserAccountDTO());
-        Applicant applicant = save(applicantDTO, userAccount);
+        Applicant applicant = save(applicantDTO, userAccount, resume);
         confirmationTokenService.generateTokenAndSendEmailConfirmationToUser(userAccount);
         return applicantDTOMapper.getDTOFromEntity(applicant);
     }
 
-    public Applicant save(ApplicantDTO applicantDTO, UserAccount userAccount) {
-        Applicant applicant = new Applicant();
+    @Transactional
+    public Applicant save(ApplicantDTO applicantDTO, UserAccount userAccount, Resume resume) {
+        Applicant applicant = applicantDTOMapper.getEntityFromDTO(applicantDTO);
         applicant.setUserAccount(userAccount);
-
-        Resume resume = resumeService.save(applicantDTO.getResumeDTO());
         applicant.setResume(resume);
-
         return persist(applicant);
     }
 
     private Applicant persist(Applicant applicant) {
-        return applicantJPARepository.save(applicant);
+        return jpaRepository.save(applicant);
     }
 
 }

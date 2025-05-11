@@ -1,16 +1,15 @@
 package com.testinprod;
 
 import com.testinprod.dto.ApplicantDTO;
-import com.testinprod.entity.Applicant;
 import com.testinprod.validator.ApplicantValidator;
-import com.testinprod.validator.ResumeValidator;
 import com.testinprod.validator.UserAccountValidator;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,23 +17,21 @@ import java.util.Map;
 @RequestMapping("/api/applicant")
 @CrossOrigin
 public class ApplicantController {
-
-    private final ApplicantService applicantService;
     private final UserAccountValidator userAccountValidator;
-    private final ResumeValidator resumeValidator;
     private final ApplicantValidator applicantValidator;
+    private final ApplicantService applicantService;
 
-    public ApplicantController(ApplicantService applicantService, UserAccountValidator userAccountValidator, ResumeValidator resumeValidator, ApplicantValidator applicantValidator) {
-        this.applicantService = applicantService;
+    public ApplicantController(UserAccountValidator userAccountValidator, ApplicantValidator applicantValidator, ApplicantService applicantService) {
         this.userAccountValidator = userAccountValidator;
-        this.resumeValidator = resumeValidator;
         this.applicantValidator = applicantValidator;
+        this.applicantService = applicantService;
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody ApplicantDTO applicantDTO, BindingResult bindingResult) {
+    public ResponseEntity<?> register(@RequestPart("applicantDTO") ApplicantDTO applicantDTO,
+                                      @RequestPart("resume") MultipartFile resume,
+                                      BindingResult bindingResult) throws IOException {
         userAccountValidator.validate(applicantDTO.getUserAccountDTO(), bindingResult);
-        resumeValidator.validate(applicantDTO.getResumeDTO(), bindingResult);
         applicantValidator.validate(applicantDTO, bindingResult);
         if(bindingResult.hasErrors()) {
             Map<String, String> errors = new HashMap<>();
@@ -49,6 +46,6 @@ public class ApplicantController {
             });
             return ResponseEntity.badRequest().body(errors);
         }
-        return new ResponseEntity<>(applicantService.register(applicantDTO), HttpStatus.CREATED);
+        return ResponseEntity.ok(applicantService.register(applicantDTO, resume));
     }
 }

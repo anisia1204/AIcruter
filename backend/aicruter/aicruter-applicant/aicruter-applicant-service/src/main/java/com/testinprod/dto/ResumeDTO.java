@@ -10,28 +10,28 @@ public class ResumeDTO {
         return id;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public Long getSize() {
-        return size;
-    }
-
-    public byte[] getContent() {
-        return content;
-    }
-
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public void setName(String name) {
         this.name = name;
     }
 
+    public Long getSize() {
+        return size;
+    }
+
     public void setSize(Long size) {
         this.size = size;
+    }
+
+    public byte[] getContent() {
+        return content;
     }
 
     public void setContent(byte[] content) {
