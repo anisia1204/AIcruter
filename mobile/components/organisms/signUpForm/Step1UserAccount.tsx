@@ -63,7 +63,7 @@ return (
         )}
       />
       <Controller
-        name="userAccount.passwordHash"
+        name="userAccount.password"
         control={control}
         render={({ field, fieldState }) => (
           <FormField

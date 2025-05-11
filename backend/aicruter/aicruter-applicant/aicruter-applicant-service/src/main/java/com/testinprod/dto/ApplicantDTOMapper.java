@@ -28,7 +28,7 @@ public class ApplicantDTOMapper {
         dto.setId(applicant.getId());
         dto.setDescription(applicant.getDescription());
         dto.setEducation(applicant.getEducation());
-        applicant.setAddress(addressDTOMapper.getEntityFromDTO(dto.getAddressDTO()));
+        dto.setAddressDTO(addressDTOMapper.getDTOFromEntity(applicant.getAddress()));
         dto.setUserAccountDTO(userAccountDTOMapper.getDTOFromEntity(applicant.getUserAccount()));
         dto.setResumeDTO(resumeDTOMapper.getDTOFromEntity(applicant.getResume()));
         return dto;

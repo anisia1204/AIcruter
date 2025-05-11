@@ -1,5 +1,6 @@
 package com.testinprod;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.testinprod.dto.ApplicantDTO;
 import com.testinprod.validator.ApplicantValidator;
 import com.testinprod.validator.UserAccountValidator;
@@ -8,7 +9,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
+//import javax.validation.Valid;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,9 +29,18 @@ public class ApplicantController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestPart("applicantDTO") ApplicantDTO applicantDTO,
+    public ResponseEntity<?> register(@RequestPart("applicantDTO") String applicantDTOString,
                                       @RequestPart("resume") MultipartFile resume,
                                       BindingResult bindingResult) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        ApplicantDTO applicantDTO = objectMapper.readValue(applicantDTOString, ApplicantDTO.class);;
+//        try{
+//
+//            applicantDTO = objectMapper.readValue(applicantDTOString, ApplicantDTO.class);
+//        } catch (IOException e) {
+//            System.out.print("Error");
+//        }
+
         userAccountValidator.validate(applicantDTO.getUserAccountDTO(), bindingResult);
         applicantValidator.validate(applicantDTO, bindingResult);
         if(bindingResult.hasErrors()) {

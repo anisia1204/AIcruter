@@ -12,7 +12,7 @@ export type UserAccount = {
     firstName: string;
     lastName: string;
     email: string;
-    passwordHash: string;
+    password: string;
     // picture: string;
     phoneNumber: string;
     userRole: UserRole;

@@ -34,9 +34,9 @@ const SignUpScreen = () => {
         firstName: '',
         lastName: '',
         email: '',
-        passwordHash: '',
+        password: '',
         telephone: '',
-        userRole: 'APPLICANT',
+        role: 'APPLICANT',
         //picture: '',
       },
       address: {
@@ -47,7 +47,12 @@ const SignUpScreen = () => {
         postalCode: '',
       },
       resume: {
-        resume: null,
+        resumeFile: {
+          uri: '',
+          name: '',
+          size: 0,
+          mimeType: ''
+        },
         description: '',
         education: '',
       },
@@ -73,9 +78,6 @@ const SignUpScreen = () => {
 
     const valid = await formData.trigger(fields as any);
 
-    console.log("Is valid:", valid);
-    console.log("Errors:", formData.formState.errors);
-
     if (valid) {
       setCurrentStep((prev) => prev + 1);
     }
@@ -83,45 +85,39 @@ const SignUpScreen = () => {
 
   const onPrevious = () => setCurrentStep((prev) => prev - 1);
 
-  const onSubmit = async (data: any) => {
-    try {
-      const formData = new FormData();
+const onSubmit = async (data: any) => {
+  try {
+    const formData = new FormData();
+    const file = data.resume.resumeFile;
+    if (!file) return;
+    
+    formData.append('resume', {
+      uri: file.uri,
+      name: file.name,
+      type: file.mimeType,
+    } as any);
 
-      // Append resume file
-      const file = data.resume;
-      formData.append('resume', {
-        uri: file.uri,
-        name: file.name,
-        type: file.mimeType || 'application/octet-stream',
-      } as any); // TypeScript workaround
+    const applicantDTO = {
+      userAccountDTO: data.userAccount,
+      addressDTO: data.address,
+      description: data.resume.description,
+      education: data.resume.education,
+    };
 
-      // Append the rest of the applicantDTO as JSON string
-      const applicantDTO = {
-        userAccountDTO: data.userAccount,
-        addressDTO: data.address,
-        description: data.description,
-        education: data.education,
-      };
+    formData.append('applicantDTO', JSON.stringify(applicantDTO));
 
-      formData.append('applicantDTO', JSON.stringify(applicantDTO));
+    const response = await fetch(`${BASE_URL}/api/applicant/register`, {
+      method: "POST",
+      body: formData,
+    });
 
-      console.log("formData", formData)
 
-      // const response = await fetch(`${BASE_URL}/api/applicant/register`, {
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "multipart/form-data",
-      //   },
-      //   body: formData,
-      // });
-
-      // if (!response.ok) throw new Error("Registration failed");
-      // router.replace("../");
-    } catch (e) {
-      console.warn('Submission error:', e);
-    }
-  };
-
+    if (!response.ok) throw new Error("Registration failed");
+    router.replace("../sign-in"); 
+  } catch (e) {
+    console.warn('Submission error:', e);
+  }
+};
 
   return (
     <FormProvider {...formData}>
