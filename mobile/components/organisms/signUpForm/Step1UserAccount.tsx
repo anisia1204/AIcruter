@@ -1,6 +1,6 @@
 import { View } from 'react-native';
 import { useFormContext, Controller } from 'react-hook-form';
-import FormField from '@/components/atoms/FormField';
+import FormField from '@/components/atoms/InputFormField';
 
 export const Step1UserAccount = () => {
   const { control } = useFormContext();

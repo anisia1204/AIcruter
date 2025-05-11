@@ -8,7 +8,7 @@ type MultiStepFormProps = {
     steps: {
         title: string;
         component: () => React.JSX.Element;
-    }[]
+    }[];
 };
 
 const MultiStepForm = ({activeStep, steps}: MultiStepFormProps) => {

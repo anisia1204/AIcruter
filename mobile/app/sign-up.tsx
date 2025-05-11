@@ -5,7 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { StyledButton } from '@/components/atoms/StyledButton';
 import AuthView from '@/components/templates/AuthView';
 import { ThemedText } from '@/components/ThemedText';
-import { apiPost } from '@/lib/api';
+import { apiPost, BASE_URL } from '@/lib/api';
 import { router } from 'expo-router';
 import { Step1UserAccount } from '@/components/organisms/signUpForm/Step1UserAccount';
 import { Step2Address } from '@/components/organisms/signUpForm/Step2Address';
@@ -13,6 +13,8 @@ import { Step3Resume } from '@/components/organisms/signUpForm/Step3Resume';
 import { fullApplicantSchema } from '@/schemas/applicantSchema';
 import { useTheme } from '@react-navigation/native';
 import MultiStepForm from '@/components/atoms/MultiStepForm';
+import { Applicant, Resume, UserAccount } from '@/domain/classTypes';
+import { Address } from '@/domain/VOandEnums';
 
 const steps = [
   { title: 'Account', component: Step1UserAccount },
@@ -83,33 +85,47 @@ const SignUpScreen = () => {
 
   const onSubmit = async (data: any) => {
     try {
-      const payload = {
-        ...data,
+      const formData = new FormData();
+
+      // Append resume file
+      const file = data.resume;
+      formData.append('resume', {
+        uri: file.uri,
+        name: file.name,
+        type: file.mimeType || 'application/octet-stream',
+      } as any); // TypeScript workaround
+
+      // Append the rest of the applicantDTO as JSON string
+      const applicantDTO = {
         userAccountDTO: data.userAccount,
         addressDTO: data.address,
-        resumeDTO: {
-          name: data.resume.resume.name,
-          size: data.resume.resume.size,
-          content: await data.resume.resume.content.arrayBuffer(),
-        },
-        description: data.resume.description,
-        education: data.resume.education,
+        description: data.description,
+        education: data.education,
       };
-      delete payload.userAccount;
-      delete payload.address;
-      delete payload.resume;
 
-      console.log("payload", JSON.stringify(payload))
-      //await apiPost('/api/applicant/register', payload);
-      //router.replace('../');
+      formData.append('applicantDTO', JSON.stringify(applicantDTO));
+
+      console.log("formData", formData)
+
+      // const response = await fetch(`${BASE_URL}/api/applicant/register`, {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "multipart/form-data",
+      //   },
+      //   body: formData,
+      // });
+
+      // if (!response.ok) throw new Error("Registration failed");
+      // router.replace("../");
     } catch (e) {
       console.warn('Submission error:', e);
     }
   };
 
+
   return (
     <FormProvider {...formData}>
-      
+
       <MultiStepForm 
         activeStep={currentStep}
         steps={steps}
@@ -121,7 +137,7 @@ const SignUpScreen = () => {
         </ThemedText>
 
         <StepComponent />
-
+       
         <View style={styles.buttonContainer}>
           <StyledButton
             label="Back"
