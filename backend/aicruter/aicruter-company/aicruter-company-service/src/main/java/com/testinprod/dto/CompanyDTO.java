@@ -1,11 +1,12 @@
 package com.testinprod.dto;
 
 import com.testinprod.service.AddressDTO;
-
+import java.util.*;
 public class CompanyDTO {
     private Long id;
     private String name;
     private AddressDTO legalAddressDTO;
+    private List<EmployerDTO> employerDTOs;
 
     public Long getId() {
         return id;
@@ -29,5 +30,13 @@ public class CompanyDTO {
 
     public void setLegalAddressDTO(AddressDTO legalAddressDTO) {
         this.legalAddressDTO = legalAddressDTO;
+    }
+
+    public List<EmployerDTO> getEmployerDTOs() {
+        return employerDTOs;
+    }
+
+    public void setEmployerDTOs(List<EmployerDTO> employerDTOs) {
+        this.employerDTOs = employerDTOs;
     }
 }

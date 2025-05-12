@@ -1,23 +1,10 @@
-package com.testinprod.entity;
+package com.testinprod.dto;
 
-import jakarta.persistence.*;
-
-@Entity
-@Table(name = "resume")
-public class Resume {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class ResumeDTO {
     private Long id;
-    @Column(name = "name", nullable = false)
     private String name;
-    @Column(name = "size")
     private Long size;
-    @Column(name = "content", columnDefinition = "BYTEA", nullable = false)
     private byte[] content;
-
-    public Resume() {
-    }
 
     public Long getId() {
         return id;

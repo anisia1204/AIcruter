@@ -32,13 +32,13 @@ public class UserAccountValidator implements Validator {
         if(userService.isExisting(userDTO)){
             UserAccount user = userService.getUserByEmail(userDTO.getEmail());
             if(user.isEnabled()) {
-                errors.reject("email", "Exista deja un utilizator cu acest email!");
+                errors.reject("email", "There already exists an account with this email!");
             }
             else {
                 ConfirmationToken confirmationToken = confirmationTokenService.getTokenByUserId(user.getId());
                 LocalDateTime currentDateAndTime = LocalDateTime.now();
                 if(!confirmationToken.getExpiresAt().isBefore(currentDateAndTime)) {
-                    errors.reject("email", "Un email de confirmare a fost deja trimis catre tine! Confirma-ti adresa de email accesand link-ul din email-ul primit sau reincearca mai tarziu! ");
+                    errors.reject("email", "A confirmation email has already been sent to you! Confirm your email address by clicking the link in the email you received or try again later! ");
                 }
             }
         }

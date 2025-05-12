@@ -1,128 +1,152 @@
-import { View, Text, StyleSheet } from 'react-native';
 import { useState } from 'react';
-import { apiPost } from '@/lib/api';
-import { useAuth } from '@/providers/AuthContext';
-import { router } from 'expo-router';
-import { UserAccount } from '@/domain/classTypes';
-import { UserRole } from '@/domain/VOandEnums';
-import { useTheme } from '@react-navigation/native';
+import { View, Text, StyleSheet } from 'react-native';
+import { useForm, FormProvider } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { StyledButton } from '@/components/atoms/StyledButton';
 import AuthView from '@/components/templates/AuthView';
 import { ThemedText } from '@/components/ThemedText';
-import FormField from '@/components/atoms/FormField';
-import { StyledButton } from '@/components/atoms/StyledButton';
+import { apiPost, BASE_URL } from '@/lib/api';
+import { router } from 'expo-router';
+import { Step1UserAccount } from '@/components/organisms/signUpForm/Step1UserAccount';
+import { Step2Address } from '@/components/organisms/signUpForm/Step2Address';
+import { Step3Resume } from '@/components/organisms/signUpForm/Step3Resume';
+import { fullApplicantSchema } from '@/schemas/applicantSchema';
+import { useTheme } from '@react-navigation/native';
+import MultiStepForm from '@/components/atoms/MultiStepForm';
+import { Applicant, Resume, UserAccount } from '@/domain/classTypes';
+import { Address } from '@/domain/VOandEnums';
+
+const steps = [
+  { title: 'Account', component: Step1UserAccount },
+  { title: 'Address', component: Step2Address },
+  { title: 'Resume', component: Step3Resume },
+];
 
 const SignUpScreen = () => {
-  
-  const { colors } = useTheme();
-  const { signIn } = useAuth();
 
-  const [userAccount, setUserAccount] = useState<UserAccount>({
-    id: 0,
-    firstName: '',
-    lastName: '',
-    email: '',
-    passwordHash: '',
-    picture: '',
-    phoneNumber: '',
-    userRole: UserRole.APPLICANT,
+  const { colors } = useTheme();
+  const [currentStep, setCurrentStep] = useState(0);
+  const formData = useForm({
+    resolver: zodResolver(fullApplicantSchema),
+    mode: 'onSubmit',
+    defaultValues: {
+      userAccount: {
+        firstName: '',
+        lastName: '',
+        email: '',
+        password: '',
+        telephone: '',
+        role: 'APPLICANT',
+        //picture: '',
+      },
+      address: {
+        country: '',
+        city: '',
+        addressLine: '',
+        state: '',
+        postalCode: '',
+      },
+      resume: {
+        resumeFile: {
+          uri: '',
+          name: '',
+          size: 0,
+          mimeType: ''
+        },
+        description: '',
+        education: '',
+      },
+    }
   });
 
-  const [errors, setErrors] = useState<{ [K in keyof UserAccount]?: string }>({});
+  const StepComponent = steps[currentStep].component;
+  const fieldGroups = ['userAccount', 'address', 'resume'] as const;
 
-  const handleChange = (field: keyof UserAccount) => (value: string) => {
-    setUserAccount((prev) => ({ ...prev, [field]: value }));
-  };
+  const onNext = async () => {
+    const currentGroup = fieldGroups[currentStep];
+    const groupValues = formData.getValues(currentGroup);
 
-  const validateFields = (): boolean => {
-  const newErrors: typeof errors = {};
+    const fields = Object.keys(groupValues).map(
+      (field) => `${currentGroup}.${field}` as const
+    );
 
-  if (!userAccount.firstName) newErrors.firstName = "First name is required.";
-  if (!userAccount.lastName) newErrors.lastName = "Last name is required.";
-  if (!userAccount.email) {
-    newErrors.email = "Email is required.";
-  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(userAccount.email)) {
-    newErrors.email = "Invalid email address.";
-  }
+    fields.forEach((fieldName) => {
+      formData.setValue(fieldName as any, formData.getValues(fieldName as any), {
+        shouldTouch: true,
+      });
+    });
 
-  if (!userAccount.phoneNumber) {
-    newErrors.phoneNumber = "Phone number is required.";
-  } else if (!/^[0-9]{8,15}$/.test(userAccount.phoneNumber)) {
-    newErrors.phoneNumber = "Invalid phone number.";
-  }
+    const valid = await formData.trigger(fields as any);
 
-  if (!userAccount.passwordHash) {
-    newErrors.passwordHash = "Password is required.";
-  } else if (userAccount.passwordHash.length < 6) {
-    newErrors.passwordHash = "Password must be at least 6 characters.";
-  }
-
-  setErrors(newErrors);
-  return Object.keys(newErrors).length === 0;
-};
-
-  const handleSignUp = async () => {
-    if (!validateFields()) return;
-
-    try {
-      console.log('User:', userAccount);
-      // await apiPost('/auth/register', userAccount);
-      // router.replace('../');
-    } catch (error) {
-      console.warn('Registration failed:', error);
+    if (valid) {
+      setCurrentStep((prev) => prev + 1);
     }
   };
 
+  const onPrevious = () => setCurrentStep((prev) => prev - 1);
+
+const onSubmit = async (data: any) => {
+  try {
+    const formData = new FormData();
+    const file = data.resume.resumeFile;
+    if (!file) return;
+    
+    formData.append('resume', {
+      uri: file.uri,
+      name: file.name,
+      type: file.mimeType,
+    } as any);
+
+    const applicantDTO = {
+      userAccountDTO: data.userAccount,
+      addressDTO: data.address,
+      description: data.resume.description,
+      education: data.resume.education,
+    };
+
+    formData.append('applicantDTO', JSON.stringify(applicantDTO));
+
+    const response = await fetch(`${BASE_URL}/api/applicant/register`, {
+      method: "POST",
+      body: formData,
+    });
+
+
+    if (!response.ok) throw new Error("Registration failed");
+    router.replace("../sign-in"); 
+  } catch (e) {
+    console.warn('Submission error:', e);
+  }
+};
+
   return (
-    <AuthView>
-      <ThemedText type="title" style={styles.title}>Create Account</ThemedText>
+    <FormProvider {...formData}>
 
-      <FormField
-        label="First Name"
-        placeholder="First name..."
-        value={userAccount.firstName}
-        onChangeText={handleChange('firstName')}
-        error={errors.firstName}
+      <MultiStepForm 
+        activeStep={currentStep}
+        steps={steps}
       />
 
-      <FormField
-        label="Last Name"
-        placeholder="Last name..."
-        value={userAccount.lastName}
-        onChangeText={handleChange('lastName')}
-        error={errors.lastName}
-      />
+      <AuthView>
+        <ThemedText type="title" style={styles.title}>
+          {steps[currentStep].title} Info
+        </ThemedText>
 
-      <FormField
-        label="Email"
-        placeholder="Email..."
-        value={userAccount.email}
-        onChangeText={handleChange('email')}
-        keyboardType="email-address"
-        autoCapitalize="none"
-        error={errors.email}
-      />
+        <StepComponent />
+       
+        <View style={styles.buttonContainer}>
+          <StyledButton
+            label="Back"
+            onPress={onPrevious}
+            disabled={currentStep === 0}
+          />
+          {currentStep < steps.length - 1 ? (
+            <StyledButton label="Next Step" onPress={onNext} />
+          ) : (
+            <StyledButton label="Register" onPress={formData.handleSubmit(onSubmit)} />
+          )}
+        </View>
 
-      <FormField
-        label="Phone"
-        placeholder="Phone..."
-        value={userAccount.phoneNumber}
-        onChangeText={handleChange('phoneNumber')}
-        keyboardType="phone-pad"
-        error={errors.phoneNumber}
-      />
-
-      <FormField
-        label="Password"
-        placeholder="Password..."
-        value={userAccount.passwordHash}
-        onChangeText={handleChange('passwordHash')}
-        secureTextEntry
-        autoCapitalize="none"
-        error={errors.passwordHash}
-      />
-
-      <View style={styles.buttonContainer}>
-        <StyledButton label="Register" onPress={handleSignUp} />
         <View style={styles.signUpTextContainer}>
           <Text style={styles.signUpText}>
             Already have an account?{' '}
@@ -133,13 +157,14 @@ const SignUpScreen = () => {
               Sign in here.
             </Text>
           </Text>
-        </View>
-      </View>
-    </AuthView>
+          </View>
+      </AuthView>
+    </FormProvider>
   );
 };
 
 export default SignUpScreen;
+
 
 const styles = StyleSheet.create({
   title: {
@@ -149,8 +174,9 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   buttonContainer: {
-    marginTop: 16,
-    gap: 12,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 2,
   },
   signUpTextContainer: {
     marginTop: 16,
@@ -165,5 +191,3 @@ const styles = StyleSheet.create({
     textDecorationLine: 'underline',
   },
 });
-
-

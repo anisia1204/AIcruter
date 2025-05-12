@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 import { useAuth } from '@/providers/AuthContext';
 import { apiPost } from '@/lib/api';
-import FormField from '@/components/atoms/FormField';
+import FormField from '@/components/atoms/InputFormField';
 import { StyledButton } from '@/components/atoms/StyledButton';
 import { useTheme } from '@react-navigation/native';
 import { ThemedText } from '@/components/ThemedText';
