@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 
 export default function HomePage() {
   return (
-    <div className="min-h-[calc(100vh+2rem)] py-24">
+    <div className="py-24">
       <div className="container mx-auto text-center px-4">
         <motion.h1
           className="text-5xl font-extrabold text-indigo-700 mb-4"
