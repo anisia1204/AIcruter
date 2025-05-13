@@ -2,11 +2,17 @@ package com.testinprod.impl;
 
 import com.testinprod.ConfirmationTokenService;
 import com.testinprod.UserAccountService;
+import com.testinprod.dto.LoggedInUserDTO;
+import com.testinprod.dto.LoggedInUserDTOMapper;
 import com.testinprod.dto.UserAccountDTO;
 import com.testinprod.dto.UserAccountDTOMapper;
 import com.testinprod.entity.ConfirmationToken;
 import com.testinprod.entity.UserAccount;
+import com.testinprod.filter.JwtService;
 import com.testinprod.repository.UserAccountJPARepository;
+import io.jsonwebtoken.Claims;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,10 +24,17 @@ public class UserAccountServiceImpl implements UserAccountService {
     private final UserAccountJPARepository jpaRepository;
     private final UserAccountDTOMapper userAccountDTOMapper;
     private final ConfirmationTokenService confirmationTokenService;
-    public UserAccountServiceImpl(UserAccountJPARepository jpaRepository, UserAccountDTOMapper userAccountDTOMapper, ConfirmationTokenService confirmationTokenService) {
+    private final AuthenticationManager authenticationManager;
+    private final JwtService jwtService;
+    private final LoggedInUserDTOMapper loggedInUserDTOMapper;
+
+    public UserAccountServiceImpl(UserAccountJPARepository jpaRepository, UserAccountDTOMapper userAccountDTOMapper, ConfirmationTokenService confirmationTokenService, AuthenticationManager authenticationManager, JwtService jwtService, LoggedInUserDTOMapper loggedInUserDTOMapper) {
         this.jpaRepository = jpaRepository;
         this.userAccountDTOMapper = userAccountDTOMapper;
         this.confirmationTokenService = confirmationTokenService;
+        this.authenticationManager = authenticationManager;
+        this.jwtService = jwtService;
+        this.loggedInUserDTOMapper = loggedInUserDTOMapper;
     }
 
     @Override
@@ -66,6 +79,24 @@ public class UserAccountServiceImpl implements UserAccountService {
         confirmationTokenService.setConfirmedAt(token);
         UserAccount user = confirmationToken.getUserAccount();
         enableUser(user);
+    }
+
+    @Override
+    public LoggedInUserDTO login(UserAccountDTO userDTO) {
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        userDTO.getEmail(),
+                        userDTO.getPassword()
+                )
+        );
+        UserAccount user = getUserByEmail(userDTO.getEmail());
+        LoggedInUserDTO loggedInUserDTO = loggedInUserDTOMapper.getDTOFromEntity(user);
+
+        String jwtToken = jwtService.generateJwtToken(user);
+        loggedInUserDTO.setToken(jwtToken);
+        loggedInUserDTO.setTokenExpirationDate(jwtService.extractClaim(jwtToken, Claims::getExpiration));
+
+        return loggedInUserDTO;
     }
 
     private void enableUser(UserAccount user) {
