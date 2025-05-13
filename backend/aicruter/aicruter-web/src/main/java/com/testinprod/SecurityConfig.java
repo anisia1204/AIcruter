@@ -30,16 +30,15 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/employer/register","/api/applicant/register", "/api/user-account/confirm").permitAll()
-                        .anyRequest().authenticated()
-                )
+                        .requestMatchers("/api/employer/register", "/api/applicant/register",
+                                "/api/user-account/confirm", "/api/applicant")
+                        .permitAll()
+                        .anyRequest().authenticated())
                 .sessionManagement(sess -> sess
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                )
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
 }
-

@@ -21,7 +21,8 @@ public class ApplicantController {
     private final ApplicantValidator applicantValidator;
     private final ApplicantService applicantService;
 
-    public ApplicantController(UserAccountValidator userAccountValidator, ApplicantValidator applicantValidator, ApplicantService applicantService) {
+    public ApplicantController(UserAccountValidator userAccountValidator, ApplicantValidator applicantValidator,
+            ApplicantService applicantService) {
         this.userAccountValidator = userAccountValidator;
         this.applicantValidator = applicantValidator;
         this.applicantService = applicantService;
@@ -29,14 +30,14 @@ public class ApplicantController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestPart("applicantDTO") String applicantDTOString,
-                                      @RequestPart("resume") MultipartFile resume,
-                                      BindingResult bindingResult) throws IOException {
+            @RequestPart("resume") MultipartFile resume,
+            BindingResult bindingResult) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         ApplicantDTO applicantDTO = objectMapper.readValue(applicantDTOString, ApplicantDTO.class);
 
         userAccountValidator.validate(applicantDTO.getUserAccountDTO(), bindingResult);
         applicantValidator.validate(applicantDTO, bindingResult);
-        if(bindingResult.hasErrors()) {
+        if (bindingResult.hasErrors()) {
             Map<String, String> errors = new HashMap<>();
             bindingResult.getAllErrors().forEach(error -> {
                 if (error instanceof FieldError) {
@@ -50,5 +51,11 @@ public class ApplicantController {
             return ResponseEntity.badRequest().body(errors);
         }
         return ResponseEntity.ok(applicantService.register(applicantDTO, resume));
+    }
+
+    @GetMapping
+    @ResponseBody
+    public ResponseEntity<?> test() {
+        return ResponseEntity.ok("hello");
     }
 }

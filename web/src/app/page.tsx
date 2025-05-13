@@ -3,8 +3,26 @@
 import Link from "next/link";
 import { Briefcase, User } from "lucide-react";
 import { motion } from "framer-motion";
+import { useEffect } from "react";
 
 export default function HomePage() {
+  useEffect(() => {
+    fetch(
+      "https://aced-2a02-2f0a-5312-1900-70af-154c-ef23-cc38.ngrok-free.app/api/applicant",
+      {
+        headers: {
+          "ngrok-skip-browser-warning": "69420",
+        },
+      }
+    )
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch");
+        return res.text();
+      })
+      .then((data) => console.log(data))
+      .catch((err) => console.error("Error fetching applicant:", err));
+  }, []);
+
   return (
     <div className="py-24">
       <div className="container mx-auto text-center px-4">
