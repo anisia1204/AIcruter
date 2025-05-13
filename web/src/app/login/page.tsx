@@ -18,8 +18,8 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { setCookie } from "cookies-next";
 import { Loader2 } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Toaster, toast } from "sonner";
@@ -29,14 +29,13 @@ const loginSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address." }),
   password: z
     .string()
-    .min(8, { message: "Password must be at least 8 characters." }),
+    .min(1, { message: "Password must be at least 1 characters." }),
 });
 
 type LoginFormValues = z.infer<typeof loginSchema>;
 
 const LoginPage = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const router = useRouter();
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -49,7 +48,7 @@ const LoginPage = () => {
   const onSubmit = async (data: LoginFormValues) => {
     setIsLoading(true);
     toast.promise(
-      fetch("http://localhost:8080/api/auth/login", {
+      fetch("http://localhost:8080/api/user-account/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -58,22 +57,25 @@ const LoginPage = () => {
       }).then(async (response) => {
         const res = await response.json();
         if (!response.ok) {
-          if (response.status === 401) {
-            throw new Error("Invalid credentials");
-          } else {
-            throw new Error(res.message || "Login failed");
-          }
+          throw new Error(res.message || "Login failed");
         }
+
+        setCookie("user", {
+          id: res.id,
+          firstName: res.firstName,
+          lastName: res.lastName,
+        });
+
         return res;
       }),
       {
         loading: "Logging in...",
         success: () => {
-          router.push("/dashboard");
+          window.location.href = "/dashboard";
           return "Login Successful";
         },
         error: (err) => {
-          router.push("/dashboard");
+          setIsLoading(false);
           return err.message || "An error occurred during login.";
         },
       }

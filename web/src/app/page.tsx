@@ -7,14 +7,11 @@ import { useEffect } from "react";
 
 export default function HomePage() {
   useEffect(() => {
-    fetch(
-      "https://aced-2a02-2f0a-5312-1900-70af-154c-ef23-cc38.ngrok-free.app/api/applicant",
-      {
-        headers: {
-          "ngrok-skip-browser-warning": "69420",
-        },
-      }
-    )
+    fetch("http://localhost:8080/api/applicant", {
+      headers: {
+        "ngrok-skip-browser-warning": "69420",
+      },
+    })
       .then((res) => {
         if (!res.ok) throw new Error("Failed to fetch");
         return res.text();
