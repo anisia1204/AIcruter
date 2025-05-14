@@ -10,6 +10,9 @@ public class Job {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "company_id", foreignKey = @ForeignKey(name = "FK_JOB__COMPANY"))
+    private Company company;
     @Column(name = "title", nullable = false)
     private String title;
     @Column(name = "description", nullable = false)
@@ -35,6 +38,14 @@ public class Job {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Company getCompany() {
+        return company;
+    }
+
+    public void setCompany(Company company) {
+        this.company = company;
     }
 
     public String getTitle() {
