@@ -30,7 +30,7 @@ const jobSchema = z.object({
   companyId: z.string().min(1),
   title: z.string().min(3, "Title is too short"),
   description: z.string().min(10, "Description is too short"),
-  locationType: z.enum(["REMOTE", "ONSITE", "HYBRID"]),
+  locationType: z.enum(["REMOTE", "ON_SITE", "HYBRID"]),
   employmentType: z.enum(["FULL_TIME", "PART_TIME", "CONTRACT"]),
 });
 
@@ -75,7 +75,7 @@ export default function CreateJobApplicationForm({
 
       if (!jobRes.ok) throw new Error("Failed to create job");
 
-      toast.success("Job & application created!");
+      toast.success("Job created!");
       router.push("/dashboard");
     } catch (err: any) {
       toast.error(err.message || "Something went wrong");
@@ -134,7 +134,7 @@ export default function CreateJobApplicationForm({
                   </FormControl>
                   <SelectContent>
                     <SelectItem value="REMOTE">Remote</SelectItem>
-                    <SelectItem value="ONSITE">On-site</SelectItem>
+                    <SelectItem value="ON_SITE">On-site</SelectItem>
                     <SelectItem value="HYBRID">Hybrid</SelectItem>
                   </SelectContent>
                 </Select>
