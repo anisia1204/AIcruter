@@ -11,11 +11,21 @@
     </parent>
 
     <artifactId>aicruter-job-service</artifactId>
+    <name>AICruiter Job Service Module</name>
+    <packaging>jar</packaging>
 
     <properties>
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <java.version>21</java.version>
     </properties>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.testinprod</groupId>
+            <artifactId>aicruter-job-domain</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.testinprod</groupId>
+            <artifactId>aicruter-company-service</artifactId>
+        </dependency>
+    </dependencies>
 </project>
