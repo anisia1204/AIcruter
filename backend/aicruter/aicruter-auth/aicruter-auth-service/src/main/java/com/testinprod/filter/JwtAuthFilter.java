@@ -1,5 +1,6 @@
 package com.testinprod.filter;
 
+import com.testinprod.context.UserContextHolder;
 import com.testinprod.exception.UserAccountNotFoundException;
 import com.testinprod.repository.UserAccountJPARepository;
 import jakarta.servlet.FilterChain;
@@ -48,7 +49,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         if(userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = userDetailsService.loadUserByUsername(userEmail);
             Long userId = getUserIdByUserEmail(userEmail);
-            //UserContextHolder.setUserContext(new UserContextHolder.UserContext(userDetails, userId));
+            UserContextHolder.setUserContext(new UserContextHolder.UserContext(userDetails, userId));
             if(jwtService.isTokenValid(jwtToken, userDetails)) {
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                         userDetails,
