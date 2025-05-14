@@ -6,6 +6,7 @@ import com.testinprod.dto.JobDTO;
 import com.testinprod.dto.JobDTOMapper;
 import com.testinprod.entity.Job;
 import com.testinprod.entity.JobStatus;
+import com.testinprod.exception.JobNotFoundException;
 import com.testinprod.repository.JobJPARepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,6 +36,12 @@ public class JobServiceImpl implements JobService {
 
         persist(job);
         return jobDTOMapper.getDTOFromEntity(job);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Job getById(Long id) {
+        return jpaRepository.findById(id).orElseThrow(JobNotFoundException::new);
     }
 
     private void persist(Job job) {

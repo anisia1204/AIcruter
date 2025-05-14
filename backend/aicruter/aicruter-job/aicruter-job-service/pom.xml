@@ -27,5 +27,9 @@
             <groupId>com.testinprod</groupId>
             <artifactId>aicruter-company-service</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.testinprod</groupId>
+            <artifactId>aicruter-applicant-service</artifactId>
+        </dependency>
     </dependencies>
 </project>
