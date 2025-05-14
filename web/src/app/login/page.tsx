@@ -56,14 +56,17 @@ const LoginPage = () => {
         body: JSON.stringify(data),
       }).then(async (response) => {
         const res = await response.json();
+
         if (!response.ok) {
           throw new Error(res.message || "Login failed");
         }
 
         setCookie("user", {
-          id: res.id,
+          userId: res.id,
           firstName: res.firstName,
           lastName: res.lastName,
+          role: res.role,
+          token: res.token,
         });
 
         return res;

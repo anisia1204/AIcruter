@@ -27,26 +27,28 @@ import { toast, Toaster } from "sonner";
 import * as z from "zod";
 
 const jobSchema = z.object({
+  companyId: z.string().min(1),
   title: z.string().min(3, "Title is too short"),
   description: z.string().min(10, "Description is too short"),
-  location_type: z.enum(["REMOTE", "ONSITE", "HYBRID"]),
-  employment_type: z.enum(["FULL_TIME", "PART_TIME", "CONTRACT"]),
+  locationType: z.enum(["REMOTE", "ONSITE", "HYBRID"]),
+  employmentType: z.enum(["FULL_TIME", "PART_TIME", "CONTRACT"]),
 });
 
 type JobFormValues = z.infer<typeof jobSchema>;
 
 export default function CreateJobApplicationForm({
-  applicantId,
+  companyId,
 }: {
-  applicantId: string;
+  companyId: string;
 }) {
   const form = useForm<JobFormValues>({
     resolver: zodResolver(jobSchema),
     defaultValues: {
+      companyId: companyId,
       title: "",
       description: "",
-      location_type: "REMOTE",
-      employment_type: "FULL_TIME",
+      locationType: "REMOTE",
+      employmentType: "FULL_TIME",
     },
   });
 
@@ -55,33 +57,26 @@ export default function CreateJobApplicationForm({
 
   const onSubmit = async (data: JobFormValues) => {
     setIsLoading(true);
-    console.log(data);
+
+    console.log({
+      ...data,
+      companyId,
+    });
+
     try {
-      // 1. Create Job
-      const jobRes = await fetch("http://localhost:8080/api/jobs", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
-
-      if (!jobRes.ok) throw new Error("Failed to create job");
-      const job = await jobRes.json();
-
-      // 2. Create Job Application
-      const appRes = await fetch("http://localhost:8080/api/job-applications", {
+      const jobRes = await fetch("http://localhost:8080/api/job", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          job_id: job.id,
-          applicant_id: applicantId,
-          status: "PENDING",
+          ...data,
+          companyId,
         }),
       });
 
-      if (!appRes.ok) throw new Error("Failed to create job application");
+      if (!jobRes.ok) throw new Error("Failed to create job");
 
       toast.success("Job & application created!");
-      router.push("/dashboard"); // or wherever
+      router.push("/dashboard");
     } catch (err: any) {
       toast.error(err.message || "Something went wrong");
     } finally {
@@ -124,7 +119,7 @@ export default function CreateJobApplicationForm({
 
           <FormField
             control={form.control}
-            name="location_type"
+            name="locationType"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Location Type</FormLabel>
@@ -150,7 +145,7 @@ export default function CreateJobApplicationForm({
 
           <FormField
             control={form.control}
-            name="employment_type"
+            name="employmentType"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Employment Type</FormLabel>

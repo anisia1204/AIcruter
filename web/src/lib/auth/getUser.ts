@@ -7,6 +7,7 @@ export async function getUser() {
   if (!userCookie) {
     return {
       userId: null,
+      companyId: null,
       email: null,
       firstName: null,
       lastName: null,
@@ -27,6 +28,7 @@ export async function getUser() {
       lastName,
       isAuthenticated: true,
       token,
+      companyId: "1",
     };
   } catch (error) {
     console.error("Failed to parse user cookie:", error);
@@ -37,6 +39,7 @@ export async function getUser() {
       lastName: null,
       isAuthenticated: false,
       token: null,
+      companyId: null,
     };
   }
 }

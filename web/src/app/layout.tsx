@@ -40,7 +40,7 @@ export default async function RootLayout({
         <nav className="fixed top-0 left-0 w-full z-50 bg-white/10 backdrop-blur-xs py-4 px-6 shadow-sm">
           <div className="container mx-auto flex items-center justify-between">
             <Link
-              href="/"
+              href="/dashboard"
               className="flex items-center text-xl font-bold text-gray-800"
             >
               <Image
