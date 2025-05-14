@@ -29,6 +29,10 @@
 		<module>aicruter-applicant/aicruter-applicant-domain</module>
 
 		<module>aicruter-shared</module>
+
+        <module>aicruter-job/aicruter-job-domain</module>
+		<module>aicruter-job/aicruter-job-service</module>
+		<module>aicruter-job/aicruter-job-web</module>
 	</modules>
 
 	<properties>
@@ -90,9 +94,26 @@
 				<artifactId>aicruter-applicant-domain</artifactId>
 				<version>0.0.1-SNAPSHOT</version>
 			</dependency>
+
 			<dependency>
 				<groupId>com.testinprod</groupId>
 				<artifactId>aicruter-shared</artifactId>
+				<version>0.0.1-SNAPSHOT</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.testinprod</groupId>
+				<artifactId>aicruter-job-web</artifactId>
+				<version>0.0.1-SNAPSHOT</version>
+			</dependency>
+			<dependency>
+				<groupId>com.testinprod</groupId>
+				<artifactId>aicruter-job-service</artifactId>
+				<version>0.0.1-SNAPSHOT</version>
+			</dependency>
+			<dependency>
+				<groupId>com.testinprod</groupId>
+				<artifactId>aicruter-job-domain</artifactId>
 				<version>0.0.1-SNAPSHOT</version>
 			</dependency>
 		</dependencies>

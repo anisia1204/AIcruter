@@ -7,11 +7,11 @@
         <groupId>com.testinprod</groupId>
         <artifactId>aicruter</artifactId>
         <version>0.0.1-SNAPSHOT</version>
-        <relativePath>../</relativePath>
+        <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <artifactId>aicruter-web</artifactId>
-    <name>AICruiter Web Module</name>
+    <artifactId>aicruter-job-web</artifactId>
+    <name>AICruiter Job Web Module</name>
     <packaging>jar</packaging>
 
     <properties>
@@ -21,54 +21,21 @@
     <dependencies>
         <dependency>
             <groupId>com.testinprod</groupId>
-            <artifactId>aicruter-auth-web</artifactId>
+            <artifactId>aicruter-job-service</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.testinprod</groupId>
-            <artifactId>aicruter-company-web</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.testinprod</groupId>
-            <artifactId>aicruter-applicant-web</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.testinprod</groupId>
-            <artifactId>aicruter-job-web</artifactId>
-        </dependency>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <scope>runtime</scope>
-        </dependency>
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
 
 </project>
