@@ -27,12 +27,10 @@ import { toast, Toaster } from "sonner";
 import * as z from "zod";
 
 const jobSchema = z.object({
-  company_id: z.string().min(1, "Company is required"),
   title: z.string().min(3, "Title is too short"),
   description: z.string().min(10, "Description is too short"),
   location_type: z.enum(["REMOTE", "ONSITE", "HYBRID"]),
   employment_type: z.enum(["FULL_TIME", "PART_TIME", "CONTRACT"]),
-  status: z.enum(["OPEN", "CLOSED"]),
 });
 
 type JobFormValues = z.infer<typeof jobSchema>;
@@ -45,12 +43,10 @@ export default function CreateJobApplicationForm({
   const form = useForm<JobFormValues>({
     resolver: zodResolver(jobSchema),
     defaultValues: {
-      company_id: "",
       title: "",
       description: "",
       location_type: "REMOTE",
       employment_type: "FULL_TIME",
-      status: "OPEN",
     },
   });
 
@@ -98,21 +94,6 @@ export default function CreateJobApplicationForm({
       <Toaster richColors />
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          {/* aici are veni Select cu lista de companii existente de la backend */}
-          <FormField
-            control={form.control}
-            name="company_id"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Company ID</FormLabel>
-                <FormControl>
-                  <Input placeholder="e.g., 1" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
           <FormField
             control={form.control}
             name="title"
@@ -186,31 +167,6 @@ export default function CreateJobApplicationForm({
                     <SelectItem value="FULL_TIME">Full Time</SelectItem>
                     <SelectItem value="PART_TIME">Part Time</SelectItem>
                     <SelectItem value="CONTRACT">Contract</SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="status"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Status</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <FormControl>
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Select status" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value="OPEN">Open</SelectItem>
-                    <SelectItem value="CLOSED">Closed</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />
