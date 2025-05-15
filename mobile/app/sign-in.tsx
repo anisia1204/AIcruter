@@ -1,56 +1,48 @@
-import { View, StyleSheet, Text } from 'react-native'; 
+import { View, StyleSheet, Text } from 'react-native';
 import { router } from 'expo-router';
-import { useState } from 'react';
+import { useForm, Controller } from 'react-hook-form';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { useAuth } from '@/providers/AuthContext';
-import { apiPost } from '@/lib/api';
+import { apiPost, BASE_URL } from '@/lib/api';
 import FormField from '@/components/atoms/InputFormField';
 import { StyledButton } from '@/components/atoms/StyledButton';
 import { useTheme } from '@react-navigation/native';
 import { ThemedText } from '@/components/ThemedText';
 import AuthView from '@/components/templates/AuthView';
+import Toast from 'react-native-toast-message';
+
+type FormData = {
+  email: string;
+  password: string;
+};
 
 const SignInScreen = () => {
   const { colors } = useTheme();
-  
   const { signIn } = useAuth();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const { control, handleSubmit, formState: { errors } } = useForm<FormData>();
 
-  const [emailError, setEmailError] = useState<string | null>(null);
-  const [passwordError, setPasswordError] = useState<string | null>(null);
-
-  const handleSignIn = async () => {
-    setEmailError(null);
-    setPasswordError(null);
-    let hasError = false;
-
-    if (!email) {
-      setEmailError('Email is required.');
-      hasError = true;
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      setEmailError('Enter a valid email address.');
-      hasError = true;
-    }
-
-    if (!password) {
-      setPasswordError('Password is required.');
-      hasError = true;
-    } else if (password.length < 6) {
-      setPasswordError('Password must be at least 6 characters.');
-      hasError = true;
-    }
-
-    if (hasError) return;
+  const onSubmit = async (data: FormData) => {
     try {
-      if (!email || !password) return;
-      console.log("email", email);
-      console.log("password", password);
-      // const response = await apiPost('/auth/login', { email, password });
-      // signIn(response.token);
-      // router.replace('../')
+      const response = await apiPost('/api/user-account/login', data);
+
+      signIn(response.token);
+      await AsyncStorage.setItem('userId', String(response.id));
+      
+      Toast.show({
+        type: 'success',
+        text1: 'Login successful!',
+        visibilityTime: 5000,
+      });
+
+      router.replace("./(tabs)")
     } catch (err) {
       console.warn('Login failed', err);
+      Toast.show({
+        type: 'error',
+        text1: 'Login failed',
+        text2: 'Invalid credentials or server error',
+      });
     }
   };
 
@@ -58,28 +50,54 @@ const SignInScreen = () => {
     <AuthView>
       <ThemedText type="title" style={styles.title}>AiCruter</ThemedText>
 
-      <FormField
-        label="Email"
-        placeholder="Email..."
-        value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address"
-        autoCapitalize="none"
-        error={emailError}
+      <Controller
+        control={control}
+        name="email"
+        rules={{
+          required: 'Email is required.',
+          pattern: {
+            value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+            message: 'Enter a valid email address.',
+          },
+        }}
+        render={({ field: { onChange, value } }) => (
+          <FormField
+            label="Email"
+            placeholder="Email..."
+            value={value}
+            onChangeText={onChange}
+            keyboardType="email-address"
+            autoCapitalize="none"
+            error={errors.email?.message}
+          />
+        )}
       />
 
-      <FormField
-        label="Password"
-        placeholder="Password..."
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-        autoCapitalize="none"
-        error={passwordError}
+      <Controller
+        control={control}
+        name="password"
+        rules={{
+          required: 'Password is required.',
+          minLength: {
+            value: 6,
+            message: 'Password must be at least 6 characters.',
+          },
+        }}
+        render={({ field: { onChange, value } }) => (
+          <FormField
+            label="Password"
+            placeholder="Password..."
+            value={value}
+            onChangeText={onChange}
+            secureTextEntry
+            autoCapitalize="none"
+            error={errors.password?.message}
+          />
+        )}
       />
 
       <View style={styles.buttonContainer}>
-        <StyledButton label="Sign In" onPress={handleSignIn} />
+        <StyledButton label="Sign In" onPress={handleSubmit(onSubmit)} />
         <View style={styles.signUpTextContainer}>
           <Text style={styles.signUpText}>
             Don't have an account?{' '}
