@@ -34,8 +34,15 @@ public class ApplicantServiceImpl implements ApplicantService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Applicant getById(Long id) {
         return jpaRepository.findById(id).orElseThrow(ApplicantNotFoundException::new);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Applicant getByUserAccountId(Long userId) {
+        return jpaRepository.findByUserAccountId(userId);
     }
 
     @Override

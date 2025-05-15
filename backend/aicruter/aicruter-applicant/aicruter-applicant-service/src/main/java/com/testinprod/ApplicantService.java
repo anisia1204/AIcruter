@@ -9,4 +9,5 @@ import java.io.IOException;
 public interface ApplicantService {
     ApplicantDTO register(ApplicantDTO applicantDTO, MultipartFile resume) throws IOException;
     Applicant getById(Long id);
+    Applicant getByUserAccountId(Long userId);
 }

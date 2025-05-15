@@ -7,6 +7,7 @@ import com.testinprod.dto.JobDTO;
 import com.testinprod.dto.JobDTOMapper;
 import com.testinprod.entity.Job;
 import com.testinprod.entity.JobStatus;
+import com.testinprod.exception.JobNotFoundException;
 import com.testinprod.repository.JobJPARepository;
 import com.testinprod.vo.JobFilters;
 import com.testinprod.vo.JobVO;
@@ -53,6 +54,12 @@ public class JobServiceImpl implements JobService {
     public Page<JobVO> getAllJobs(JobFilters jobFilters, Pageable pageable) {
         Specification<Job> specification = jobFilterService.buildSpecification(jobFilters);
         return jpaRepository.findAll(specification, pageable).map(jobVOMapper::getVOFromEntity);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Job getById(Long id) {
+        return jpaRepository.findById(id).orElseThrow(JobNotFoundException::new);
     }
 
     private void persist(Job job) {

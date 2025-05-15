@@ -27,30 +27,28 @@ import { toast, Toaster } from "sonner";
 import * as z from "zod";
 
 const jobSchema = z.object({
-  company_id: z.string().min(1, "Company is required"),
+  companyId: z.string().min(1),
   title: z.string().min(3, "Title is too short"),
   description: z.string().min(10, "Description is too short"),
-  location_type: z.enum(["REMOTE", "ONSITE", "HYBRID"]),
-  employment_type: z.enum(["FULL_TIME", "PART_TIME", "CONTRACT"]),
-  status: z.enum(["OPEN", "CLOSED"]),
+  locationType: z.enum(["REMOTE", "ON_SITE", "HYBRID"]),
+  employmentType: z.enum(["FULL_TIME", "PART_TIME", "CONTRACT"]),
 });
 
 type JobFormValues = z.infer<typeof jobSchema>;
 
 export default function CreateJobApplicationForm({
-  applicantId,
+  companyId,
 }: {
-  applicantId: string;
+  companyId: string;
 }) {
   const form = useForm<JobFormValues>({
     resolver: zodResolver(jobSchema),
     defaultValues: {
-      company_id: "",
+      companyId: companyId,
       title: "",
       description: "",
-      location_type: "REMOTE",
-      employment_type: "FULL_TIME",
-      status: "OPEN",
+      locationType: "REMOTE",
+      employmentType: "FULL_TIME",
     },
   });
 
@@ -59,33 +57,26 @@ export default function CreateJobApplicationForm({
 
   const onSubmit = async (data: JobFormValues) => {
     setIsLoading(true);
-    console.log(data);
+
+    console.log({
+      ...data,
+      companyId,
+    });
+
     try {
-      // 1. Create Job
-      const jobRes = await fetch("http://localhost:8080/api/jobs", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
-
-      if (!jobRes.ok) throw new Error("Failed to create job");
-      const job = await jobRes.json();
-
-      // 2. Create Job Application
-      const appRes = await fetch("http://localhost:8080/api/job-applications", {
+      const jobRes = await fetch("http://localhost:8080/api/job", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          job_id: job.id,
-          applicant_id: applicantId,
-          status: "PENDING",
+          ...data,
+          companyId,
         }),
       });
 
-      if (!appRes.ok) throw new Error("Failed to create job application");
+      if (!jobRes.ok) throw new Error("Failed to create job");
 
-      toast.success("Job & application created!");
-      router.push("/dashboard"); // or wherever
+      toast.success("Job created!");
+      router.push("/dashboard");
     } catch (err: any) {
       toast.error(err.message || "Something went wrong");
     } finally {
@@ -98,21 +89,6 @@ export default function CreateJobApplicationForm({
       <Toaster richColors />
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          {/* aici are veni Select cu lista de companii existente de la backend */}
-          <FormField
-            control={form.control}
-            name="company_id"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Company ID</FormLabel>
-                <FormControl>
-                  <Input placeholder="e.g., 1" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
           <FormField
             control={form.control}
             name="title"
@@ -143,7 +119,7 @@ export default function CreateJobApplicationForm({
 
           <FormField
             control={form.control}
-            name="location_type"
+            name="locationType"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Location Type</FormLabel>
@@ -158,7 +134,7 @@ export default function CreateJobApplicationForm({
                   </FormControl>
                   <SelectContent>
                     <SelectItem value="REMOTE">Remote</SelectItem>
-                    <SelectItem value="ONSITE">On-site</SelectItem>
+                    <SelectItem value="ON_SITE">On-site</SelectItem>
                     <SelectItem value="HYBRID">Hybrid</SelectItem>
                   </SelectContent>
                 </Select>
@@ -169,7 +145,7 @@ export default function CreateJobApplicationForm({
 
           <FormField
             control={form.control}
-            name="employment_type"
+            name="employmentType"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Employment Type</FormLabel>
@@ -186,31 +162,6 @@ export default function CreateJobApplicationForm({
                     <SelectItem value="FULL_TIME">Full Time</SelectItem>
                     <SelectItem value="PART_TIME">Part Time</SelectItem>
                     <SelectItem value="CONTRACT">Contract</SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="status"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Status</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <FormControl>
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Select status" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value="OPEN">Open</SelectItem>
-                    <SelectItem value="CLOSED">Closed</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />
