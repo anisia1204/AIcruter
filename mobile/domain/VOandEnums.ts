@@ -36,7 +36,7 @@ export enum EmploymentType {
 };
 
 export enum JobStatus {
-    CAN_STILL_APPLY = "CAN_STILL_APPLY",
+    OPEN = "OPEN",
     CLOSED = "CLOSED",
 };
 

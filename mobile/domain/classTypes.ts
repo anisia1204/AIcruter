@@ -43,12 +43,15 @@ export type Resume = {
 
 export type Job = {
     id: number;
-    jobTitle: string;
-    jobDescription: string;
-    creationDate: Date;
-    jobLocationType: JobLocationType;
+    title: string;
+    description: string;
+    createdAt: string;
+    locationType: JobLocationType;
     employmentType: EmploymentType;
-    jobStatus: JobStatus;
+    status: JobStatus;
+    companyId: string;
+    companyName: string;
+    state: string;
 };
 
 export type JobApplication = {

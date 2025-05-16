@@ -2,9 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Button, Alert } from 'react-native';
 import MainView from '@/components/templates/MainView';
 import { apiGet } from '@/lib/api';
-import { EmploymentType, JobLocationType } from '@/domain/VOandEnums';
+import { EmploymentType, JobLocationType, JobStatus } from '@/domain/VOandEnums';
 import { Job } from '@/domain/classTypes';
 import Toast from 'react-native-toast-message';
+import { Loader } from '@/components/atoms/Loader';
+import JobCard from '@/components/moleculas/JobCard';
+import { ScrollView } from 'react-native-reanimated/lib/typescript/Animated';
 
 type Filters = {
   title: string;
@@ -22,7 +25,7 @@ type Pagination = {
 
 export default function HomeScreen() {
 
-  const [jobs, setJobs] = useState<Job|null>(null);
+  const [jobs, setJobs] = useState<Job[] | null>(null);
   const [filters, setFilters] = useState<Filters>({
     title: '',
     state: '',
@@ -54,7 +57,7 @@ export default function HomeScreen() {
       const data = await apiGet(`/api/job?${query.toString()}`);
       console.log("data", data)
       setJobs(data.content);
-    } catch(err) {
+    } catch (err) {
       Toast.show({
         type: 'error',
         text1: 'Sserver error',
@@ -68,9 +71,23 @@ export default function HomeScreen() {
 
   return (
     <MainView>
-      
       <View>
-      <Button title={"jobs"} onPress={fetchJobs}/>
+        {jobs ? (
+          jobs.map((job) => (
+            <JobCard
+              key={job.id}
+              jobTitle={job.title}
+              companyName={job.companyName}
+              employmentType={job.employmentType}
+              locationType={job.locationType}
+              state={job.state}
+              createdAt={job.createdAt}
+              status={job.status}
+            />
+          ))
+        ) : (
+          <Loader />
+        )}
       </View>
 
     </MainView>
