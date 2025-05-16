@@ -2,24 +2,18 @@ import React from 'react';
 import { View, StyleSheet, Button, Alert } from 'react-native';
 import { useAuth } from '@/providers/AuthContext'; 
 import { router } from 'expo-router';
+import MainView from '@/components/templates/MainView';
 
 export default function HomeScreen() {
-  const { signOut } = useAuth();
-
-  const handleSignOut = async () => {
-    Alert.alert('Sign Out', 'Are you sure you want to sign out?', [
-      { text: 'Cancel', style: 'cancel' },
-      { text: 'Yes', onPress: () => {
-        signOut()
-    router.replace("../sign-in"); 
-       } },
-    ]);
-  };
 
   return (
-    <View style={styles.container}>
-      <Button title="Sign Out" onPress={handleSignOut} />
-    </View>
+    <MainView>
+      
+      <View>
+
+      </View>
+
+    </MainView>
   );
 }
 

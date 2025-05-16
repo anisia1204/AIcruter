@@ -27,7 +27,7 @@ const TabLayout = () => {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
+          title: 'Jobs',
           animation: 'fade',
           headerTitleAlign: 'left',
           tabBarIcon: ({ color }) => <Icon name="check-circle" size={24} color="green" />,
