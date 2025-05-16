@@ -10,7 +10,6 @@ const RootNavigation = () => {
   useEffect(() => {
     if (!loading && !isAuthenticated) {
       router.replace('/sign-in');
-    //   router.replace('/(tabs)/explore');
     }
   }, [isAuthenticated, loading]);
 

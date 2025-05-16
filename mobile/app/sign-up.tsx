@@ -113,8 +113,8 @@ const onSubmit = async (data: any) => {
     if (!response.ok)
     {
       Toast.show({
-        type: 'success',
-        text1: 'Check your email!',
+        type: 'error',
+        text1: 'Registration failed',
         visibilityTime: 5000,
       });
       throw new Error("Registration failed");
@@ -125,7 +125,6 @@ const onSubmit = async (data: any) => {
       text1: 'Check your email!',
       visibilityTime: 5000,
     });
-console.log("here")
     router.replace("../sign-in"); 
   } catch (e) {
     console.warn('Submission error:', e);
