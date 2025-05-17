@@ -52,6 +52,7 @@ export type Job = {
     companyId: string;
     companyName: string;
     state: string;
+    city: string;
 };
 
 export type JobApplication = {

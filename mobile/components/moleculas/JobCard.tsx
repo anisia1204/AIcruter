@@ -9,12 +9,13 @@ type JobCardProps = {
     employmentType: EmploymentType;
     locationType: JobLocationType;
     state: string;
+    city: string;
     createdAt: string;
     status: JobStatus;
 };
 
 
-const JobCard = ({ jobTitle, companyName, employmentType, locationType, state, createdAt, status }: JobCardProps) => {
+const JobCard = ({ jobTitle, companyName, employmentType, locationType, state, city, createdAt, status }: JobCardProps) => {
 
     const initials = companyName.slice(0, 2).toUpperCase();
     const createdDate = moment(createdAt).format('MMM D, YYYY')
@@ -36,7 +37,7 @@ const JobCard = ({ jobTitle, companyName, employmentType, locationType, state, c
         <Text style={styles.details}>
           {formatEnum(employmentType)} • {formatEnum(locationType)}
         </Text>
-        <Text style={styles.details}>{state}</Text>
+        <Text style={styles.details}>{city}, {state}</Text>
         <Text style={styles.date}>Posted on {createdDate}</Text>
       </View>
 

@@ -1,6 +1,7 @@
 import { Filters } from '@/app/(tabs)';
+import { apiGet } from '@/lib/api';
 import { useTheme } from '@react-navigation/native';
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
     View,
     Text,
@@ -11,6 +12,7 @@ import {
     Dimensions,
     Modal,
 } from 'react-native';
+import Toast from 'react-native-toast-message';
 
 type FiltersBarProps = {
     filters: Filters;
@@ -18,28 +20,42 @@ type FiltersBarProps = {
 };
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
-const stateOptions =
-    [
-        { label: 'Timisoara', value: 'Timisoara' },
-        { label: 'Maramures', value: 'Maramures' },
-        { label: 'Cluj', value: 'Cluj' },
-    ];
-const locationOptions =
-    [
+
+const locationOptions = [
         { label: 'On Site', value: 'ON_SITE' },
         { label: 'Hybrid', value: 'HYBRID' },
-        { label: 'Remote', value: 'REMOTE' },
-    ];
-const employmentOptions =
-    [
+        { label: 'Remote', value: 'REMOTE' }];
+
+const employmentOptions = [
         { label: 'Part Time', value: 'PART_TIME' },
-        { label: 'Full Time', value: 'FULL_TIME' },
-    ];
+        { label: 'Full Time', value: 'FULL_TIME' }];
 
 const FiltersBar = ({ filters, setFilters }: FiltersBarProps) => {
 
-    const [openDropdown, setOpenDropdown] = useState<'none' | 'state' | 'locationType' | 'employmentType'>('none');
+    const [stateOptions, setStateOptions] = useState<{label: string, value: string}[]>();
 
+    const getStatesFromCompanies = async () => {
+        try {
+            const data = await apiGet(`/api/job/states`);
+            const stateOptions = data.map((d: string) => ({
+                label: d,
+                value: d,
+            }));
+            setStateOptions(stateOptions);
+        } catch (err) {
+            Toast.show({
+                type: 'error',
+                text1: 'Server error',
+            });
+            console.error('Failed to fetch jobs', err);
+        }
+    };
+
+    useEffect(() => {
+        getStatesFromCompanies();
+    }, []);
+
+    const [openDropdown, setOpenDropdown] = useState<'none' | 'state' | 'locationType' | 'employmentType'>('none');
     const closeDropdown = () => setOpenDropdown('none');
 
     const applyFilter = (filterName: string, value: string | undefined) => {
@@ -136,7 +152,7 @@ const FiltersBar = ({ filters, setFilters }: FiltersBarProps) => {
                         {filters.state ? `State | ${filters.state}` : 'State'}
                     </Text>
                 </TouchableOpacity>
-                {renderDropdown([{ label: 'All', value: '' }, ...stateOptions], 'state')}
+                {renderDropdown([{ label: 'All', value: '' }, ...stateOptions ?? []], 'state')}
 
                 <TouchableOpacity
                     onPress={() => setOpenDropdown(openDropdown === 'locationType' ? 'none' : 'locationType')}

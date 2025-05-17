@@ -59,7 +59,7 @@ export default function HomeScreen() {
     } catch (err) {
       Toast.show({
         type: 'error',
-        text1: 'Sserver error',
+        text1: 'Server error',
       });
       console.error('Failed to fetch jobs', err);
     }
@@ -96,6 +96,7 @@ export default function HomeScreen() {
                 employmentType={job.employmentType}
                 locationType={job.locationType}
                 state={job.state}
+                city={job.city}
                 createdAt={job.createdAt}
                 status={job.status}
               />
