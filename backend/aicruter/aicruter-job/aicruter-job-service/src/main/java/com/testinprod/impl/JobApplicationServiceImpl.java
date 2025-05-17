@@ -9,10 +9,18 @@ import com.testinprod.dto.JobApplicationDTOMapper;
 import com.testinprod.entity.JobApplication;
 import com.testinprod.entity.JobApplicationStatus;
 import com.testinprod.repository.JobApplicationJPARepository;
+import com.testinprod.vo.JobApplicationVO;
+import com.testinprod.vo.JobApplicationVOMapper;
+import jakarta.persistence.criteria.Predicate;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class JobApplicationServiceImpl implements JobApplicationService {
@@ -20,12 +28,14 @@ public class JobApplicationServiceImpl implements JobApplicationService {
     private final JobService jobService;
     private final ApplicantService applicantService;
     private final JobApplicationDTOMapper dtoMapper;
+    private final JobApplicationVOMapper voMapper;
 
-    public JobApplicationServiceImpl(JobApplicationJPARepository jpaRepository, JobService jobService, ApplicantService applicantService, JobApplicationDTOMapper dtoMapper) {
+    public JobApplicationServiceImpl(JobApplicationJPARepository jpaRepository, JobService jobService, ApplicantService applicantService, JobApplicationDTOMapper dtoMapper, JobApplicationVOMapper voMapper) {
         this.jpaRepository = jpaRepository;
         this.jobService = jobService;
         this.applicantService = applicantService;
         this.dtoMapper = dtoMapper;
+        this.voMapper = voMapper;
     }
 
     @Override
@@ -39,6 +49,21 @@ public class JobApplicationServiceImpl implements JobApplicationService {
 
         persist(jobApplication);
         return dtoMapper.getDTOFromEntity(jobApplication);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<JobApplicationVO> getAllJobApplicationsOfCurrentUser(Pageable pageable, String status) {
+        Specification<JobApplication> specification = ((root, query, criteriaBuilder) -> {
+            Predicate predicate = criteriaBuilder.equal(root.get("applicant").get("userAccount").get("id"), UserContextHolder.getUserContext().getUserId());
+            List<Predicate> predicates = new ArrayList<>();
+            if (status != null) {
+                predicates.add(criteriaBuilder.equal(root.get("status"), status));
+            }
+            return criteriaBuilder.and(predicate, criteriaBuilder.and(predicates.toArray(new Predicate[0])));
+        });
+
+        return jpaRepository.findAll(specification, pageable).map(voMapper::getVOFromEntity);
     }
 
     private void persist(JobApplication jobApplication) {

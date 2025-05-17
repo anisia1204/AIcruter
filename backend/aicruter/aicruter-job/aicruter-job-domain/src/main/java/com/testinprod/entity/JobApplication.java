@@ -10,10 +10,10 @@ public class JobApplication {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @OneToOne(optional = false)
+    @ManyToOne(optional = false)
     @JoinColumn(name = "job_id", foreignKey = @ForeignKey(name = "FK_JOB_APPLICATION__JOB"))
     private Job job;
-    @OneToOne(optional = false)
+    @ManyToOne(optional = false)
     @JoinColumn(name = "applicant_id", foreignKey = @ForeignKey(name = "FK_JOB_APPLICATION__APPLICANT"))
     private Applicant applicant;
     @Column(name = "created_at", nullable = false)
