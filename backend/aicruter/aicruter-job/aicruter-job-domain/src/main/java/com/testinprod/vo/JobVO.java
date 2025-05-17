@@ -10,6 +10,7 @@ public class JobVO {
     private Long id;
     private Long companyId;
     private String companyName;
+    private String city;
     private String state;
     private String title;
     private String description;
@@ -18,10 +19,11 @@ public class JobVO {
     private JobStatus status;
     private LocalDateTime createdAt;
 
-    public JobVO(Long id, Long companyId, String companyName, String state, String title, String description, JobLocationType locationType, EmploymentType employmentType, JobStatus status, LocalDateTime createdAt) {
+    public JobVO(Long id, Long companyId, String companyName, String city, String state, String title, String description, JobLocationType locationType, EmploymentType employmentType, JobStatus status, LocalDateTime createdAt) {
         this.id = id;
         this.companyId = companyId;
         this.companyName = companyName;
+        this.city = city;
         this.state = state;
         this.title = title;
         this.description = description;
@@ -41,6 +43,10 @@ public class JobVO {
 
     public String getCompanyName() {
         return companyName;
+    }
+
+    public String getCity() {
+        return city;
     }
 
     public String getState() {

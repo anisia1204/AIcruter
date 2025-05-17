@@ -3,10 +3,8 @@ package com.testinprod.impl;
 import com.testinprod.CompanyService;
 import com.testinprod.JobFilterService;
 import com.testinprod.JobService;
-import com.testinprod.domain.Address;
 import com.testinprod.dto.JobDTO;
 import com.testinprod.dto.JobDTOMapper;
-import com.testinprod.entity.Company;
 import com.testinprod.entity.Job;
 import com.testinprod.entity.JobStatus;
 import com.testinprod.exception.JobNotFoundException;
@@ -63,6 +61,13 @@ public class JobServiceImpl implements JobService {
     @Transactional(readOnly = true)
     public Job getById(Long id) {
         return jpaRepository.findById(id).orElseThrow(JobNotFoundException::new);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public JobVO getTemplateById(Long id) {
+        Job job = getById(id);
+        return jobVOMapper.getVOFromEntity(job);
     }
 
     @Override

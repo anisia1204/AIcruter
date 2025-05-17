@@ -48,4 +48,9 @@ public class JobController {
     public ResponseEntity<List<String>> getAllStatesAssociatedToJobs() {
         return ResponseEntity.ok(jobService.getAllDistinctStatesAssociatedToJobs());
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<JobVO> getTemplateById(@PathVariable Long id) {
+        return ResponseEntity.ok(jobService.getTemplateById(id));
+    }
 }
