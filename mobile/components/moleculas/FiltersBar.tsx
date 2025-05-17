@@ -1,7 +1,6 @@
 import { Filters } from '@/app/(tabs)';
 import { apiGet } from '@/lib/api';
-import { useTheme } from '@react-navigation/native';
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     View,
     Text,
@@ -202,7 +201,7 @@ const styles = StyleSheet.create({
     filterButton: {
         paddingVertical: 8,
         paddingHorizontal: 14,
-        backgroundColor: '#f2f2f2',
+        backgroundColor: '#fff',
         borderRadius: 20,
         marginRight: 10,
     },

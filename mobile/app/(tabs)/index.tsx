@@ -9,6 +9,7 @@ import { Loader } from '@/components/atoms/Loader';
 import JobCard from '@/components/moleculas/JobCard';
 import SearchBar from '@/components/atoms/SearchBar';
 import FiltersBar from '@/components/moleculas/FiltersBar';
+import Pagination from '@/components/atoms/Pagination';
 
 export type Filters = {
   title: string;
@@ -33,10 +34,11 @@ export default function HomeScreen() {
     locationType: undefined,
     employmentType: undefined,
   });
+  const [totalPages, setTotalPages] = useState(0);
 
   const [pagination, setPagination] = useState<Pagination>({
     page: 0,
-    size: 10,
+    size: 3,
     sortField: 'createdAt',
     sortOrder: 'desc',
   });
@@ -55,7 +57,9 @@ export default function HomeScreen() {
 
     try {
       const data = await apiGet(`/api/job?${query.toString()}`);
+      console.log("data", data)
       setJobs(data.content);
+      setTotalPages(data.totalPages);
     } catch (err) {
       Toast.show({
         type: 'error',
@@ -105,6 +109,16 @@ export default function HomeScreen() {
             <Loader />
           )}
         </View>
+        {jobs && jobs.length > 0 && (
+          <Pagination
+            currentPage={pagination.page}
+            totalPages={totalPages}
+            onPageChange={(newPage) => {
+              setPagination(prev => ({ ...prev, page: newPage }));
+            }}
+          />
+        )}
+
       </View>
     </MainView>
   );
