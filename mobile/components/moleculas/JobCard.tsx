@@ -36,9 +36,7 @@ const JobCard = ({ jobTitle, companyName, employmentType, locationType, state, c
         <Text style={styles.details}>
           {formatEnum(employmentType)} • {formatEnum(locationType)}
         </Text>
-        <Text style={styles.details}>
-          {state}
-        </Text>
+        <Text style={styles.details}>{state}</Text>
         <Text style={styles.date}>Posted on {createdDate}</Text>
       </View>
 
@@ -63,6 +61,7 @@ const styles = StyleSheet.create({
     elevation: 4,
     marginBottom: 12,
     alignItems: 'center',
+    marginHorizontal: 2,
   },
   logo: {
     width: 50,
@@ -103,10 +102,9 @@ const styles = StyleSheet.create({
     marginTop: 6,
   },
   statusPill: {
-    borderRadius: 12,
+    borderRadius: 10,
     paddingVertical: 4,
     paddingHorizontal: 10,
-    alignSelf: 'flex-start',
   },
   statusText: {
     color: '#fff',

@@ -8,6 +8,7 @@ import Toast from 'react-native-toast-message';
 import { Loader } from '@/components/atoms/Loader';
 import JobCard from '@/components/moleculas/JobCard';
 import { ScrollView } from 'react-native-reanimated/lib/typescript/Animated';
+import SearchBar from '@/components/atoms/SearchBar';
 
 type Filters = {
   title: string;
@@ -42,8 +43,7 @@ export default function HomeScreen() {
 
   const fetchJobs = async () => {
     const query = new URLSearchParams();
-
-    if (filters.state) query.append('title', filters.title);
+    if (filters.title) query.append('title', filters.title);
     if (filters.state) query.append('state', filters.state);
     if (filters.locationType) query.append('locationType', filters.locationType);
     if (filters.employmentType) query.append('employmentType', filters.employmentType);
@@ -52,10 +52,9 @@ export default function HomeScreen() {
     query.append('size', pagination.size.toString());
     query.append('sortField', pagination.sortField);
     query.append('sortOrder', pagination.sortOrder);
-
+    console.log("query", query.toString());
     try {
       const data = await apiGet(`/api/job?${query.toString()}`);
-      console.log("data", data)
       setJobs(data.content);
     } catch (err) {
       Toast.show({
@@ -65,40 +64,50 @@ export default function HomeScreen() {
       console.error('Failed to fetch jobs', err);
     }
   };
-  // useEffect(() => {
-  //   fetchJobs();
-  // }, [filters, pagination]);
+
+  useEffect(() => {
+    fetchJobs();
+  }, []);
+
+  useEffect(() => {
+    fetchJobs();
+  }, [filters, pagination]);
+
 
   return (
     <MainView>
-      <View>
-        {jobs ? (
-          jobs.map((job) => (
-            <JobCard
-              key={job.id}
-              jobTitle={job.title}
-              companyName={job.companyName}
-              employmentType={job.employmentType}
-              locationType={job.locationType}
-              state={job.state}
-              createdAt={job.createdAt}
-              status={job.status}
-            />
-          ))
-        ) : (
-          <Loader />
-        )}
+      <View style={styles.container}>
+        <SearchBar
+          value={filters.title}
+          onChange={(text) => setFilters({ ...filters, title: text })}
+          placeholder="Search job title..."
+        />
+        <View>
+          {jobs ? (
+            jobs.map((job) => (
+              <JobCard
+                key={job.id}
+                jobTitle={job.title}
+                companyName={job.companyName}
+                employmentType={job.employmentType}
+                locationType={job.locationType}
+                state={job.state}
+                createdAt={job.createdAt}
+                status={job.status}
+              />
+            ))
+          ) : (
+            <Loader />
+          )}
+        </View>
       </View>
-
     </MainView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    padding: 16,
-    justifyContent: 'center',
-    alignItems: 'center',
-    flex: 1,
+    // padding: 16,
+    gap: 10
   },
 });
