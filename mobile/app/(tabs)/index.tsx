@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Button, Alert } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import MainView from '@/components/templates/MainView';
 import { apiGet } from '@/lib/api';
-import { EmploymentType, JobLocationType, JobStatus } from '@/domain/VOandEnums';
+import { EmploymentType, JobLocationType } from '@/domain/VOandEnums';
 import { Job } from '@/domain/classTypes';
 import Toast from 'react-native-toast-message';
 import { Loader } from '@/components/atoms/Loader';
 import JobCard from '@/components/moleculas/JobCard';
-import { ScrollView } from 'react-native-reanimated/lib/typescript/Animated';
 import SearchBar from '@/components/atoms/SearchBar';
+import FiltersBar from '@/components/moleculas/FiltersBar';
 
-type Filters = {
+export type Filters = {
   title: string;
   state: string;
   locationType: JobLocationType | undefined;
@@ -52,7 +52,7 @@ export default function HomeScreen() {
     query.append('size', pagination.size.toString());
     query.append('sortField', pagination.sortField);
     query.append('sortOrder', pagination.sortOrder);
-    console.log("query", query.toString());
+
     try {
       const data = await apiGet(`/api/job?${query.toString()}`);
       setJobs(data.content);
@@ -82,11 +82,15 @@ export default function HomeScreen() {
           onChange={(text) => setFilters({ ...filters, title: text })}
           placeholder="Search job title..."
         />
+        <FiltersBar
+          filters={filters}
+          setFilters={setFilters}
+        />
         <View>
           {jobs ? (
-            jobs.map((job) => (
+            jobs.map((job, index) => (
               <JobCard
-                key={job.id}
+                key={job.id ?? `job-${index}`}
                 jobTitle={job.title}
                 companyName={job.companyName}
                 employmentType={job.employmentType}
@@ -107,7 +111,6 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    // padding: 16,
     gap: 10
   },
 });

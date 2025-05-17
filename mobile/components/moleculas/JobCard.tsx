@@ -20,8 +20,8 @@ const JobCard = ({ jobTitle, companyName, employmentType, locationType, state, c
     const createdDate = moment(createdAt).format('MMM D, YYYY')
 
     const statusColor = {
-        OPEN: '#4ade80',
-        CLOSED: '#f87171',
+        Open: '#4ade80',
+        Closed: '#f87171',
     }[status];
 
     return (
