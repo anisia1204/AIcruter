@@ -12,6 +12,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/job")
 public class JobController {
@@ -40,5 +42,15 @@ public class JobController {
         Pageable pageable = PageRequest.of(page, size,
                 sortOrder.equalsIgnoreCase("asc") ? Sort.by(sortField).ascending() : Sort.by(sortField).descending());
         return ResponseEntity.ok(jobService.getAllJobs(new JobFilters(title, state, locationType != null ? JobLocationType.valueOf(locationType) : null, employmentType != null ? EmploymentType.valueOf(employmentType) : null), pageable));
+    }
+
+    @GetMapping("/states")
+    public ResponseEntity<List<String>> getAllStatesAssociatedToJobs() {
+        return ResponseEntity.ok(jobService.getAllDistinctStatesAssociatedToJobs());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<JobVO> getTemplateById(@PathVariable Long id) {
+        return ResponseEntity.ok(jobService.getTemplateById(id));
     }
 }

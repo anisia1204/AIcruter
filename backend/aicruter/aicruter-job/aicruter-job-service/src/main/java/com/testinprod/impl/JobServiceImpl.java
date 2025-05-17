@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class JobServiceImpl implements JobService {
@@ -60,6 +61,19 @@ public class JobServiceImpl implements JobService {
     @Transactional(readOnly = true)
     public Job getById(Long id) {
         return jpaRepository.findById(id).orElseThrow(JobNotFoundException::new);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public JobVO getTemplateById(Long id) {
+        Job job = getById(id);
+        return jobVOMapper.getVOFromEntity(job);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<String> getAllDistinctStatesAssociatedToJobs() {
+        return jpaRepository.findAllDistinctStatesAssociatedToJobs();
     }
 
     private void persist(Job job) {
