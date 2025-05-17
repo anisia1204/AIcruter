@@ -21,6 +21,7 @@ const MultiStepForm = ({activeStep, steps}: MultiStepFormProps) => {
         activeStepIconBorderColor={colors.primary}
         completedProgressBarColor={colors.primary}
         activeStepNumColor={colors.primary}
+        disabledStepIconColor = {'#ccc'}
       >
         {steps.map((step, index) => (
           <ProgressStep key={index} />

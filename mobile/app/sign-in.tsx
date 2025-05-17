@@ -25,7 +25,7 @@ const SignInScreen = () => {
   const onSubmit = async (data: FormData) => {
     try {
       const response = await apiPost('/api/user-account/login', data);
-
+      console.log("response", response)
       signIn(response.token);
       await AsyncStorage.setItem('userId', String(response.id));
       

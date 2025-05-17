@@ -1,7 +1,7 @@
 import { EmploymentType, JobLocationType, JobStatus } from "@/domain/VOandEnums";
 import { formatEnum } from "@/lib/utils";
 import moment from 'moment';
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 
 type JobCardProps = {
     jobTitle: string;
@@ -12,10 +12,11 @@ type JobCardProps = {
     city: string;
     createdAt: string;
     status: JobStatus;
+    onPress?: () => void;
 };
 
 
-const JobCard = ({ jobTitle, companyName, employmentType, locationType, state, city, createdAt, status }: JobCardProps) => {
+const JobCard = ({ jobTitle, companyName, employmentType, locationType, state, city, createdAt, status, onPress }: JobCardProps) => {
 
     const initials = companyName.slice(0, 2).toUpperCase();
     const createdDate = moment(createdAt).format('MMM D, YYYY')
@@ -26,7 +27,7 @@ const JobCard = ({ jobTitle, companyName, employmentType, locationType, state, c
     }[status];
 
     return (
-    <View style={styles.card}>
+    <TouchableOpacity style={styles.card} onPress={onPress}>
       <View style={styles.logo}>
         <Text style={styles.logoText}>{initials}</Text>
       </View>
@@ -44,7 +45,7 @@ const JobCard = ({ jobTitle, companyName, employmentType, locationType, state, c
       <View style={[styles.statusPill, { backgroundColor: statusColor }]}>
         <Text style={styles.statusText}>{formatEnum(status)}</Text>
       </View>
-    </View>
+    </TouchableOpacity>
     );
 };
 

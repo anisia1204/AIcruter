@@ -10,6 +10,8 @@ import JobCard from '@/components/moleculas/JobCard';
 import SearchBar from '@/components/atoms/SearchBar';
 import FiltersBar from '@/components/moleculas/FiltersBar';
 import Pagination from '@/components/atoms/Pagination';
+import { useRouter } from 'expo-router';
+import JobDetailsModal from '@/components/moleculas/modals/JobDetailsModal';
 
 export type Filters = {
   title: string;
@@ -25,8 +27,9 @@ type Pagination = {
   sortOrder: string;
 };
 
-export default function HomeScreen() {
+const JobsScreen = () => {
 
+  const router = useRouter();
   const [jobs, setJobs] = useState<Job[] | null>(null);
   const [filters, setFilters] = useState<Filters>({
     title: '',
@@ -76,6 +79,22 @@ export default function HomeScreen() {
     fetchJobs();
   }, [filters, pagination]);
 
+  const [selectedJob, setSelectedJob] = useState<Job | null>(null);
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const handleCardPress = (job: Job) => {
+    setSelectedJob(job);
+    setModalVisible(true);
+  };
+
+  const handleCloseModal = () => {
+    setModalVisible(false);
+    setSelectedJob(null);
+  };
+
+  const handleApply = () => {
+    console.log('Apply to', selectedJob?.id);
+  };
 
   return (
     <MainView>
@@ -102,12 +121,20 @@ export default function HomeScreen() {
                 city={job.city}
                 createdAt={job.createdAt}
                 status={job.status}
+                onPress={() => handleCardPress(job)}
               />
             ))
+
           ) : (
             <Loader />
           )}
         </View>
+        <JobDetailsModal
+          job={selectedJob}
+          visible={modalVisible}
+          onClose={handleCloseModal}
+          onApply={handleApply}
+        />
         {jobs && jobs.length > 0 && (
           <Pagination
             currentPage={pagination.page}
@@ -128,3 +155,5 @@ const styles = StyleSheet.create({
     gap: 10
   },
 });
+
+export default JobsScreen;
