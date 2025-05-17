@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Alert } from 'react-native';
 import { useForm, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { StyledButton } from '@/components/atoms/StyledButton';
 import AuthView from '@/components/templates/AuthView';
 import { ThemedText } from '@/components/ThemedText';
-import { apiPost, BASE_URL } from '@/lib/api';
+import { BASE_URL } from '@/lib/api';
 import { router } from 'expo-router';
 import { Step1UserAccount } from '@/components/organisms/signUpForm/Step1UserAccount';
 import { Step2Address } from '@/components/organisms/signUpForm/Step2Address';
@@ -13,8 +13,7 @@ import { Step3Resume } from '@/components/organisms/signUpForm/Step3Resume';
 import { fullApplicantSchema } from '@/schemas/applicantSchema';
 import { useTheme } from '@react-navigation/native';
 import MultiStepForm from '@/components/atoms/MultiStepForm';
-import { Applicant, Resume, UserAccount } from '@/domain/classTypes';
-import { Address } from '@/domain/VOandEnums';
+import Toast from 'react-native-toast-message';
 
 const steps = [
   { title: 'Account', component: Step1UserAccount },
@@ -111,8 +110,21 @@ const onSubmit = async (data: any) => {
       body: formData,
     });
 
+    if (!response.ok)
+    {
+      Toast.show({
+        type: 'error',
+        text1: 'Registration failed',
+        visibilityTime: 5000,
+      });
+      throw new Error("Registration failed");
+    } 
 
-    if (!response.ok) throw new Error("Registration failed");
+    Toast.show({
+      type: 'success',
+      text1: 'Check your email!',
+      visibilityTime: 5000,
+    });
     router.replace("../sign-in"); 
   } catch (e) {
     console.warn('Submission error:', e);

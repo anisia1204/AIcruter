@@ -25,19 +25,19 @@ export enum JobApplicationStatus {
 };
 
 export enum JobLocationType {
-    ON_SITE = "ON_SITE",
-    HYBRID = "HYBRID",
-    REMOTE = "REMOTE",
+    ON_SITE = "On site",
+    HYBRID = "Hybrid",
+    REMOTE = "Remote",
 };
 
 export enum EmploymentType {
-    PART_TIME = "PART_TIME",
-    FULL_TIME = "FULL_TIME",
+    PART_TIME = "Part time",
+    FULL_TIME = "Full time",
 };
 
 export enum JobStatus {
-    CAN_STILL_APPLY = "CAN_STILL_APPLY",
-    CLOSED = "CLOSED",
+    OPEN = "Open",
+    CLOSED = "Closed",
 };
 
 export enum AIMatchingType {

@@ -21,7 +21,7 @@ public class JobFilterServiceImpl implements JobFilterService {
             }
 
             if (jobFilters.getState() != null && !jobFilters.getState().isEmpty()) {
-                predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("company").get("state")), "%" + jobFilters.getState().toLowerCase() + "%"));
+                predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("company").get("legalAddress").get("state")), "%" + jobFilters.getState().toLowerCase() + "%"));
             }
 
             if (jobFilters.getLocationType() != null) {
