@@ -57,7 +57,6 @@ export default function HomeScreen() {
 
     try {
       const data = await apiGet(`/api/job?${query.toString()}`);
-      console.log("data", data)
       setJobs(data.content);
       setTotalPages(data.totalPages);
     } catch (err) {
