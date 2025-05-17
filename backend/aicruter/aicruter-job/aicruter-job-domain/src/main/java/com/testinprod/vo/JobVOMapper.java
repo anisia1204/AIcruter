@@ -10,6 +10,7 @@ public class JobVOMapper {
                 job.getId(),
                 job.getCompany().getId(),
                 job.getCompany().getName(),
+                job.getCompany().getLegalAddress().getCity(),
                 job.getCompany().getLegalAddress().getState(),
                 job.getTitle(),
                 job.getDescription(),

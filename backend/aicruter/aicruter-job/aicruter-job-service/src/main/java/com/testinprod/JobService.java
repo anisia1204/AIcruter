@@ -13,5 +13,6 @@ public interface JobService {
     JobDTO save(JobDTO jobDTO);
     Page<JobVO> getAllJobs(JobFilters jobFilters, Pageable pageable);
     Job getById(Long id);
+    JobVO getTemplateById(Long id);
     List<String> getAllDistinctStatesAssociatedToJobs();
 }
