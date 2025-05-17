@@ -7,8 +7,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import com.testinprod.entity.Job;
 
+import java.util.List;
+
 public interface JobService {
     JobDTO save(JobDTO jobDTO);
     Page<JobVO> getAllJobs(JobFilters jobFilters, Pageable pageable);
     Job getById(Long id);
+    List<String> getAllDistinctStatesAssociatedToJobs();
 }

@@ -3,8 +3,10 @@ package com.testinprod.impl;
 import com.testinprod.CompanyService;
 import com.testinprod.JobFilterService;
 import com.testinprod.JobService;
+import com.testinprod.domain.Address;
 import com.testinprod.dto.JobDTO;
 import com.testinprod.dto.JobDTOMapper;
+import com.testinprod.entity.Company;
 import com.testinprod.entity.Job;
 import com.testinprod.entity.JobStatus;
 import com.testinprod.exception.JobNotFoundException;
@@ -19,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class JobServiceImpl implements JobService {
@@ -60,6 +63,12 @@ public class JobServiceImpl implements JobService {
     @Transactional(readOnly = true)
     public Job getById(Long id) {
         return jpaRepository.findById(id).orElseThrow(JobNotFoundException::new);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<String> getAllDistinctStatesAssociatedToJobs() {
+        return jpaRepository.findAllDistinctStatesAssociatedToJobs();
     }
 
     private void persist(Job job) {
