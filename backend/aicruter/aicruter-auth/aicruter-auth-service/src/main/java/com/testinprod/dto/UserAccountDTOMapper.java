@@ -23,6 +23,7 @@ public class UserAccountDTOMapper {
     }
     public UserAccountDTO getDTOFromEntity(UserAccount entity) {
         UserAccountDTO userAccountDTO = new UserAccountDTO();
+        userAccountDTO.setId(entity.getId());
         userAccountDTO.setFirstName(entity.getFirstName());
         userAccountDTO.setLastName(entity.getLastName());
         userAccountDTO.setEmail(entity.getEmail());

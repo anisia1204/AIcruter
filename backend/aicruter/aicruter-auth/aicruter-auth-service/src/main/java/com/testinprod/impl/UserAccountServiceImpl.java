@@ -111,7 +111,7 @@ public class UserAccountServiceImpl implements UserAccountService {
     @Override
     @Transactional(readOnly = true)
     public UserAccount getById(Long id) {
-        return null;
+        return jpaRepository.findById(id).orElseThrow();
     }
 
     private void enableUser(UserAccount user) {
