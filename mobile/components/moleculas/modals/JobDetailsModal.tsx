@@ -3,16 +3,28 @@ import { formatEnum } from '@/lib/utils';
 import React from 'react';
 import { Modal, View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { JobStatus } from '@/domain/VOandEnums';
 
 type Props = {
   job: Job | null;
   visible: boolean;
   onClose: () => void;
   onApply: () => void;
+  isJobAppliedTo: boolean;
 };
 
-const JobDetailsModal = ({ job, visible, onClose, onApply }: Props) => {
+const JobDetailsModal = ({ job, visible, onClose, onApply, isJobAppliedTo }: Props) => {
+
   if (!job) return null;
+
+  console.log("isJobAppliedTo", isJobAppliedTo)
+  const buttonText = (jobStatus: JobStatus) => {
+    return isJobAppliedTo
+      ? 'Already applied'
+      : jobStatus === JobStatus.CLOSED
+        ? 'Closed application'
+        : 'Apply here';
+  };
 
   return (
     <Modal visible={visible} animationType="slide" transparent>
@@ -20,8 +32,8 @@ const JobDetailsModal = ({ job, visible, onClose, onApply }: Props) => {
         <View style={styles.modal}>
           <TouchableOpacity onPress={onClose} style={styles.closeButton}>
             <View style={styles.backField}>
-                <Ionicons name="arrow-back" size={16} color="black" />
-                <Text style={styles.closeText}>Back</Text>
+              <Ionicons name="arrow-back" size={16} color="black" />
+              <Text style={styles.closeText}>Back</Text>
             </View>
           </TouchableOpacity>
           <ScrollView contentContainerStyle={styles.content}>
@@ -35,10 +47,21 @@ const JobDetailsModal = ({ job, visible, onClose, onApply }: Props) => {
             </View>
 
             <Text style={styles.description}>{job.description}</Text>
-
-            <TouchableOpacity onPress={onApply} style={styles.applyButton}>
-              <Text style={styles.applyText}>Apply here</Text>
+            <TouchableOpacity
+              onPress={onApply}
+              style={[
+                styles.applyButton,
+                job.status === JobStatus.CLOSED && styles.disabledButton,
+                isJobAppliedTo && styles.alreadyApplied,
+              ]}
+              disabled={job.status === JobStatus.CLOSED || isJobAppliedTo}
+            >
+              <Text style={styles.applyText}>
+                {buttonText(job.status)}
+              </Text>
             </TouchableOpacity>
+
+
           </ScrollView>
         </View>
       </View>
@@ -113,6 +136,12 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: 'bold',
     fontSize: 16,
+  },
+  disabledButton: {
+    backgroundColor: '#bbb',
+  },
+  alreadyApplied: {
+    backgroundColor: '#3F51B5'
   },
   backField: {
     flexDirection: 'row',

@@ -36,8 +36,8 @@ export enum EmploymentType {
 };
 
 export enum JobStatus {
-    OPEN = "Open",
-    CLOSED = "Closed",
+    OPEN = "OPEN",
+    CLOSED = "CLOSED",
 };
 
 export enum AIMatchingType {

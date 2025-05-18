@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import MainView from '@/components/templates/MainView';
-import { apiGet } from '@/lib/api';
+import { apiGet, apiPost } from '@/lib/api';
 import { EmploymentType, JobLocationType } from '@/domain/VOandEnums';
-import { Job } from '@/domain/classTypes';
+import { Job, JobApplication } from '@/domain/classTypes';
 import Toast from 'react-native-toast-message';
 import { Loader } from '@/components/atoms/Loader';
 import JobCard from '@/components/moleculas/JobCard';
 import SearchBar from '@/components/atoms/SearchBar';
 import FiltersBar from '@/components/moleculas/FiltersBar';
 import Pagination from '@/components/atoms/Pagination';
-import { useRouter } from 'expo-router';
 import JobDetailsModal from '@/components/moleculas/modals/JobDetailsModal';
 
 export type Filters = {
@@ -29,7 +28,7 @@ type Pagination = {
 
 const JobsScreen = () => {
 
-  const router = useRouter();
+  const [jobApplications, setJobApplications] = useState<JobApplication[] | null>(null);
   const [jobs, setJobs] = useState<Job[] | null>(null);
   const [filters, setFilters] = useState<Filters>({
     title: '',
@@ -71,8 +70,24 @@ const JobsScreen = () => {
     }
   };
 
+
+  const getJobApplications = async () => {
+    try {
+      const jobApps = await apiGet('/api/job-application');
+      setJobApplications(jobApps.content);
+    } catch (err) {
+      console.error('Job app error', err);
+      Toast.show({
+        type: 'error',
+        text1: 'Failed to get job applications',
+      });
+    }
+  };
+
+
   useEffect(() => {
     fetchJobs();
+    getJobApplications();
   }, []);
 
   useEffect(() => {
@@ -92,8 +107,28 @@ const JobsScreen = () => {
     setSelectedJob(null);
   };
 
-  const handleApply = () => {
-    console.log('Apply to', selectedJob?.id);
+  const handleApply = async () => {
+    if (!selectedJob) return;
+
+    try {
+      const payload = {
+        jobId: selectedJob.id,
+      };
+      await apiPost('/api/job-application', payload);
+
+      Toast.show({
+        type: 'success',
+        text1: 'Application submitted!',
+      });
+
+      handleCloseModal();
+    } catch (err) {
+      console.error('Apply error', err);
+      Toast.show({
+        type: 'error',
+        text1: 'Failed to apply',
+      });
+    }
   };
 
   return (
@@ -134,6 +169,7 @@ const JobsScreen = () => {
           visible={modalVisible}
           onClose={handleCloseModal}
           onApply={handleApply}
+          isJobAppliedTo={jobApplications?.some(app => app.jobId === selectedJob?.id) ?? false}
         />
         {jobs && jobs.length > 0 && (
           <Pagination

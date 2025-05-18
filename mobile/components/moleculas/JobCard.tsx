@@ -22,8 +22,8 @@ const JobCard = ({ jobTitle, companyName, employmentType, locationType, state, c
     const createdDate = moment(createdAt).format('MMM D, YYYY')
 
     const statusColor = {
-        Open: '#4ade80',
-        Closed: '#f87171',
+        OPEN: '#4ade80',
+        CLOSED: '#f87171',
     }[status];
 
     return (
@@ -43,7 +43,7 @@ const JobCard = ({ jobTitle, companyName, employmentType, locationType, state, c
       </View>
 
       <View style={[styles.statusPill, { backgroundColor: statusColor }]}>
-        <Text style={styles.statusText}>{formatEnum(status)}</Text>
+        <Text style={styles.statusText}>{status}</Text>
       </View>
     </TouchableOpacity>
     );

@@ -56,11 +56,16 @@ export type Job = {
 };
 
 export type JobApplication = {
+    applicantId: number;
+    city: string;
+    companyId: number;
+    companyName: string;
+    country: string;
+    createdAt: string;
     id: number;
-    applicant: Applicant;
-    job: Job;
+    jobId: number;
+    state: string;
     status: JobApplicationStatus;
-    createdAt: Date;
 };
 
 export type JobNotification = {
