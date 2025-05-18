@@ -11,9 +11,7 @@ public class ResumeDTOMapper {
 
     public Resume getEntityFromFile(MultipartFile resume) throws IOException {
         Resume entity = new Resume();
-        entity.setName(resume.getOriginalFilename());
-        entity.setSize(resume.getSize());
-        entity.setContent(resume.getBytes());
+        updateEntityFields(entity, resume);
         return entity;
     }
 
@@ -24,5 +22,11 @@ public class ResumeDTOMapper {
         dto.setSize(resume.getSize());
         dto.setContent(resume.getContent());
         return dto;
+    }
+
+    public void updateEntityFields(Resume entity, MultipartFile resume) throws IOException {
+        entity.setName(resume.getOriginalFilename());
+        entity.setSize(resume.getSize());
+        entity.setContent(resume.getBytes());
     }
 }

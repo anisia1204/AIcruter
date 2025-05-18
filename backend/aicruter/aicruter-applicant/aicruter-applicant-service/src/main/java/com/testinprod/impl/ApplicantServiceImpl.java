@@ -4,8 +4,10 @@ import com.testinprod.ApplicantService;
 import com.testinprod.ConfirmationTokenService;
 import com.testinprod.ResumeService;
 import com.testinprod.UserAccountService;
+import com.testinprod.context.UserContextHolder;
 import com.testinprod.dto.ApplicantDTO;
 import com.testinprod.dto.ApplicantDTOMapper;
+import com.testinprod.dto.ResumeDTO;
 import com.testinprod.entity.Applicant;
 import com.testinprod.entity.Resume;
 import com.testinprod.entity.UserAccount;
@@ -53,6 +55,23 @@ public class ApplicantServiceImpl implements ApplicantService {
         Applicant applicant = save(applicantDTO, userAccount, resume);
         confirmationTokenService.generateTokenAndSendEmailConfirmationToUser(userAccount);
         return applicantDTOMapper.getDTOFromEntity(applicant);
+    }
+
+    @Override
+    @Transactional
+    public ApplicantDTO update(ApplicantDTO applicantDTO) {
+        Applicant applicant = getById(applicantDTO.getId());
+        userAccountService.update(applicantDTO.getUserAccountDTO());
+        applicantDTOMapper.updateEntityFields(applicant, applicantDTO);
+        applicant = persist(applicant);
+        return applicantDTOMapper.getDTOFromEntity(applicant);
+    }
+
+    @Override
+    @Transactional
+    public ResumeDTO updateResume(MultipartFile file) throws IOException {
+        Applicant applicant = getByUserAccountId(UserContextHolder.getUserContext().getUserId());
+        return resumeService.update(file, applicant.getResume().getId());
     }
 
     @Transactional

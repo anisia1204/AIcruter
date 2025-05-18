@@ -1,6 +1,7 @@
 package com.testinprod.impl;
 
 import com.testinprod.ResumeService;
+import com.testinprod.dto.ResumeDTO;
 import com.testinprod.dto.ResumeDTOMapper;
 import com.testinprod.entity.Resume;
 import com.testinprod.repository.ResumeJPARepository;
@@ -25,6 +26,21 @@ public class ResumeServiceImpl implements ResumeService {
     public Resume save(MultipartFile resume) throws IOException {
         Resume entity = dtoMapper.getEntityFromFile(resume);
         return persist(entity);
+    }
+
+    @Override
+    @Transactional
+    public ResumeDTO update(MultipartFile file, Long currentResumeId) throws IOException {
+        Resume resume = getById(currentResumeId);
+        dtoMapper.updateEntityFields(resume, file);
+        resume = persist(resume);
+        return dtoMapper.getDTOFromEntity(resume);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Resume getById(Long id) {
+        return jpaRepository.findById(id).orElseThrow();
     }
 
     private Resume persist(Resume resume) {

@@ -17,9 +17,7 @@ public class ApplicantDTOMapper {
 
     public Applicant getEntityFromDTO(ApplicantDTO applicantDTO) {
         Applicant applicant = new Applicant();
-        applicant.setAddress(addressDTOMapper.getEntityFromDTO(applicantDTO.getAddressDTO()));
-        applicant.setDescription(applicantDTO.getDescription());
-        applicant.setEducation(applicantDTO.getEducation());
+        updateEntityFields(applicant, applicantDTO);
         return applicant;
     }
 
@@ -32,5 +30,11 @@ public class ApplicantDTOMapper {
         dto.setUserAccountDTO(userAccountDTOMapper.getDTOFromEntity(applicant.getUserAccount()));
         dto.setResumeDTO(resumeDTOMapper.getDTOFromEntity(applicant.getResume()));
         return dto;
+    }
+
+    public void updateEntityFields(Applicant applicant, ApplicantDTO applicantDTO) {
+        applicant.setAddress(addressDTOMapper.getEntityFromDTO(applicantDTO.getAddressDTO()));
+        applicant.setDescription(applicantDTO.getDescription());
+        applicant.setEducation(applicantDTO.getEducation());
     }
 }
