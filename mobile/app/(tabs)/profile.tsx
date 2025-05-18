@@ -3,7 +3,7 @@ import { View, StyleSheet, Button, Alert } from 'react-native';
 import { useAuth } from '@/providers/AuthContext'; 
 import { router } from 'expo-router';
 
-export default function ProfileScreen() {
+const ProfileScreen = () => {
   const { signOut } = useAuth();
 
   const handleSignOut = async () => {
@@ -31,3 +31,5 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 });
+
+export default ProfileScreen;

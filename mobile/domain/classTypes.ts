@@ -38,7 +38,7 @@ export type Resume = {
     id: number;
     name: string;
     size: string;
-    content: string; // change these with the correct types when needed
+    content: string;
 };
 
 export type Job = {
@@ -66,6 +66,9 @@ export type JobApplication = {
     jobId: number;
     state: string;
     status: JobApplicationStatus;
+    title: string;
+    jobLocationType: JobLocationType;
+    employmentType: EmploymentType;
 };
 
 export type JobNotification = {

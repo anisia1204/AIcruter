@@ -4,7 +4,7 @@ import { useForm, Controller } from 'react-hook-form';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { useAuth } from '@/providers/AuthContext';
-import { apiPost, BASE_URL } from '@/lib/api';
+import { apiPost } from '@/lib/api';
 import FormField from '@/components/atoms/InputFormField';
 import { StyledButton } from '@/components/atoms/StyledButton';
 import { useTheme } from '@react-navigation/native';

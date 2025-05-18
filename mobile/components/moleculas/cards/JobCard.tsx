@@ -1,32 +1,41 @@
-import { EmploymentType, JobLocationType, JobStatus } from "@/domain/VOandEnums";
+import { EmploymentType, JobApplicationStatus, JobLocationType, JobStatus } from "@/domain/VOandEnums";
 import { formatEnum } from "@/lib/utils";
 import moment from 'moment';
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 
 type JobCardProps = {
-    jobTitle: string;
-    companyName: string;
-    employmentType: EmploymentType;
-    locationType: JobLocationType;
-    state: string;
-    city: string;
-    createdAt: string;
-    status: JobStatus;
-    onPress?: () => void;
+  jobTitle: string;
+  companyName: string;
+  employmentType: EmploymentType;
+  locationType: JobLocationType;
+  state: string;
+  city: string;
+  createdOrAppliedAt: string;
+  status: JobStatus | JobApplicationStatus;
+  onPress?: () => void;
+  isJobApplicationCard?: boolean;
+  country?: string;
 };
 
 
-const JobCard = ({ jobTitle, companyName, employmentType, locationType, state, city, createdAt, status, onPress }: JobCardProps) => {
+const JobCard = ({ jobTitle, companyName, employmentType, locationType, state, city, createdOrAppliedAt, status, onPress, isJobApplicationCard = false, country = '' }: JobCardProps) => {
 
-    const initials = companyName.slice(0, 2).toUpperCase();
-    const createdDate = moment(createdAt).format('MMM D, YYYY')
+  const initials = companyName.slice(0, 2).toUpperCase();
+  const createdDate = moment(createdOrAppliedAt).format('MMM D, YYYY')
 
-    const statusColor = {
-        OPEN: '#4ade80',
-        CLOSED: '#f87171',
-    }[status];
+  const dateText = isJobApplicationCard ? 'Applied on' : 'Posted on'
 
-    return (
+  const statusColor = {
+      OPEN: '#4ade80', 
+      CLOSED: '#f87171', 
+      NEW: '#60a5fa', 
+      IN_REVIEW: '#facc15',
+      INTERVIEW: '#a78bfa',  
+      ACCEPTED: '#34d399', 
+      REJECTED: '#9ca3af',
+  }[status];
+
+  return (
     <TouchableOpacity style={styles.card} onPress={onPress}>
       <View style={styles.logo}>
         <Text style={styles.logoText}>{initials}</Text>
@@ -39,14 +48,15 @@ const JobCard = ({ jobTitle, companyName, employmentType, locationType, state, c
           {formatEnum(employmentType)} • {formatEnum(locationType)}
         </Text>
         <Text style={styles.details}>{city}, {state}</Text>
-        <Text style={styles.date}>Posted on {createdDate}</Text>
+        {!!country && <Text style={styles.details}>{country}</Text>}
+        <Text style={styles.date}>{dateText} {createdDate}</Text>
       </View>
 
       <View style={[styles.statusPill, { backgroundColor: statusColor }]}>
         <Text style={styles.statusText}>{status}</Text>
       </View>
     </TouchableOpacity>
-    );
+  );
 };
 
 export default JobCard;
@@ -69,7 +79,7 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     borderRadius: 25,
-    backgroundColor: '#e0e7ff', 
+    backgroundColor: '#e0e7ff',
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: 16,
@@ -104,7 +114,7 @@ const styles = StyleSheet.create({
     marginTop: 6,
   },
   statusPill: {
-    borderRadius: 10,
+    borderRadius: 12,
     paddingVertical: 4,
     paddingHorizontal: 10,
   },

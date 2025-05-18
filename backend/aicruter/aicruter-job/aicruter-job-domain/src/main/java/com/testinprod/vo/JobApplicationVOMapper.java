@@ -9,6 +9,9 @@ public class JobApplicationVOMapper {
         return new JobApplicationVO(
                 jobApplication.getId(),
                 jobApplication.getJob().getId(),
+                jobApplication.getJob().getTitle(),
+                jobApplication.getJob().getEmploymentType(),
+                jobApplication.getJob().getLocationType(),
                 jobApplication.getApplicant().getId(),
                 jobApplication.getJob().getCompany().getId(),
                 jobApplication.getCreatedAt(),

@@ -6,11 +6,11 @@ import { EmploymentType, JobLocationType } from '@/domain/VOandEnums';
 import { Job, JobApplication } from '@/domain/classTypes';
 import Toast from 'react-native-toast-message';
 import { Loader } from '@/components/atoms/Loader';
-import JobCard from '@/components/moleculas/JobCard';
 import SearchBar from '@/components/atoms/SearchBar';
-import FiltersBar from '@/components/moleculas/FiltersBar';
 import Pagination from '@/components/atoms/Pagination';
 import JobDetailsModal from '@/components/moleculas/modals/JobDetailsModal';
+import FiltersBar from '@/components/moleculas/filters/FiltersBar';
+import JobCard from '@/components/moleculas/cards/JobCard';
 
 export type Filters = {
   title: string;
@@ -154,7 +154,7 @@ const JobsScreen = () => {
                 locationType={job.locationType}
                 state={job.state}
                 city={job.city}
-                createdAt={job.createdAt}
+                createdOrAppliedAt={job.createdAt}
                 status={job.status}
                 onPress={() => handleCardPress(job)}
               />
