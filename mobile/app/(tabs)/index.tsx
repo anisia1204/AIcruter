@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import MainView from '@/components/templates/MainView';
-import { apiGet } from '@/lib/api';
+import { apiGet, apiPost } from '@/lib/api';
 import { EmploymentType, JobLocationType } from '@/domain/VOandEnums';
-import { Job } from '@/domain/classTypes';
+import { Job, JobApplication } from '@/domain/classTypes';
 import Toast from 'react-native-toast-message';
 import { Loader } from '@/components/atoms/Loader';
-import JobCard from '@/components/moleculas/JobCard';
 import SearchBar from '@/components/atoms/SearchBar';
-import FiltersBar from '@/components/moleculas/FiltersBar';
 import Pagination from '@/components/atoms/Pagination';
+import JobDetailsModal from '@/components/moleculas/modals/JobDetailsModal';
+import FiltersBar from '@/components/moleculas/filters/FiltersBar';
+import JobCard from '@/components/moleculas/cards/JobCard';
 
 export type Filters = {
   title: string;
@@ -25,8 +26,9 @@ type Pagination = {
   sortOrder: string;
 };
 
-export default function HomeScreen() {
+const JobsScreen = () => {
 
+  const [jobApplications, setJobApplications] = useState<JobApplication[] | null>(null);
   const [jobs, setJobs] = useState<Job[] | null>(null);
   const [filters, setFilters] = useState<Filters>({
     title: '',
@@ -68,14 +70,66 @@ export default function HomeScreen() {
     }
   };
 
+
+  const getJobApplications = async () => {
+    try {
+      const jobApps = await apiGet('/api/job-application');
+      setJobApplications(jobApps.content);
+    } catch (err) {
+      console.error('Job app error', err);
+      Toast.show({
+        type: 'error',
+        text1: 'Failed to get job applications',
+      });
+    }
+  };
+
+
   useEffect(() => {
     fetchJobs();
+    getJobApplications();
   }, []);
 
   useEffect(() => {
     fetchJobs();
   }, [filters, pagination]);
 
+  const [selectedJob, setSelectedJob] = useState<Job | null>(null);
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const handleCardPress = (job: Job) => {
+    setSelectedJob(job);
+    setModalVisible(true);
+  };
+
+  const handleCloseModal = () => {
+    setModalVisible(false);
+    setSelectedJob(null);
+  };
+
+  const handleApply = async () => {
+    if (!selectedJob) return;
+
+    try {
+      const payload = {
+        jobId: selectedJob.id,
+      };
+      await apiPost('/api/job-application', payload);
+
+      Toast.show({
+        type: 'success',
+        text1: 'Application submitted!',
+      });
+
+      handleCloseModal();
+    } catch (err) {
+      console.error('Apply error', err);
+      Toast.show({
+        type: 'error',
+        text1: 'Failed to apply',
+      });
+    }
+  };
 
   return (
     <MainView>
@@ -100,14 +154,23 @@ export default function HomeScreen() {
                 locationType={job.locationType}
                 state={job.state}
                 city={job.city}
-                createdAt={job.createdAt}
+                createdOrAppliedAt={job.createdAt}
                 status={job.status}
+                onPress={() => handleCardPress(job)}
               />
             ))
+
           ) : (
             <Loader />
           )}
         </View>
+        <JobDetailsModal
+          job={selectedJob}
+          visible={modalVisible}
+          onClose={handleCloseModal}
+          onApply={handleApply}
+          isJobAppliedTo={jobApplications?.some(app => app.jobId === selectedJob?.id) ?? false}
+        />
         {jobs && jobs.length > 0 && (
           <Pagination
             currentPage={pagination.page}
@@ -128,3 +191,5 @@ const styles = StyleSheet.create({
     gap: 10
   },
 });
+
+export default JobsScreen;

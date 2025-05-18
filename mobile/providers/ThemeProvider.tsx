@@ -11,6 +11,7 @@ export const CustomTheme = {
     text: '#111827',             // gray-900
     border: '#E5E7EB',           // gray-200
     notification: '#EF4444',     // red-500
+    lighter: '#6C63FF'           // lighter indigo
   },
 };
   

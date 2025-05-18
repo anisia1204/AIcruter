@@ -21,7 +21,7 @@ export enum JobApplicationStatus {
     IN_REVIEW = "IN_REVIEW",
     INTERVIEW = "INTERVIEW",
     ACCEPTED = "ACCEPTED",
-    PASSED = "PASSED",
+    REJECTED = "REJECTED",
 };
 
 export enum JobLocationType {
@@ -36,12 +36,12 @@ export enum EmploymentType {
 };
 
 export enum JobStatus {
-    OPEN = "Open",
-    CLOSED = "Closed",
+    OPEN = "OPEN",
+    CLOSED = "CLOSED",
 };
 
 export enum AIMatchingType {
     POTENTIAL_CANDIDATES = "POTENTIAL_CANDIDATES",
-    BEST_CANDITATES = "BEST_CANDIDATES",
+    BEST_CANDIDATES = "BEST_CANDIDATES",
     RECOMMENDED_JOBS = "RECOMMENDED_JOBS",
 };
