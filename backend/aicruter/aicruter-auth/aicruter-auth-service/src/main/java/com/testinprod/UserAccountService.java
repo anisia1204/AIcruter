@@ -8,6 +8,8 @@ public interface UserAccountService {
     boolean isExisting(UserAccountDTO userDTO0);
     UserAccount getUserByEmail(String email);
     UserAccount save(UserAccountDTO userAccountDTO);
+    UserAccount update(UserAccountDTO userAccountDTO);
     void confirmUser(String token);
     LoggedInUserDTO login(UserAccountDTO userDTO);
+    UserAccount getById(Long id);
 }

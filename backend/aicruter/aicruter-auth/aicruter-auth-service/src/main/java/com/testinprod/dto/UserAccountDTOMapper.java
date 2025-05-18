@@ -15,11 +15,9 @@ public class UserAccountDTOMapper {
 
     public UserAccount getEntityFromDTO(UserAccountDTO userAccountDTO) {
         UserAccount userAccount = new UserAccount();
-        userAccount.setFirstName(userAccountDTO.getFirstName());
-        userAccount.setLastName(userAccountDTO.getLastName());
+        updateEntityFields(userAccount, userAccountDTO);
         userAccount.setEmail(userAccountDTO.getEmail());
         userAccount.setPassword(passwordEncoder.encode(userAccountDTO.getPassword()));
-        userAccount.setTelephone(userAccountDTO.getTelephone());
         userAccount.setRole(userAccountDTO.getRole());
         return userAccount;
     }
@@ -32,5 +30,11 @@ public class UserAccountDTOMapper {
         userAccountDTO.setTelephone(entity.getTelephone());
         userAccountDTO.setRole(entity.getRole());
         return userAccountDTO;
+    }
+
+    public void updateEntityFields(UserAccount userAccount, UserAccountDTO userAccountDTO) {
+        userAccount.setFirstName(userAccountDTO.getFirstName());
+        userAccount.setLastName(userAccountDTO.getLastName());
+        userAccount.setTelephone(userAccountDTO.getTelephone());
     }
 }

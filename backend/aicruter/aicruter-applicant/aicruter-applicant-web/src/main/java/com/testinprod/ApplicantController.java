@@ -53,6 +53,26 @@ public class ApplicantController {
         return ResponseEntity.ok(applicantService.register(applicantDTO, resume));
     }
 
+    @PutMapping
+    public ResponseEntity<?> update(@RequestBody ApplicantDTO applicantDTO, BindingResult bindingResult){
+        userAccountValidator.validate(applicantDTO.getUserAccountDTO(), bindingResult);
+        applicantValidator.validate(applicantDTO, bindingResult);
+        if (bindingResult.hasErrors()) {
+            Map<String, String> errors = new HashMap<>();
+            bindingResult.getAllErrors().forEach(error -> {
+                if (error instanceof FieldError) {
+                    String fieldName = ((FieldError) error).getField();
+                    String errorMessage = error.getDefaultMessage();
+                    errors.put(fieldName, errorMessage);
+                } else {
+                    errors.put("globalError", error.getDefaultMessage());
+                }
+            });
+            return ResponseEntity.badRequest().body(errors);
+        }
+        return ResponseEntity.ok(applicantService.update(applicantDTO));
+    }
+
     @GetMapping
     @ResponseBody
     public ResponseEntity<?> test() {

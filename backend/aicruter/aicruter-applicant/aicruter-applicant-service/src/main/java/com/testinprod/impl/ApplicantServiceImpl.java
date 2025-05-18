@@ -55,6 +55,16 @@ public class ApplicantServiceImpl implements ApplicantService {
         return applicantDTOMapper.getDTOFromEntity(applicant);
     }
 
+    @Override
+    @Transactional
+    public ApplicantDTO update(ApplicantDTO applicantDTO) {
+        Applicant applicant = getById(applicantDTO.getId());
+        userAccountService.update(applicantDTO.getUserAccountDTO());
+        applicantDTOMapper.updateEntityFields(applicant, applicantDTO);
+        applicant = persist(applicant);
+        return applicantDTOMapper.getDTOFromEntity(applicant);
+    }
+
     @Transactional
     public Applicant save(ApplicantDTO applicantDTO, UserAccount userAccount, Resume resume) {
         Applicant applicant = applicantDTOMapper.getEntityFromDTO(applicantDTO);

@@ -60,6 +60,15 @@ public class UserAccountServiceImpl implements UserAccountService {
 
     @Override
     @Transactional
+    public UserAccount update(UserAccountDTO userAccountDTO) {
+        UserAccount userAccount = getById(userAccountDTO.getId());
+        userAccountDTOMapper.updateEntityFields(userAccount, userAccountDTO);
+        userAccount = persist(userAccount);
+        return userAccount;
+    }
+
+    @Override
+    @Transactional
     public void confirmUser(String token) {
         ConfirmationToken confirmationToken = confirmationTokenService
                 .getByToken(token)
@@ -97,6 +106,12 @@ public class UserAccountServiceImpl implements UserAccountService {
         loggedInUserDTO.setTokenExpirationDate(jwtService.extractClaim(jwtToken, Claims::getExpiration));
 
         return loggedInUserDTO;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public UserAccount getById(Long id) {
+        return null;
     }
 
     private void enableUser(UserAccount user) {
