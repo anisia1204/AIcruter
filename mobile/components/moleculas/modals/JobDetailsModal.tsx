@@ -17,7 +17,6 @@ const JobDetailsModal = ({ job, visible, onClose, onApply, isJobAppliedTo }: Pro
 
   if (!job) return null;
 
-  console.log("isJobAppliedTo", isJobAppliedTo)
   const buttonText = (jobStatus: JobStatus) => {
     return isJobAppliedTo
       ? 'Already applied'

@@ -56,7 +56,7 @@ const LoginPage = () => {
         body: JSON.stringify(data),
       }).then(async (response) => {
         const res = await response.json();
-        console.log("res", res)
+  
         if (!response.ok) {
           throw new Error(res.message || "Login failed");
         }
@@ -74,7 +74,7 @@ const LoginPage = () => {
       {
         loading: "Logging in...",
         success: () => {
-          // window.location.href = "/dashboard";
+          window.location.href = "/dashboard";
           return "Login Successful";
         },
         error: (err) => {
