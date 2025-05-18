@@ -1,6 +1,7 @@
 package com.testinprod;
 
 import com.testinprod.dto.ApplicantDTO;
+import com.testinprod.dto.ResumeDTO;
 import com.testinprod.entity.Applicant;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -11,4 +12,5 @@ public interface ApplicantService {
     Applicant getById(Long id);
     Applicant getByUserAccountId(Long userId);
     ApplicantDTO update(ApplicantDTO applicantDTO);
+    ResumeDTO updateResume(MultipartFile file) throws IOException;
 }

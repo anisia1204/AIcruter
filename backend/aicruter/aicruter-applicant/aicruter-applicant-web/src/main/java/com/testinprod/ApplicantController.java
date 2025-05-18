@@ -73,6 +73,11 @@ public class ApplicantController {
         return ResponseEntity.ok(applicantService.update(applicantDTO));
     }
 
+    @PutMapping("/resume")
+    public ResponseEntity<?> updateResume(@RequestPart("resume") MultipartFile resume) throws IOException {
+        return ResponseEntity.ok(applicantService.updateResume(resume));
+    }
+
     @GetMapping
     @ResponseBody
     public ResponseEntity<?> test() {
