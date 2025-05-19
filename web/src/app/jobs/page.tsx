@@ -1,10 +1,21 @@
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
+import { isTokenExpired } from "@/lib/auth/checkToken";
 import { getUser } from "@/lib/auth/getUser";
-import { EMPLOYMENT_TYPE, JobVO, LOCATION_TYPE } from "@/types/job";
+import {
+  EMPLOYMENT_TYPE_COLORS,
+  JOB_STATUS_COLORS,
+  JOB_STATUS_LABELS,
+  LOCATION_TYPE_COLORS,
+} from "@/lib/utils";
+import {
+  EMPLOYMENT_TYPE_LABELS,
+  JobVO,
+  LOCATION_TYPE_LABELS,
+} from "@/types/job";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 
@@ -17,9 +28,6 @@ async function getJobs(token: string) {
     },
   });
 
-  console.log(token);
-  console.log(res);
-
   if (!res.ok) {
     throw new Error("Failed to fetch jobs");
   }
@@ -30,6 +38,8 @@ async function getJobs(token: string) {
 
 export default async function JobListingPage() {
   const { token } = await getUser();
+  if (isTokenExpired(token)) redirect("/login");
+
   const jobs: JobVO[] = await getJobs(token);
 
   return (
@@ -44,13 +54,31 @@ export default async function JobListingPage() {
             <CardContent>
               <p className="text-sm text-gray-600 mb-2">{job.companyName}</p>
               <p className="text-sm text-gray-500 mb-2">
-                {job.city}, {job.state} - {LOCATION_TYPE[job.locationType]}
+                {job.city}, {job.state} →{" "}
+                <span
+                  className={`text-xs font-bold px-3 py-1 rounded-md border-1 border-gray-200 ${
+                    LOCATION_TYPE_COLORS[job.locationType]
+                  }`}
+                >
+                  {LOCATION_TYPE_LABELS[job.locationType]}
+                </span>
               </p>
               <div className="flex gap-2 mb-4">
-                <Badge variant="outline">
-                  {EMPLOYMENT_TYPE[job.employmentType]}
-                </Badge>
-                <Badge variant="secondary">{job.status}</Badge>
+                <span
+                  className={`text-xs px-3 py-1 rounded-md font-bold border-1 border-gray-200 ${
+                    EMPLOYMENT_TYPE_COLORS[job.employmentType]
+                  }`}
+                >
+                  {EMPLOYMENT_TYPE_LABELS[job.employmentType]}
+                </span>
+
+                <span
+                  className={`text-xs font-bold px-3 py-1 rounded-md border-1 border-gray-200 ${
+                    JOB_STATUS_COLORS[job.status]
+                  } hover:opacity-90 transition`}
+                >
+                  {JOB_STATUS_LABELS[job.status]}
+                </span>
               </div>
               <p className="text-sm text-gray-700 line-clamp-3 mb-4">
                 {job.description}

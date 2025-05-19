@@ -6,6 +6,7 @@ import { Toaster } from "@/components/ui/sonner";
 import logoImage from "@/public/AIcruterLOGO.webp";
 import Image from "next/image";
 import { cookies } from "next/headers";
+import { UserCircle } from "lucide-react";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -55,8 +56,13 @@ export default async function RootLayout({
 
             <div className="flex items-center gap-4">
               {firstName && lastName ? (
-                <div>
-                  Welcome, {firstName} {lastName}
+                <div className="flex items-center flex-wrap">
+                  <UserCircle className="me-2" />
+                  Welcome,
+                  <span className="font-bold">
+                    {firstName} {lastName}
+                  </span>
+                  !
                 </div>
               ) : (
                 <div>
@@ -64,12 +70,14 @@ export default async function RootLayout({
                 </div>
               )}
 
-              <Link
-                href="/register"
-                className="bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-2 px-4 rounded-md"
-              >
-                Register
-              </Link>
+              {!firstName && (
+                <Link
+                  href="/register"
+                  className="bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-2 px-4 rounded-md"
+                >
+                  Register
+                </Link>
+              )}
             </div>
           </div>
         </nav>

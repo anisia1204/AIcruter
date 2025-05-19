@@ -52,11 +52,6 @@ export default function CreateJobForm({ companyId }: { companyId: string }) {
   const onSubmit = async (data: JobFormValues) => {
     setIsLoading(true);
 
-    console.log({
-      ...data,
-      companyId,
-    });
-
     try {
       const jobRes = await fetch("http://localhost:8080/api/job", {
         method: "POST",
