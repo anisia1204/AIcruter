@@ -40,7 +40,10 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     @Transactional
     public CompanyDTO update(CompanyDTO companyDTO) {
-        return null;
+        Company company = getById(companyDTO.getId());
+        companyDTOMapper.updateEntityFields(company, companyDTO);
+        company = persist(company);
+        return companyDTOMapper.getDTOFromEntity(company);
     }
 
     private Company persist(Company company) {
