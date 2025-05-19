@@ -3,7 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Link from "next/link";
 import { Toaster } from "@/components/ui/sonner";
-import logoImage from "@/public/AIcruterLOGO.webp";
+import logoImage from "@/public/aicruterlogotop.png";
 import Image from "next/image";
 import { cookies } from "next/headers";
 import { UserCircle } from "lucide-react";
@@ -38,18 +38,18 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <nav className="fixed top-0 left-0 w-full z-50 bg-white/10 backdrop-blur-xs py-4 px-6 shadow-sm">
+        <nav className="fixed top-0 left-0 w-full z-50 bg-white/10 backdrop-blur-xs py-2 px-6 shadow-sm">
           <div className="container mx-auto flex items-center justify-between">
             <Link
               href="/dashboard"
-              className="flex items-center text-xl font-bold text-gray-800"
+              className="flex items-center text-xl font-bold text-gray-800 gap-2 hover:text-gray-600"
             >
               <Image
                 src={logoImage}
                 alt="AIcruter Logo"
-                width={40}
+                width={50}
                 height={40}
-                className="mr-2"
+                className="mr-2 rounded-lg"
               />
               AIcruter
             </Link>

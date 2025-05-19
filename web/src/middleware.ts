@@ -14,11 +14,15 @@ export function middleware(request: NextRequest) {
     const token = user.token;
 
     if (!token || isTokenExpired(token)) {
-      return NextResponse.redirect(new URL("/login", request.url));
+      const response = NextResponse.redirect(new URL("/login", request.url));
+      response.cookies.set("user", "", { maxAge: 0 }); // Clear cookie
+      return response;
     }
   } catch (err) {
     console.error("Invalid user cookie", err);
-    return NextResponse.redirect(new URL("/login", request.url));
+    const response = NextResponse.redirect(new URL("/login", request.url));
+    response.cookies.set("user", "", { maxAge: 0 }); // Clear malformed cookie
+    return response;
   }
 
   return NextResponse.next();
@@ -26,6 +30,6 @@ export function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|login).*)",
+    "/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|login|register).*)",
   ],
 };
