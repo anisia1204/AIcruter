@@ -4,6 +4,7 @@ import com.testinprod.CompanyService;
 import com.testinprod.ConfirmationTokenService;
 import com.testinprod.EmployerService;
 import com.testinprod.UserAccountService;
+import com.testinprod.dto.CompanyDTO;
 import com.testinprod.dto.EmployerDTO;
 import com.testinprod.dto.EmployerDTOMapper;
 import com.testinprod.entity.Company;
@@ -43,6 +44,12 @@ public class EmployerServiceImpl implements EmployerService {
     @Transactional(readOnly = true)
     public Employer getByUserAccountId(Long id) {
         return jpaRepository.findByUserAccountId(id);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public CompanyDTO getCompanyTemplateByUserAccountId(Long userAccountId) {
+        return companyService.getTemplateById(getByUserAccountId(userAccountId).getCompany().getId());
     }
 
     @Transactional

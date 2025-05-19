@@ -33,7 +33,7 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     @Transactional(readOnly = true)
-    public CompanyDTO getTemplate(Long id) {
+    public CompanyDTO getTemplateById(Long id) {
         return companyDTOMapper.getDTOFromEntity(getById(id));
     }
 
