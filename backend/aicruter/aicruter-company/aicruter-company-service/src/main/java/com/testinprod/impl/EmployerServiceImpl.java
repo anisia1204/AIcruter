@@ -39,6 +39,12 @@ public class EmployerServiceImpl implements EmployerService {
         return employerDTOMapper.getDTOFromEntity(employer);
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public Employer getByUserAccountId(Long id) {
+        return jpaRepository.findByUserAccountId(id);
+    }
+
     @Transactional
     public Employer save(EmployerDTO employerDTO, UserAccount userAccount) {
         Employer employer = new Employer();

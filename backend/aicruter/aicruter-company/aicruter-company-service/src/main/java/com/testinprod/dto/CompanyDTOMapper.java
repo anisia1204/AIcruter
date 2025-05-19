@@ -14,8 +14,7 @@ public class CompanyDTOMapper {
 
     public Company getEntityFromDTO(CompanyDTO companyDTO) {
         Company company = new Company();
-        company.setName(companyDTO.getName());
-        company.setLegalAddress(addressDTOMapper.getEntityFromDTO(companyDTO.getLegalAddressDTO()));
+        updateEntityFields(company, companyDTO);
         return company;
     }
 
@@ -25,5 +24,10 @@ public class CompanyDTOMapper {
         companyDTO.setName(company.getName());
         companyDTO.setLegalAddressDTO(addressDTOMapper.getDTOFromEntity(company.getLegalAddress()));
         return companyDTO;
+    }
+
+    public void updateEntityFields(Company company, CompanyDTO companyDTO) {
+        company.setName(companyDTO.getName());
+        company.setLegalAddress(addressDTOMapper.getEntityFromDTO(companyDTO.getLegalAddressDTO()));
     }
 }

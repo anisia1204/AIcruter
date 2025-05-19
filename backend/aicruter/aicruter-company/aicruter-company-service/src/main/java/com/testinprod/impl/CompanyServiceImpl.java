@@ -31,6 +31,21 @@ public class CompanyServiceImpl implements CompanyService {
         return persist(company);
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public CompanyDTO getTemplate(Long id) {
+        return companyDTOMapper.getDTOFromEntity(getById(id));
+    }
+
+    @Override
+    @Transactional
+    public CompanyDTO update(CompanyDTO companyDTO) {
+        Company company = getById(companyDTO.getId());
+        companyDTOMapper.updateEntityFields(company, companyDTO);
+        company = persist(company);
+        return companyDTOMapper.getDTOFromEntity(company);
+    }
+
     private Company persist(Company company) {
         return companyJPARepository.save(company);
     }
