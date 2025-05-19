@@ -31,24 +31,18 @@ const jobSchema = z.object({
   title: z.string().min(3, "Title is too short"),
   description: z.string().min(10, "Description is too short"),
   locationType: z.enum(["REMOTE", "ON_SITE", "HYBRID"]),
-  employmentType: z.enum(["FULL_TIME", "PART_TIME", "CONTRACT"]),
+  employmentType: z.enum(["FULL_TIME", "PART_TIME"]),
 });
 
 type JobFormValues = z.infer<typeof jobSchema>;
 
-export default function CreateJobApplicationForm({
-  companyId,
-}: {
-  companyId: string;
-}) {
+export default function CreateJobForm({ companyId }: { companyId: string }) {
   const form = useForm<JobFormValues>({
     resolver: zodResolver(jobSchema),
     defaultValues: {
       companyId: companyId,
       title: "",
       description: "",
-      locationType: "REMOTE",
-      employmentType: "FULL_TIME",
     },
   });
 
@@ -110,7 +104,16 @@ export default function CreateJobApplicationForm({
               <FormItem>
                 <FormLabel>Description</FormLabel>
                 <FormControl>
-                  <Textarea placeholder="Job responsibilities..." {...field} />
+                  <Textarea
+                    placeholder="Job responsibilities..."
+                    className="min-h-24 h-24 max-h-64"
+                    onInput={(e) => {
+                      const target = e.target as HTMLTextAreaElement;
+                      target.style.height = "0px";
+                      target.style.height = target.scrollHeight + "px";
+                    }}
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -161,7 +164,6 @@ export default function CreateJobApplicationForm({
                   <SelectContent>
                     <SelectItem value="FULL_TIME">Full Time</SelectItem>
                     <SelectItem value="PART_TIME">Part Time</SelectItem>
-                    <SelectItem value="CONTRACT">Contract</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />
