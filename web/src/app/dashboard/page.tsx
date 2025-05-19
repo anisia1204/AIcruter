@@ -10,8 +10,11 @@ export default async function DashboardPage() {
 
   return (
     <section className="container mx-auto">
-      <Link href={"/create-job-application"}>
+      <Link href={"/create-job"}>
         <Button className="cursor-pointer">Create Job</Button>
+      </Link>
+      <Link href={"/jobs"}>
+        <Button className="cursor-pointer">See Created Jobs</Button>
       </Link>
     </section>
   );
