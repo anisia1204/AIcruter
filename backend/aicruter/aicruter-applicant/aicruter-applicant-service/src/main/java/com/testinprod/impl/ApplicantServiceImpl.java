@@ -74,6 +74,12 @@ public class ApplicantServiceImpl implements ApplicantService {
         return resumeService.update(file, applicant.getResume().getId());
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public ApplicantDTO getTemplate(Long id) {
+        return applicantDTOMapper.getDTOFromEntity(getById(id));
+    }
+
     @Transactional
     public Applicant save(ApplicantDTO applicantDTO, UserAccount userAccount, Resume resume) {
         Applicant applicant = applicantDTOMapper.getEntityFromDTO(applicantDTO);

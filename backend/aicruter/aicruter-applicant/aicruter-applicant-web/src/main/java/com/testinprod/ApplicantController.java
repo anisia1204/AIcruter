@@ -73,14 +73,14 @@ public class ApplicantController {
         return ResponseEntity.ok(applicantService.update(applicantDTO));
     }
 
+    @GetMapping("/{id}")
+    @ResponseBody
+    public ResponseEntity<?> getTemplate(@PathVariable Long id) {
+        return ResponseEntity.ok(applicantService.getTemplate(id));
+    }
+
     @PutMapping("/resume")
     public ResponseEntity<?> updateResume(@RequestPart("resume") MultipartFile resume) throws IOException {
         return ResponseEntity.ok(applicantService.updateResume(resume));
-    }
-
-    @GetMapping
-    @ResponseBody
-    public ResponseEntity<?> test() {
-        return ResponseEntity.ok("hello");
     }
 }
