@@ -76,8 +76,8 @@ public class ApplicantServiceImpl implements ApplicantService {
 
     @Override
     @Transactional(readOnly = true)
-    public ApplicantDTO getTemplate(Long id) {
-        return applicantDTOMapper.getDTOFromEntity(getById(id));
+    public ApplicantDTO getTemplateByUserAccountId(Long userAccountId) {
+        return applicantDTOMapper.getDTOFromEntity(getByUserAccountId(userAccountId));
     }
 
     @Transactional
