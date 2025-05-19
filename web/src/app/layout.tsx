@@ -56,13 +56,12 @@ export default async function RootLayout({
 
             <div className="flex items-center gap-4">
               {firstName && lastName ? (
-                <div className="flex items-center flex-wrap">
+                <div className="flex items-center flex-wrap gap-1">
                   <UserCircle className="me-2" />
                   Welcome,
                   <span className="font-bold">
-                    {firstName} {lastName}
+                    {firstName} {lastName}!
                   </span>
-                  !
                 </div>
               ) : (
                 <div>
