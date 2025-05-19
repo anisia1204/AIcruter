@@ -1,4 +1,4 @@
-import CreateJobApplicationForm from "@/components/CreateJobApplicationForm";
+import CreateJobForm from "@/components/CreateJobForm";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { getUser } from "@/lib/auth/getUser";
 import { redirect } from "next/navigation";
@@ -13,7 +13,7 @@ export default async function CreateJobApplicationPage() {
       <CardTitle className="px-6">Create Job Listing</CardTitle>
 
       <CardContent className="px-6">
-        <CreateJobApplicationForm companyId={companyId ?? ""} />
+        <CreateJobForm companyId={companyId ?? ""} />
       </CardContent>
     </Card>
   );
