@@ -5,6 +5,7 @@ import com.testinprod.JobFilterService;
 import com.testinprod.JobService;
 import com.testinprod.dto.JobDTO;
 import com.testinprod.dto.JobDTOMapper;
+import com.testinprod.dto.JobStatusChangeDTO;
 import com.testinprod.entity.Job;
 import com.testinprod.entity.JobStatus;
 import com.testinprod.exception.JobNotFoundException;
@@ -74,6 +75,15 @@ public class JobServiceImpl implements JobService {
     @Transactional(readOnly = true)
     public List<String> getAllDistinctStatesAssociatedToJobs() {
         return jpaRepository.findAllDistinctStatesAssociatedToJobs();
+    }
+
+    @Override
+    @Transactional
+    public JobStatus updateStatus(JobStatusChangeDTO jobStatusChangeDTO) {
+        Job job = getById(jobStatusChangeDTO.getId());
+        job.setStatus(jobStatusChangeDTO.getStatus());
+        persist(job);
+        return job.getStatus();
     }
 
     private void persist(Job job) {

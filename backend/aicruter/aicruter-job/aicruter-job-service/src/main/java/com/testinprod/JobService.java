@@ -1,6 +1,8 @@
 package com.testinprod;
 
 import com.testinprod.dto.JobDTO;
+import com.testinprod.dto.JobStatusChangeDTO;
+import com.testinprod.entity.JobStatus;
 import com.testinprod.vo.JobFilters;
 import com.testinprod.vo.JobVO;
 import org.springframework.data.domain.Page;
@@ -15,4 +17,5 @@ public interface JobService {
     Job getById(Long id);
     JobVO getTemplateById(Long id);
     List<String> getAllDistinctStatesAssociatedToJobs();
+    JobStatus updateStatus(JobStatusChangeDTO jobStatusChangeDTO);
 }

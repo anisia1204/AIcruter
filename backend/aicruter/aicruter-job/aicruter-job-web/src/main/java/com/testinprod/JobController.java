@@ -1,8 +1,10 @@
 package com.testinprod;
 
 import com.testinprod.dto.JobDTO;
+import com.testinprod.dto.JobStatusChangeDTO;
 import com.testinprod.entity.EmploymentType;
 import com.testinprod.entity.JobLocationType;
+import com.testinprod.entity.JobStatus;
 import com.testinprod.vo.JobFilters;
 import com.testinprod.vo.JobVO;
 import org.springframework.data.domain.Page;
@@ -52,5 +54,10 @@ public class JobController {
     @GetMapping("/{id}")
     public ResponseEntity<JobVO> getTemplateById(@PathVariable Long id) {
         return ResponseEntity.ok(jobService.getTemplateById(id));
+    }
+
+    @PatchMapping("/status")
+    public ResponseEntity<JobStatus> updateStatus(@RequestBody JobStatusChangeDTO jobStatusChangeDTO) {
+        return ResponseEntity.ok(jobService.updateStatus(jobStatusChangeDTO));
     }
 }
