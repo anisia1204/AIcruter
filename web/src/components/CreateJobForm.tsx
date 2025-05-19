@@ -166,8 +166,12 @@ export default function CreateJobForm({ companyId }: { companyId: string }) {
             )}
           />
 
-          <Button type="submit" disabled={isLoading} className="w-full">
-            {isLoading ? "Submitting..." : "Post Job Application"}
+          <Button
+            type="submit"
+            disabled={isLoading}
+            className="w-full cursor-pointer"
+          >
+            {isLoading ? "Submitting..." : "Create Job"}
           </Button>
         </form>
       </Form>
