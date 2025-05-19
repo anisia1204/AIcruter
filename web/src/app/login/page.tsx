@@ -56,7 +56,7 @@ const LoginPage = () => {
         body: JSON.stringify(data),
       }).then(async (response) => {
         const res = await response.json();
-  
+
         if (!response.ok) {
           throw new Error(res.message || "Login failed");
         }
@@ -128,7 +128,11 @@ const LoginPage = () => {
                   </FormItem>
                 )}
               />
-              <Button type="submit" className="w-full" disabled={isLoading}>
+              <Button
+                type="submit"
+                className="w-full cursor-pointer"
+                disabled={isLoading}
+              >
                 {isLoading ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />

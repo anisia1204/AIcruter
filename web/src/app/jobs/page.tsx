@@ -47,9 +47,16 @@ export default async function JobListingPage() {
       <h1 className="text-3xl font-bold mb-8">Job Listings</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {jobs.map((job) => (
-          <Card key={job.id} className="shadow-md border border-gray-200">
-            <CardTitle>
-              <h2 className="text-xl font-semibold px-4">{job.title}</h2>
+          <Card key={job.id} className="shadow-lg border border-gray-200">
+            <CardTitle className="flex items-center flex-wrap px-4 gap-4">
+              <h2 className="text-xl font-semibold">{job.title}</h2>
+              <span
+                className={`text-xs font-bold px-3 py-1 rounded-md border-1 border-gray-200 ${
+                  JOB_STATUS_COLORS[job.status]
+                } hover:opacity-90 transition`}
+              >
+                {JOB_STATUS_LABELS[job.status]}
+              </span>
             </CardTitle>
             <CardContent>
               <p className="text-sm text-gray-600 mb-2">{job.companyName}</p>
@@ -70,14 +77,6 @@ export default async function JobListingPage() {
                   }`}
                 >
                   {EMPLOYMENT_TYPE_LABELS[job.employmentType]}
-                </span>
-
-                <span
-                  className={`text-xs font-bold px-3 py-1 rounded-md border-1 border-gray-200 ${
-                    JOB_STATUS_COLORS[job.status]
-                  } hover:opacity-90 transition`}
-                >
-                  {JOB_STATUS_LABELS[job.status]}
                 </span>
               </div>
               <p className="text-sm text-gray-700 line-clamp-3 mb-4">
