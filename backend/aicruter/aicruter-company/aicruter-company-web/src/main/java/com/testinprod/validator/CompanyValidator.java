@@ -25,10 +25,10 @@ public class CompanyValidator  implements Validator {
     public void validate(Object target, Errors errors) {
         Employer currentEmployer = employerService.getByUserAccountId(UserContextHolder.getUserContext().getUserId());
         if(currentEmployer == null) {
-            errors.rejectValue("companyDTO", "The employer doesn't exist!");
+            errors.rejectValue("id", "The employer doesn't exist!");
         }
         if(currentEmployer != null && currentEmployer.getRole() == EmployeeRole.ADMIN) {
-            errors.rejectValue("companyDTO", "Employers with ADMIN role cannot modify company's details!");
+            errors.rejectValue("id", "Employers with ADMIN role cannot modify company's details!");
         }
     }
 }
