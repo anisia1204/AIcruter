@@ -13,5 +13,5 @@ public interface ApplicantService {
     Applicant getByUserAccountId(Long userId);
     ApplicantDTO update(ApplicantDTO applicantDTO);
     ResumeDTO updateResume(MultipartFile file) throws IOException;
-    ApplicantDTO getTemplate(Long id);
+    ApplicantDTO getTemplateByUserAccountId(Long userAccountId);
 }

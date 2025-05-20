@@ -14,17 +14,19 @@ import java.util.Map;
 @RequestMapping("/api/company")
 public class CompanyController {
     private final CompanyService companyService;
+    private final EmployerService employerService;
     private final CompanyValidator companyValidator;
 
-    public CompanyController(CompanyService companyService, CompanyValidator companyValidator) {
+    public CompanyController(CompanyService companyService, EmployerService employerService, CompanyValidator companyValidator) {
         this.companyService = companyService;
+        this.employerService = employerService;
         this.companyValidator = companyValidator;
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{userAccountId}")
     @ResponseBody
-    public ResponseEntity<?> getTemplate(@PathVariable Long id) {
-        return ResponseEntity.ok(companyService.getTemplate(id));
+    public ResponseEntity<?> getTemplate(@PathVariable Long userAccountId) {
+        return ResponseEntity.ok(employerService.getCompanyTemplateByUserAccountId(userAccountId));
     }
 
     @PutMapping

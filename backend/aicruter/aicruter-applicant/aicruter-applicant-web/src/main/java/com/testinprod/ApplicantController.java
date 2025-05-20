@@ -73,10 +73,10 @@ public class ApplicantController {
         return ResponseEntity.ok(applicantService.update(applicantDTO));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{userAccountId}")
     @ResponseBody
-    public ResponseEntity<?> getTemplate(@PathVariable Long id) {
-        return ResponseEntity.ok(applicantService.getTemplate(id));
+    public ResponseEntity<?> getTemplate(@PathVariable Long userAccountId) {
+        return ResponseEntity.ok(applicantService.getTemplateByUserAccountId(userAccountId));
     }
 
     @PutMapping("/resume")
