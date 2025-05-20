@@ -80,7 +80,9 @@ export default async function RootLayout({
             </div>
           </div>
         </nav>
-        <main className="mt-24">{children}</main>
+
+        <main className="mt-20">{children}</main>
+
         <Toaster />
       </body>
     </html>

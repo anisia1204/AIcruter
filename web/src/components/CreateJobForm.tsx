@@ -36,7 +36,13 @@ const jobSchema = z.object({
 
 type JobFormValues = z.infer<typeof jobSchema>;
 
-export default function CreateJobForm({ companyId }: { companyId: string }) {
+export default function CreateJobForm({
+  companyId,
+  token,
+}: {
+  companyId: string;
+  token: string;
+}) {
   const form = useForm<JobFormValues>({
     resolver: zodResolver(jobSchema),
     defaultValues: {
@@ -55,7 +61,10 @@ export default function CreateJobForm({ companyId }: { companyId: string }) {
     try {
       const jobRes = await fetch("http://localhost:8080/api/job", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
         body: JSON.stringify({
           ...data,
           companyId,
@@ -65,7 +74,7 @@ export default function CreateJobForm({ companyId }: { companyId: string }) {
       if (!jobRes.ok) throw new Error("Failed to create job");
 
       toast.success("Job created!");
-      router.push("/dashboard");
+      router.push("/jobs");
     } catch (err: any) {
       toast.error(err.message || "Something went wrong");
     } finally {
