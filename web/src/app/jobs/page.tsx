@@ -13,7 +13,7 @@ import {
   JobVO,
   LOCATION_TYPE_LABELS,
 } from "@/types/job";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, FileBox } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
@@ -44,7 +44,15 @@ export default async function JobListingPage() {
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-10">
-      <h1 className="text-3xl font-bold mb-8">Job Listings</h1>
+      <div className="flex items-center gap-4 mb-8">
+        <h1 className="text-3xl font-bold">Job Listings</h1>
+
+        <Link href="/create-job">
+          <Button className="w-full h-full text-lg cursor-pointer">
+            <FileBox /> Create New Job
+          </Button>
+        </Link>
+      </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {jobs.map((job) => (
           <Card key={job.id} className="shadow-lg border border-gray-200">
@@ -58,19 +66,19 @@ export default async function JobListingPage() {
                 {JOB_STATUS_LABELS[job.status]}
               </span>
             </CardTitle>
-            <CardContent>
-              <p className="text-sm text-gray-600 mb-2">{job.companyName}</p>
-              <p className="text-sm text-gray-500 mb-2">
-                {job.city}, {job.state} →{" "}
-                <span
-                  className={`text-xs font-bold px-3 py-1 rounded-md border-1 border-gray-200 ${
-                    LOCATION_TYPE_COLORS[job.locationType]
-                  }`}
-                >
-                  {LOCATION_TYPE_LABELS[job.locationType]}
-                </span>
-              </p>
-              <div className="flex gap-2 mb-4">
+            <CardContent className="flex flex-col justify-between h-full">
+              <div>
+                <p className="text-sm text-gray-600 mb-2">{job.companyName}</p>
+                <p className="text-sm text-gray-500 mb-2">
+                  {job.city}, {job.state} →{" "}
+                  <span
+                    className={`text-xs font-bold px-3 py-1 rounded-md border-1 border-gray-200 ${
+                      LOCATION_TYPE_COLORS[job.locationType]
+                    }`}
+                  >
+                    {LOCATION_TYPE_LABELS[job.locationType]}
+                  </span>
+                </p>
                 <span
                   className={`text-xs px-3 py-1 rounded-md font-bold border-1 border-gray-200 ${
                     EMPLOYMENT_TYPE_COLORS[job.employmentType]
@@ -79,7 +87,11 @@ export default async function JobListingPage() {
                   {EMPLOYMENT_TYPE_LABELS[job.employmentType]}
                 </span>
               </div>
-              <p className="text-sm text-gray-700 line-clamp-3 mb-4">
+
+              <p
+                className="text-sm text-gray-700 line-clamp-3 my-4"
+                title={job.description}
+              >
                 {job.description}
               </p>
               <Link href={`/jobs/${job.id}`}>
