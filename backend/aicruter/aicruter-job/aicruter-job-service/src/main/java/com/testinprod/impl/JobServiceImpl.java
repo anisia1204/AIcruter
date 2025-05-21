@@ -1,8 +1,10 @@
 package com.testinprod.impl;
 
 import com.testinprod.CompanyService;
+import com.testinprod.EmployerService;
 import com.testinprod.JobFilterService;
 import com.testinprod.JobService;
+import com.testinprod.context.UserContextHolder;
 import com.testinprod.dto.JobDTO;
 import com.testinprod.dto.JobDTOMapper;
 import com.testinprod.dto.JobStatusChangeDTO;
@@ -27,13 +29,15 @@ public class JobServiceImpl implements JobService {
     private final JobJPARepository jpaRepository;
     private final JobDTOMapper jobDTOMapper;
     private final CompanyService companyService;
+    private final EmployerService employerService;
     private final JobFilterService jobFilterService;
     private final JobVOMapper jobVOMapper;
 
-    public JobServiceImpl(JobJPARepository jpaRepository, JobDTOMapper jobDTOMapper, CompanyService companyService, JobFilterService jobFilterService, JobVOMapper jobVOMapper) {
+    public JobServiceImpl(JobJPARepository jpaRepository, JobDTOMapper jobDTOMapper, CompanyService companyService, EmployerService employerService, JobFilterService jobFilterService, JobVOMapper jobVOMapper) {
         this.jpaRepository = jpaRepository;
         this.jobDTOMapper = jobDTOMapper;
         this.companyService = companyService;
+        this.employerService = employerService;
         this.jobFilterService = jobFilterService;
         this.jobVOMapper = jobVOMapper;
     }
@@ -54,8 +58,23 @@ public class JobServiceImpl implements JobService {
     @Override
     @Transactional(readOnly = true)
     public Page<JobVO> getAllJobs(JobFilters jobFilters, Pageable pageable) {
-        Specification<Job> specification = jobFilterService.buildSpecification(jobFilters);
+        Specification<Job> specification = jobFilterService.buildDefaultSpecification(jobFilters);
         return jpaRepository.findAll(specification, pageable).map(jobVOMapper::getVOFromEntity);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<JobVO> getAllJobsByCompanyId(JobFilters jobFilters, Pageable pageable) {
+        Specification<Job> specification = jobFilterService.buildDefaultSpecification(jobFilters);
+
+        Specification<Job> companySpecification = (root, query, criteriaBuilder) ->
+                criteriaBuilder.equal(root.get("company").get("id"),
+                        employerService.getByUserAccountId(UserContextHolder.getUserContext().getUserId()).getCompany().getId());
+
+        specification = specification.and(companySpecification);
+
+        return jpaRepository.findAll(specification, pageable)
+                .map(jobVOMapper::getVOFromEntity);
     }
 
     @Override

@@ -14,6 +14,7 @@ import java.util.List;
 public interface JobService {
     JobDTO save(JobDTO jobDTO);
     Page<JobVO> getAllJobs(JobFilters jobFilters, Pageable pageable);
+    Page<JobVO> getAllJobsByCompanyId(JobFilters jobFilters, Pageable pageable);
     Job getById(Long id);
     JobVO getTemplateById(Long id);
     List<String> getAllDistinctStatesAssociatedToJobs();
