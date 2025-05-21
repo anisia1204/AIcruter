@@ -8,4 +8,5 @@ import org.springframework.data.domain.Pageable;
 public interface JobApplicationService {
     JobApplicationDTO save(JobApplicationDTO dto);
     Page<JobApplicationVO> getAllJobApplicationsOfCurrentUser(Pageable pageable, String status);
+    Page<JobApplicationVO> getJobApplicationsByJobId(Pageable pageable, String status, String jobId);
 }

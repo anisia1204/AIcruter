@@ -5,7 +5,13 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class JobApplicationVOMapper {
-    public JobApplicationVO getVOFromEntity(JobApplication jobApplication) {
+    private final ResumeVOMapper resumeVOMapper;
+
+    public JobApplicationVOMapper(ResumeVOMapper resumeVOMapper) {
+        this.resumeVOMapper = resumeVOMapper;
+    }
+
+    public JobApplicationVO getVOFromEntityByCurrentUser(JobApplication jobApplication) {
         return new JobApplicationVO(
                 jobApplication.getId(),
                 jobApplication.getJob().getId(),
@@ -20,6 +26,21 @@ public class JobApplicationVOMapper {
                 jobApplication.getJob().getCompany().getLegalAddress().getCountry(),
                 jobApplication.getJob().getCompany().getLegalAddress().getCity(),
                 jobApplication.getJob().getCompany().getLegalAddress().getState()
+        );
+    }
+    public JobApplicationVO getVOFromEntityByJobId(JobApplication jobApplication) {
+        return new JobApplicationVO(
+                jobApplication.getId(),
+                jobApplication.getApplicant().getId(),
+                jobApplication.getApplicant().getDescription(),
+                jobApplication.getApplicant().getEducation(),
+                jobApplication.getApplicant().getUserAccount().getFirstName(),
+                jobApplication.getApplicant().getUserAccount().getLastName(),
+                jobApplication.getApplicant().getUserAccount().getEmail(),
+                jobApplication.getApplicant().getUserAccount().getTelephone(),
+                resumeVOMapper.getVOFromEntity(jobApplication.getApplicant().getResume()),
+                jobApplication.getCreatedAt(),
+                jobApplication.getStatus()
         );
     }
 }
