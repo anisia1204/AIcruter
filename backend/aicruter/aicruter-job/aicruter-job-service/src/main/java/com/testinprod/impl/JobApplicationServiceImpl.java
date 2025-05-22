@@ -54,16 +54,31 @@ public class JobApplicationServiceImpl implements JobApplicationService {
     @Override
     @Transactional(readOnly = true)
     public Page<JobApplicationVO> getAllJobApplicationsOfCurrentUser(Pageable pageable, String status) {
-        Specification<JobApplication> specification = ((root, query, criteriaBuilder) -> {
-            Predicate predicate = criteriaBuilder.equal(root.get("applicant").get("userAccount").get("id"), UserContextHolder.getUserContext().getUserId());
+        Specification<JobApplication> specification = buildDefaultSpecification(status);
+        Specification<JobApplication> userSpecification = (root, query, criteriaBuilder) ->
+                criteriaBuilder.equal(root.get("applicant").get("userAccount").get("id"), UserContextHolder.getUserContext().getUserId());
+        specification = specification.and(userSpecification);
+        return jpaRepository.findAll(specification, pageable).map(voMapper::getVOFromEntityByCurrentUser);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<JobApplicationVO> getJobApplicationsByJobId(Pageable pageable, String status, String jobId) {
+        Specification<JobApplication> specification = buildDefaultSpecification(status);
+        Specification<JobApplication> jobSpecification = (root, query, criteriaBuilder) ->
+                criteriaBuilder.equal(root.get("job").get("id"), jobId);
+        specification = specification.and(jobSpecification);
+        return jpaRepository.findAll(specification, pageable).map(voMapper::getVOFromEntityByJobId);
+    }
+
+    private static Specification<JobApplication> buildDefaultSpecification(String status) {
+        return (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
             if (status != null) {
                 predicates.add(criteriaBuilder.equal(root.get("status"), status));
             }
-            return criteriaBuilder.and(predicate, criteriaBuilder.and(predicates.toArray(new Predicate[0])));
-        });
-
-        return jpaRepository.findAll(specification, pageable).map(voMapper::getVOFromEntity);
+            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+        };
     }
 
     private void persist(JobApplication jobApplication) {

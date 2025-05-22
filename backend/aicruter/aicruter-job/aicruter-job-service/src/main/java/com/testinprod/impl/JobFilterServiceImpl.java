@@ -12,7 +12,7 @@ import java.util.List;
 @Service
 public class JobFilterServiceImpl implements JobFilterService {
     @Override
-    public Specification<Job> buildSpecification(JobFilters jobFilters) {
+    public Specification<Job> buildDefaultSpecification(JobFilters jobFilters) {
         return (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
 

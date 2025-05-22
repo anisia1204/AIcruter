@@ -5,5 +5,5 @@ import com.testinprod.vo.JobFilters;
 import org.springframework.data.jpa.domain.Specification;
 
 public interface JobFilterService {
-    Specification<Job> buildSpecification(JobFilters jobFilters);
+    Specification<Job> buildDefaultSpecification(JobFilters jobFilters);
 }
