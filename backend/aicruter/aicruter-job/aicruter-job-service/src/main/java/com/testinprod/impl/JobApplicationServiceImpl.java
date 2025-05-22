@@ -6,6 +6,7 @@ import com.testinprod.JobService;
 import com.testinprod.context.UserContextHolder;
 import com.testinprod.dto.JobApplicationDTO;
 import com.testinprod.dto.JobApplicationDTOMapper;
+import com.testinprod.dto.JobApplicationStatusChangeDTO;
 import com.testinprod.entity.JobApplication;
 import com.testinprod.entity.JobApplicationStatus;
 import com.testinprod.repository.JobApplicationJPARepository;
@@ -69,6 +70,22 @@ public class JobApplicationServiceImpl implements JobApplicationService {
                 criteriaBuilder.equal(root.get("job").get("id"), jobId);
         specification = specification.and(jobSpecification);
         return jpaRepository.findAll(specification, pageable).map(voMapper::getVOFromEntityByJobId);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public JobApplication getById(Long id) {
+        return jpaRepository.findById(id).orElseThrow();
+    }
+
+    @Override
+    @Transactional
+    public JobApplicationStatusChangeDTO updateStatus(JobApplicationStatusChangeDTO jobApplicationStatusChangeDTO) {
+        JobApplication jobApplication = getById(jobApplicationStatusChangeDTO.getId());
+        jobApplication.setStatus(jobApplicationStatusChangeDTO.getStatus());
+        persist(jobApplication);
+        //TODO: logic for notifying the applicant that its job application status changed
+        return jobApplicationStatusChangeDTO;
     }
 
     private static Specification<JobApplication> buildDefaultSpecification(String status) {
