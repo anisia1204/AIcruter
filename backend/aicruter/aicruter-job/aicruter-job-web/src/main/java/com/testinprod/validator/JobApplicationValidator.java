@@ -26,7 +26,7 @@ public class JobApplicationValidator implements Validator {
         JobApplication jobApplication = jobApplicationService.getById(jobApplicationStatusChangeDTO.getId());
         JobApplicationStatus currentStatus = jobApplication.getStatus();
         if(!JobApplicationStatus.getPossibleTransitionsForStatus(currentStatus).contains(jobApplicationStatusChangeDTO.getStatus())) {
-            errors.reject("status", "Job Application's status can't go from " + currentStatus + " to " + jobApplicationStatusChangeDTO.getStatus());
+            errors.rejectValue("status", "Job Application's status can't go from " + currentStatus + " to " + jobApplicationStatusChangeDTO.getStatus());
         }
     }
 }
