@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
+import { getCompanyJobs } from "@/lib/api/jobs";
 import { isTokenExpired } from "@/lib/auth/checkToken";
 import { getUser } from "@/lib/auth/getUser";
 import {
@@ -8,39 +9,22 @@ import {
   JOB_STATUS_LABELS,
   LOCATION_TYPE_COLORS,
 } from "@/lib/utils";
-import {
-  EMPLOYMENT_TYPE_LABELS,
-  JobVO,
-  LOCATION_TYPE_LABELS,
-} from "@/types/job";
+import { EMPLOYMENT_TYPE_LABELS, LOCATION_TYPE_LABELS } from "@/types/job";
 import { ArrowRight, FileBox } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 
-async function getJobs(token: string) {
-  const res = await fetch(`http://localhost:8080/api/job?page=0&size=12`, {
-    cache: "no-store",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
-  if (!res.ok) {
-    throw new Error("Failed to fetch jobs");
-  }
-
-  const data = await res.json();
-  return data.content;
-}
-
 export default async function JobListingPage() {
   const { token } = await getUser();
   if (isTokenExpired(token)) redirect("/login");
 
-  const jobs: JobVO[] = await getJobs(token);
+  const { data: jobs, error } = await getCompanyJobs(token);
+
+  if (error || !jobs) {
+    throw new Error(error || "Failed to fetch company jobs");
+  }
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-10">
