@@ -54,9 +54,4 @@ public class CompanyController {
     public ResponseEntity<List<CompanyVO>> getAllCompanies() {
         return ResponseEntity.ok(companyService.getAllForDropdown());
     }
-
-//    @GetMapping("/all")
-//    public ResponseEntity<CompanyVO> getAllCompanies() {
-//
-//    }
 }
