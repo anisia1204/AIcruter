@@ -1,4 +1,5 @@
-import { JobVO } from "@/types/job";
+import { JobVO, JobStatusChangeDTO } from "@/types/job";
+import { getUser } from "../auth/getUser";
 
 export async function getAllJobs(token: string, page = 0, size = 12) {
   try {
@@ -69,5 +70,33 @@ export async function getJobById(id: string, token: string) {
   } catch (error) {
     console.error("Error fetching job details:", error);
     return { data: null, error: "Failed to fetch job details" };
+  }
+}
+
+export async function updateJobStatus(statusChange: JobStatusChangeDTO) {
+  try {
+    const { token } = await getUser();
+    const res = await fetch(`http://localhost:8080/api/job/status`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(statusChange),
+    });
+
+    if (!res.ok) {
+      throw new Error("Failed to update job status");
+    }
+
+    const data = await res.json();
+    return { data, error: null };
+  } catch (error) {
+    console.error("Error updating job status:", error);
+    return {
+      data: null,
+      error:
+        error instanceof Error ? error.message : "Failed to update job status",
+    };
   }
 }
