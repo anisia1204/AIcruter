@@ -47,7 +47,7 @@ public class JobController {
     }
 
     @GetMapping("/company")
-    public ResponseEntity<Page<JobVO>> getAllJobsByCompanyId(
+    public ResponseEntity<Page<JobVO>> getAllJobsByCurrentCompany(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(required = false, defaultValue = "createdAt") String sortField,
@@ -60,7 +60,7 @@ public class JobController {
     ) {
         Pageable pageable = PageRequest.of(page, size,
                 sortOrder.equalsIgnoreCase("asc") ? Sort.by(sortField).ascending() : Sort.by(sortField).descending());
-        return ResponseEntity.ok(jobService.getAllJobsByCompanyId(new JobFilters(title, state, locationType != null ? JobLocationType.valueOf(locationType) : null, employmentType != null ? EmploymentType.valueOf(employmentType) : null), pageable));
+        return ResponseEntity.ok(jobService.getAllJobsByCurrentCompany(new JobFilters(title, state, locationType != null ? JobLocationType.valueOf(locationType) : null, employmentType != null ? EmploymentType.valueOf(employmentType) : null), pageable));
     }
 
     @GetMapping("/states")
