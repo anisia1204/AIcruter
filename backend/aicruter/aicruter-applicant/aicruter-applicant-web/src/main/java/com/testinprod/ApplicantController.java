@@ -79,6 +79,12 @@ public class ApplicantController {
         return ResponseEntity.ok(applicantService.getTemplateByUserAccountId(userAccountId));
     }
 
+    @GetMapping("/profile/{applicantId}")
+    @ResponseBody
+    public ResponseEntity<?> getProfileInformation(@PathVariable Long applicantId) {
+        return ResponseEntity.ok(applicantService.getProfileInformation(applicantId));
+    }
+
     @PutMapping("/resume")
     public ResponseEntity<?> updateResume(@RequestPart("resume") MultipartFile resume) throws IOException {
         return ResponseEntity.ok(applicantService.updateResume(resume));

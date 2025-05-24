@@ -13,6 +13,8 @@ import com.testinprod.entity.Resume;
 import com.testinprod.entity.UserAccount;
 import com.testinprod.exception.ApplicantNotFoundException;
 import com.testinprod.repository.ApplicantJPARepository;
+import com.testinprod.vo.ApplicantVO;
+import com.testinprod.vo.ApplicantVOMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,13 +28,15 @@ public class ApplicantServiceImpl implements ApplicantService {
     private final ConfirmationTokenService confirmationTokenService;
     private final ApplicantDTOMapper applicantDTOMapper;
     private final ResumeService resumeService;
+    private final ApplicantVOMapper applicantVOMapper;
 
-    public ApplicantServiceImpl(ApplicantJPARepository jpaRepository, UserAccountService userAccountService, ConfirmationTokenService confirmationTokenService, ApplicantDTOMapper applicantDTOMapper, ResumeService resumeService) {
+    public ApplicantServiceImpl(ApplicantJPARepository jpaRepository, UserAccountService userAccountService, ConfirmationTokenService confirmationTokenService, ApplicantDTOMapper applicantDTOMapper, ResumeService resumeService, ApplicantVOMapper applicantVOMapper) {
         this.jpaRepository = jpaRepository;
         this.userAccountService = userAccountService;
         this.confirmationTokenService = confirmationTokenService;
         this.applicantDTOMapper = applicantDTOMapper;
         this.resumeService = resumeService;
+        this.applicantVOMapper = applicantVOMapper;
     }
 
     @Override
@@ -78,6 +82,13 @@ public class ApplicantServiceImpl implements ApplicantService {
     @Transactional(readOnly = true)
     public ApplicantDTO getTemplateByUserAccountId(Long userAccountId) {
         return applicantDTOMapper.getDTOFromEntity(getByUserAccountId(userAccountId));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public ApplicantVO getProfileInformation(Long applicantId) {
+        Applicant applicant = getById(applicantId);
+        return applicantVOMapper.getVOFromEntity(applicant);
     }
 
     @Transactional
