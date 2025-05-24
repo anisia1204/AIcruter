@@ -64,7 +64,7 @@ public class JobServiceImpl implements JobService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<JobVO> getAllJobsByCompanyId(JobFilters jobFilters, Pageable pageable) {
+    public Page<JobVO> getAllJobsByCurrentCompany(JobFilters jobFilters, Pageable pageable) {
         Specification<Job> specification = jobFilterService.buildDefaultSpecification(jobFilters);
 
         Specification<Job> companySpecification = (root, query, criteriaBuilder) ->
