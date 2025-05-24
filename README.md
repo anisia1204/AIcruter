@@ -40,3 +40,29 @@ The AI-powered job recruitment platform connects job seekers with employers by u
 ### 2.4 Receive Job Status Notifications
 **Actors:** Job Seeker
 **Description:** Job seekers get notified about application updates.
+
+
+
+## Running the Application
+
+### Backend
+
+cd backend\aicruter
+mvn clean 
+mvn install
+mvn spring-boot:run -pl aicruter-web
+
+
+### AI Chatbot
+
+cd ai/ai-chatbot
+npm install
+npm run dev
+
+
+
+### Frontend
+
+cd web
+npm install
+npm run dev
