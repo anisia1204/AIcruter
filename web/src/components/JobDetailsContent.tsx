@@ -33,7 +33,9 @@ export function JobDetailsContent({
   applications,
   applicationsError,
 }: JobDetailsContentProps) {
-  const [currentJobStatus, setCurrentJobStatus] = useState<JOB_STATUS>(job.status);
+  const [currentJobStatus, setCurrentJobStatus] = useState<JOB_STATUS>(
+    job.status
+  );
 
   const handleJobStatusUpdate = (jobId: number, newStatus: JOB_STATUS) => {
     setCurrentJobStatus(newStatus);
@@ -41,7 +43,6 @@ export function JobDetailsContent({
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-10">
-      {/* Header */}
       <div className="mb-8">
         <Link href="/jobs">
           <Button variant="outline" className="mb-4">
@@ -91,7 +92,6 @@ export function JobDetailsContent({
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Job Details */}
         <div className="lg:col-span-2">
           <Card>
             <CardHeader>
@@ -107,7 +107,6 @@ export function JobDetailsContent({
           </Card>
         </div>
 
-        {/* Applications */}
         <div>
           <Card>
             <CardHeader>

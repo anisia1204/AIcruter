@@ -84,7 +84,7 @@ export function ApplicationCard({ application }: ApplicationCardProps) {
       )}
 
       {application.resumeVO && (
-        <div className="flex items-center justify-between pt-2 border-t">
+        <div className="flex items-center justify-between gap-2 pt-2 border-t">
           <span className="text-sm text-gray-600">
             Resume: {application.resumeVO.name}
           </span>

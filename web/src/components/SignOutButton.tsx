@@ -11,7 +11,7 @@ export function SignOutButton() {
 
   return (
     <Button
-      variant={"destructive"}
+      variant={"secondary"}
       onClick={handleSignOut}
       className="flex items-center gap-4"
     >
