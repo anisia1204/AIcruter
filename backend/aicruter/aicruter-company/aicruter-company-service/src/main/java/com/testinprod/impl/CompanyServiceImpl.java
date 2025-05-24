@@ -1,12 +1,18 @@
 package com.testinprod.impl;
 
+import com.testinprod.CompanyFilterService;
 import com.testinprod.CompanyService;
 import com.testinprod.dto.CompanyDTO;
 import com.testinprod.dto.CompanyDTOMapper;
 import com.testinprod.entity.Company;
 import com.testinprod.exception.CompanyNotFoundException;
 import com.testinprod.repository.CompanyJPARepository;
+import com.testinprod.service.AddressDTOMapper;
+import com.testinprod.vo.CompanyFilters;
 import com.testinprod.vo.CompanyVO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,9 +22,13 @@ import java.util.List;
 public class CompanyServiceImpl implements CompanyService {
     private final CompanyJPARepository companyJPARepository;
     private final CompanyDTOMapper companyDTOMapper;
-    public CompanyServiceImpl(CompanyJPARepository companyJPARepository, CompanyDTOMapper companyDTOMapper) {
+    private final CompanyFilterService companyFilterService;
+    private final AddressDTOMapper addressDTOMapper;
+    public CompanyServiceImpl(CompanyJPARepository companyJPARepository, CompanyDTOMapper companyDTOMapper, CompanyFilterService companyFilterService, AddressDTOMapper addressDTOMapper) {
         this.companyJPARepository = companyJPARepository;
         this.companyDTOMapper = companyDTOMapper;
+        this.companyFilterService = companyFilterService;
+        this.addressDTOMapper = addressDTOMapper;
     }
 
     @Override
@@ -56,6 +66,15 @@ public class CompanyServiceImpl implements CompanyService {
                 .stream()
                 .map(company -> new CompanyVO(company.getId(), company.getName()))
                 .toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<CompanyVO> getAll(CompanyFilters companyFilters, Pageable pageable) {
+        Specification<Company> specification = companyFilterService.buildSpecification(companyFilters);
+        return companyJPARepository.findAll(specification, pageable)
+                .map(company -> new CompanyVO(company.getId(), company.getName(),
+                        addressDTOMapper.getDTOFromEntity(company.getLegalAddress())));
     }
 
     private Company persist(Company company) {
