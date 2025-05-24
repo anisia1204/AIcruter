@@ -83,6 +83,42 @@ export async function getAllJobApplicationsOfCurrentUser(
   }
 }
 
+export async function getAllJobApplicationsForJob(
+  jobId: string,
+  token: string
+) {
+  try {
+    const res = await fetch(
+      `http://localhost:8080/api/job-application/${jobId}?page=0&size=100`,
+      {
+        cache: "no-store",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (!res.ok) {
+      throw new Error("Failed to fetch job applications");
+    }
+
+    const data = await res.json();
+    return {
+      data: data.content as JobApplicationVO[],
+      totalElements: data.totalElements,
+      error: null,
+    };
+  } catch (error) {
+    console.error("Error fetching job applications:", error);
+    return {
+      data: null,
+      totalElements: 0,
+      error: "Failed to fetch job applications",
+    };
+  }
+}
+
 export async function updateJobApplicationStatus(
   statusChange: JobApplicationStatusChangeDTO
 ) {
