@@ -2,12 +2,14 @@ package com.testinprod;
 
 import com.testinprod.dto.CompanyDTO;
 import com.testinprod.validator.CompanyValidator;
+import com.testinprod.vo.CompanyVO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -47,4 +49,14 @@ public class CompanyController {
         }
         return ResponseEntity.ok(companyService.update(companyDTO));
     }
+
+    @GetMapping("/dropdown")
+    public ResponseEntity<List<CompanyVO>> getAllCompanies() {
+        return ResponseEntity.ok(companyService.getAllForDropdown());
+    }
+
+//    @GetMapping("/all")
+//    public ResponseEntity<CompanyVO> getAllCompanies() {
+//
+//    }
 }

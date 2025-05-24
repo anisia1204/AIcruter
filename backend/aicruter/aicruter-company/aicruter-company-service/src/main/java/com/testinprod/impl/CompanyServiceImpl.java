@@ -6,8 +6,11 @@ import com.testinprod.dto.CompanyDTOMapper;
 import com.testinprod.entity.Company;
 import com.testinprod.exception.CompanyNotFoundException;
 import com.testinprod.repository.CompanyJPARepository;
+import com.testinprod.vo.CompanyVO;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class CompanyServiceImpl implements CompanyService {
@@ -44,6 +47,15 @@ public class CompanyServiceImpl implements CompanyService {
         companyDTOMapper.updateEntityFields(company, companyDTO);
         company = persist(company);
         return companyDTOMapper.getDTOFromEntity(company);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<CompanyVO> getAllForDropdown() {
+        return companyJPARepository.findAllByOrderByNameAsc()
+                .stream()
+                .map(company -> new CompanyVO(company.getId(), company.getName()))
+                .toList();
     }
 
     private Company persist(Company company) {
