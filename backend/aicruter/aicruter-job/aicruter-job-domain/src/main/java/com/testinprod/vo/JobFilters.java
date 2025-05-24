@@ -4,6 +4,7 @@ import com.testinprod.entity.EmploymentType;
 import com.testinprod.entity.JobLocationType;
 
 public class JobFilters {
+    private Long companyId;
     private String title;
     private String state;
     private JobLocationType locationType;
@@ -14,6 +15,15 @@ public class JobFilters {
         this.state = state;
         this.locationType = locationType;
         this.employmentType = employmentType;
+    }
+
+    public JobFilters(Long companyId, String title, String state, JobLocationType locationType, EmploymentType employmentType) {
+        this(title, state, locationType, employmentType);
+        this.companyId = companyId;
+    }
+
+    public Long getCompanyId() {
+        return companyId;
     }
 
     public String getTitle() {

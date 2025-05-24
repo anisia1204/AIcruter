@@ -63,6 +63,24 @@ public class JobController {
         return ResponseEntity.ok(jobService.getAllJobsByCurrentCompany(new JobFilters(title, state, locationType != null ? JobLocationType.valueOf(locationType) : null, employmentType != null ? EmploymentType.valueOf(employmentType) : null), pageable));
     }
 
+    @GetMapping("/company/{companyId}")
+    public ResponseEntity<Page<JobVO>> getAllJobsByCompanyId(
+            @PathVariable Long companyId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false, defaultValue = "createdAt") String sortField,
+            @RequestParam(required = false, defaultValue = "desc") String sortOrder,
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) String state,
+            @RequestParam(required = false) String locationType,
+            @RequestParam(required = false) String employmentType
+
+    ) {
+        Pageable pageable = PageRequest.of(page, size,
+                sortOrder.equalsIgnoreCase("asc") ? Sort.by(sortField).ascending() : Sort.by(sortField).descending());
+        return ResponseEntity.ok(jobService.getAllJobsByCompanyId(new JobFilters(companyId, title, state, locationType != null ? JobLocationType.valueOf(locationType) : null, employmentType != null ? EmploymentType.valueOf(employmentType) : null), pageable));
+    }
+
     @GetMapping("/states")
     public ResponseEntity<List<String>> getAllStatesAssociatedToJobs() {
         return ResponseEntity.ok(jobService.getAllDistinctStatesAssociatedToJobs());

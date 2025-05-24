@@ -79,6 +79,20 @@ public class JobServiceImpl implements JobService {
 
     @Override
     @Transactional(readOnly = true)
+    public Page<JobVO> getAllJobsByCompanyId(JobFilters jobFilters, Pageable pageable) {
+        Specification<Job> specification = jobFilterService.buildDefaultSpecification(jobFilters);
+
+        Specification<Job> companySpecification = (root, query, criteriaBuilder) ->
+                criteriaBuilder.equal(root.get("company").get("id"), jobFilters.getCompanyId());
+
+        specification = specification.and(companySpecification);
+
+        return jpaRepository.findAll(specification, pageable)
+                .map(jobVOMapper::getVOFromEntity);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public Job getById(Long id) {
         return jpaRepository.findById(id).orElseThrow(JobNotFoundException::new);
     }
