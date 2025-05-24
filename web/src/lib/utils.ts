@@ -18,10 +18,10 @@ export const EMPLOYMENT_TYPE_COLORS: Record<string, string> = {
 
 export const JOB_STATUS_LABELS: Record<string, string> = {
   OPEN: "Open",
-  REJECTED: "Rejected",
+  CLOSED: "Closed",
 };
 
 export const JOB_STATUS_COLORS: Record<string, string> = {
   OPEN: "bg-green-100 text-green-600",
-  REJECTED: "bg-red-100 text-red-800",
+  CLOSED: "bg-red-100 text-red-800",
 };

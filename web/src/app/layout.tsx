@@ -7,6 +7,12 @@ import logoImage from "@/public/aicruterlogotop.png";
 import Image from "next/image";
 import { cookies } from "next/headers";
 import { UserCircle } from "lucide-react";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { SignOutButton } from "@/components/SignOutButton";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -56,13 +62,24 @@ export default async function RootLayout({
 
             <div className="flex items-center gap-4">
               {firstName && lastName ? (
-                <div className="flex items-center flex-wrap gap-1">
-                  <UserCircle className="me-2" />
-                  Welcome,
-                  <span className="font-bold">
-                    {firstName} {lastName}!
-                  </span>
-                </div>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <button className="flex items-center gap-2 hover:underline focus:outline-none">
+                      <UserCircle className="text-gray-700" />
+                      <span className="cursor-pointer">
+                        Welcome,{" "}
+                        <span className="font-bold">
+                          {firstName} {lastName}
+                        </span>
+                      </span>
+                    </button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-44">
+                    <div className="flex flex-col gap-2">
+                      <SignOutButton />
+                    </div>
+                  </PopoverContent>
+                </Popover>
               ) : (
                 <div>
                   <Link href="/login">Login</Link>

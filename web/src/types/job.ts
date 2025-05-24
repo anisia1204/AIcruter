@@ -34,3 +34,18 @@ export const EMPLOYMENT_TYPE_LABELS: Record<EMPLOYMENT_TYPE, string> = {
   [EMPLOYMENT_TYPE.PART_TIME]: "Part Time",
   [EMPLOYMENT_TYPE.FULL_TIME]: "Full Time",
 };
+
+export enum JOB_STATUS {
+  "OPEN" = "OPEN",
+  "CLOSED" = "CLOSED",
+}
+
+export const JOB_STATUS_LABELS: Record<JOB_STATUS, string> = {
+  [JOB_STATUS.OPEN]: "Open",
+  [JOB_STATUS.CLOSED]: "Closed",
+};
+
+export interface JobStatusChangeDTO {
+  id: number;
+  status: JOB_STATUS;
+}

@@ -15,13 +15,13 @@ export function middleware(request: NextRequest) {
 
     if (!token || isTokenExpired(token)) {
       const response = NextResponse.redirect(new URL("/login", request.url));
-      response.cookies.set("user", "", { maxAge: 0 }); // Clear cookie
+      response.cookies.set("user", "", { maxAge: 0 });
       return response;
     }
   } catch (err) {
     console.error("Invalid user cookie", err);
     const response = NextResponse.redirect(new URL("/login", request.url));
-    response.cookies.set("user", "", { maxAge: 0 }); // Clear malformed cookie
+    response.cookies.set("user", "", { maxAge: 0 });
     return response;
   }
 
