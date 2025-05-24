@@ -16,4 +16,5 @@ public interface CompanyService {
     CompanyDTO update(CompanyDTO companyDTO);
     List<CompanyVO> getAllForDropdown();
     Page<CompanyVO> getAll(CompanyFilters companyFilters, Pageable pageable);
+    CompanyVO getProfileInformation(Long companyId);
 }

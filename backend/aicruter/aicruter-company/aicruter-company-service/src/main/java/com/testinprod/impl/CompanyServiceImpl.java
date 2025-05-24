@@ -77,6 +77,13 @@ public class CompanyServiceImpl implements CompanyService {
                         addressDTOMapper.getDTOFromEntity(company.getLegalAddress())));
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public CompanyVO getProfileInformation(Long companyId) {
+        Company company = getById(companyId);
+        return new CompanyVO(company.getId(), company.getName(), addressDTOMapper.getDTOFromEntity(company.getLegalAddress()));
+    }
+
     private Company persist(Company company) {
         return companyJPARepository.save(company);
     }

@@ -36,6 +36,12 @@ public class CompanyController {
         return ResponseEntity.ok(employerService.getCompanyTemplateByUserAccountId(userAccountId));
     }
 
+    @GetMapping("/profile/{companyId}")
+    @ResponseBody
+    public ResponseEntity<?> getProfileInformation(@PathVariable Long companyId) {
+        return ResponseEntity.ok(companyService.getProfileInformation(companyId));
+    }
+
     @PutMapping
     public ResponseEntity<?> update(@RequestBody CompanyDTO companyDTO, BindingResult bindingResult){
         companyValidator.validate(companyDTO, bindingResult);
