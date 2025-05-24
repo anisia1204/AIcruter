@@ -3,6 +3,7 @@ package com.testinprod;
 import com.testinprod.dto.ApplicantDTO;
 import com.testinprod.dto.ResumeDTO;
 import com.testinprod.entity.Applicant;
+import com.testinprod.vo.ApplicantVO;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -14,4 +15,5 @@ public interface ApplicantService {
     ApplicantDTO update(ApplicantDTO applicantDTO);
     ResumeDTO updateResume(MultipartFile file) throws IOException;
     ApplicantDTO getTemplateByUserAccountId(Long userAccountId);
+    ApplicantVO getProfileInformation(Long applicantId);
 }
