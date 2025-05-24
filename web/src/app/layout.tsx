@@ -13,6 +13,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { SignOutButton } from "@/components/SignOutButton";
+import ChatBot from "@/components/chat/ChatBot";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -101,6 +102,7 @@ export default async function RootLayout({
         <main className="mt-20">{children}</main>
 
         <Toaster />
+        <ChatBot />
       </body>
     </html>
   );
