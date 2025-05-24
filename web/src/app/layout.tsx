@@ -69,7 +69,7 @@ export default async function RootLayout({
                       <span className="cursor-pointer">
                         Welcome,{" "}
                         <span className="font-bold">
-                          {firstName} {lastName}
+                          {firstName} {lastName}!
                         </span>
                       </span>
                     </button>

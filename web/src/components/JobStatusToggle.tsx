@@ -2,8 +2,8 @@
 
 import { Button } from "@/components/ui/button";
 import { updateJobStatus } from "@/lib/api/jobs";
-import { JOB_STATUS, JOB_STATUS_LABELS, JobVO } from "@/types/job";
-import { Loader2 } from "lucide-react";
+import { JOB_STATUS, JobVO } from "@/types/job";
+import { Loader2, Lock, Unlock } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -15,10 +15,10 @@ interface JobStatusToggleProps {
 export function JobStatusToggle({ job, onStatusUpdate }: JobStatusToggleProps) {
   const [isUpdating, setIsUpdating] = useState(false);
 
-  const toggleStatus = async () => {
-    const newStatus =
-      job.status === JOB_STATUS.OPEN ? JOB_STATUS.CLOSED : JOB_STATUS.OPEN;
+  const newStatus =
+    job.status === JOB_STATUS.OPEN ? JOB_STATUS.CLOSED : JOB_STATUS.OPEN;
 
+  const toggleStatus = async () => {
     setIsUpdating(true);
     try {
       const { error } = await updateJobStatus({
@@ -35,7 +35,7 @@ export function JobStatusToggle({ job, onStatusUpdate }: JobStatusToggleProps) {
         onStatusUpdate?.(job.id, newStatus);
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
       toast.error("Failed to update job status", {
         description: "An unexpected error occurred",
       });
@@ -44,21 +44,29 @@ export function JobStatusToggle({ job, onStatusUpdate }: JobStatusToggleProps) {
     }
   };
 
-  const newStatus =
-    job.status === JOB_STATUS.OPEN ? JOB_STATUS.CLOSED : JOB_STATUS.OPEN;
+  const icon =
+    newStatus === JOB_STATUS.CLOSED ? (
+      <Lock className="w-4 h-4" />
+    ) : (
+      <Unlock className="w-4 h-4" color="green" />
+    );
+  const label = newStatus === JOB_STATUS.CLOSED ? "Close job" : "Open job";
 
   return (
     <Button
-      variant={job.status === JOB_STATUS.OPEN ? "destructive" : "default"}
+      variant="outline"
       size="sm"
       onClick={toggleStatus}
       disabled={isUpdating}
-      className="min-w-20"
+      className="flex items-center gap-2 text-gray-600 hover:text-black"
     >
       {isUpdating ? (
         <Loader2 className="w-4 h-4 animate-spin" />
       ) : (
-        `Mark as ${JOB_STATUS_LABELS[newStatus]}`
+        <>
+          {icon}
+          <span>{label}</span>
+        </>
       )}
     </Button>
   );
