@@ -5,15 +5,8 @@ import Link from "next/link";
 import { Toaster } from "@/components/ui/sonner";
 import logoImage from "@/public/aicruterlogotop.png";
 import Image from "next/image";
-import { cookies } from "next/headers";
-import { UserCircle } from "lucide-react";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { SignOutButton } from "@/components/SignOutButton";
 import ChatBot from "@/components/chat/ChatBot";
+import NavbarUserSection from "@/components/NavbarUserSection";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -27,29 +20,14 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const cookieStore = await cookies();
-  const userCookie = cookieStore.get("user");
-  let firstName = "";
-  let lastName = "";
-
-  if (userCookie?.value) {
-    try {
-      const user = JSON.parse(userCookie.value);
-      firstName = user.firstName;
-      lastName = user.lastName;
-    } catch (e) {
-      console.error("Invalid user cookie: ", e);
-    }
-  }
-
   return (
     <html lang="en">
       <body className={inter.className}>
-        <nav className="fixed top-0 left-0 w-full z-50 bg-white/10 backdrop-blur-xs py-2 px-6 shadow-sm">
+        <nav className="fixed top-0 left-0 w-full z-50 bg-white/20 backdrop-blur-md py-3 px-6 shadow-lg border-b border-white/20">
           <div className="container mx-auto flex items-center justify-between">
             <Link
               href="/dashboard"
-              className="flex items-center text-xl font-bold text-gray-800 gap-2 hover:text-gray-600"
+              className="flex items-center text-xl font-bold text-gray-800 gap-2 hover:text-gray-600 transition-colors"
             >
               <Image
                 src={logoImage}
@@ -61,41 +39,7 @@ export default async function RootLayout({
               AIcruter
             </Link>
 
-            <div className="flex items-center gap-4">
-              {firstName && lastName ? (
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <button className="flex items-center gap-2 hover:underline focus:outline-none">
-                      <UserCircle className="text-gray-700" />
-                      <span className="cursor-pointer">
-                        Welcome,{" "}
-                        <span className="font-bold">
-                          {firstName} {lastName}!
-                        </span>
-                      </span>
-                    </button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-44">
-                    <div className="flex flex-col gap-2">
-                      <SignOutButton />
-                    </div>
-                  </PopoverContent>
-                </Popover>
-              ) : (
-                <div>
-                  <Link href="/login">Login</Link>
-                </div>
-              )}
-
-              {!firstName && (
-                <Link
-                  href="/register"
-                  className="bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-2 px-4 rounded-md"
-                >
-                  Register
-                </Link>
-              )}
-            </div>
+            <NavbarUserSection />
           </div>
         </nav>
 
