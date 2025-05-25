@@ -17,7 +17,7 @@ export default async function CreateJobPage() {
   }
 
   return (
-    <Card className="max-w-md mx-auto mt-12 shadow-xl rounded-2xl">
+    <Card className="max-w-md mx-auto mt-32 shadow-xl rounded-2xl">
       <CardTitle className="px-6">Create Job Listing</CardTitle>
 
       <CardContent className="px-6">

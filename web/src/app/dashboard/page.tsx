@@ -118,7 +118,7 @@ async function getDashboardStats(token: string): Promise<DashboardStats> {
 }
 
 export default async function DashboardPage() {
-  const { isAuthenticated, token } = await getUser();
+  const { isAuthenticated, token, firstName, lastName } = await getUser();
 
   if (!isAuthenticated) redirect("/login");
 
@@ -131,8 +131,12 @@ export default async function DashboardPage() {
           Recruiter Dashboard
         </h1>
         <p className="text-gray-600 text-lg max-w-2xl">
-          Welcome to your company portal. Manage your job postings, review
-          applications, and track your recruitment progress all in one place.
+          Welcome back,{" "}
+          <span className="font-semibold">
+            {firstName} {lastName}
+          </span>
+          ! Manage your job postings, review applications, and track your
+          recruitment progress all in one place.
         </p>
       </div>
 
