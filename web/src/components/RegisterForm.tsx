@@ -31,11 +31,8 @@ import { Check, ChevronsUpDown } from "lucide-react";
 import { Card, CardContent } from "./ui/card";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-
-type Company = {
-  id: number;
-  name: string;
-};
+import { getCompaniesDropdown } from "@/lib/api/company";
+import { CompanyDropdownItem } from "@/types/company";
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -79,8 +76,15 @@ const otherSchema = z.object({
 
 type FormData = z.infer<typeof formSchema>;
 
-export default function RegistrationForm() {
-  const [companies, setCompanies] = useState<Company[]>([]);
+interface RegistrationFormProps {
+  initialCompanies?: CompanyDropdownItem[];
+}
+
+export default function RegistrationForm({
+  initialCompanies = [],
+}: RegistrationFormProps) {
+  const [companies, setCompanies] =
+    useState<CompanyDropdownItem[]>(initialCompanies);
   const [isNewCompany, setIsNewCompany] = useState(false);
   const [open, setOpen] = useState(false);
   const router = useRouter();
@@ -106,16 +110,27 @@ export default function RegistrationForm() {
   });
 
   useEffect(() => {
-    const loadCompanies = async () => {
-      const mockCompanies = [
-        { id: 1, name: "TechCorp" },
-        { id: 2, name: "SoftServe" },
-      ];
-      setCompanies(mockCompanies);
-    };
+    // Only fetch companies if not provided as props
+    if (initialCompanies.length === 0) {
+      const loadCompanies = async () => {
+        try {
+          const { data, error } = await getCompaniesDropdown();
+          if (error) {
+            console.error("Failed to load companies:", error);
+            // Fallback to empty array
+            setCompanies([]);
+          } else {
+            setCompanies(data || []);
+          }
+        } catch (err) {
+          console.error("Error loading companies:", err);
+          setCompanies([]);
+        }
+      };
 
-    loadCompanies();
-  }, []);
+      loadCompanies();
+    }
+  }, [initialCompanies]);
 
   const onSubmit = async (data: FormData) => {
     const payload = {
