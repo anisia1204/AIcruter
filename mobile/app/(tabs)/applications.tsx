@@ -9,6 +9,8 @@ import { Loader } from '@/components/atoms/Loader';
 import JobCard from '@/components/moleculas/cards/JobCard';
 import Pagination from '@/components/atoms/Pagination';
 import JobAppStatusFilter from '@/components/moleculas/filters/JobAppStatusFilter';
+import { useAuth } from '@/providers/AuthContext';
+import { useRouter } from 'expo-router';
 
 export type Filters = {
   title: string;
@@ -25,10 +27,12 @@ type Pagination = {
 };
 
 const ApplicationsScreen = () => {
-
+  const { isAuthenticated, loading: authLoading } = useAuth();
+  const router = useRouter();
   const [jobApplications, setJobApplications] = useState<JobApplication[] | null>(null);
   const [statusFilter, setStatusFilter] = useState<JobApplicationStatus | undefined>(undefined);
   const [totalPages, setTotalPages] = useState(0);
+  const [loading, setLoading] = useState(false);
 
   const [pagination, setPagination] = useState<Pagination>({
     page: 0,
@@ -38,14 +42,13 @@ const ApplicationsScreen = () => {
   });
 
   const fetchJobApplications = async () => {
+    setLoading(true);
     const query = new URLSearchParams();
     if (statusFilter) query.append('status', statusFilter);
-
     query.append('page', pagination.page.toString());
     query.append('size', pagination.size.toString());
     query.append('sortField', pagination.sortField);
     query.append('sortOrder', pagination.sortOrder);
-
     try {
       const data = await apiGet(`/api/job-application?${query.toString()}`);
       setJobApplications(data.content);
@@ -55,17 +58,38 @@ const ApplicationsScreen = () => {
         type: 'error',
         text1: 'Server error',
       });
+      setJobApplications(null);
       console.error('Failed to fetch job applications', err);
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchJobApplications();
-  }, []);
+    if (!authLoading && !isAuthenticated) {
+      router.replace('/sign-in');
+    }
+  }, [authLoading, isAuthenticated]);
 
   useEffect(() => {
-    fetchJobApplications();
-  }, [statusFilter, pagination]);
+    if (!authLoading && isAuthenticated) {
+      fetchJobApplications();
+    }
+  }, [authLoading, isAuthenticated]);
+
+  useEffect(() => {
+    if (!authLoading && isAuthenticated) {
+      fetchJobApplications();
+    }
+  }, [statusFilter, pagination, authLoading, isAuthenticated]);
+
+  if (authLoading || !isAuthenticated) {
+    return (
+      <View style={styles.centeredContent}>
+        <Loader />
+      </View>
+    );
+  }
 
   return (
     <MainView>
@@ -74,8 +98,10 @@ const ApplicationsScreen = () => {
           statusFilter={statusFilter}
           setStatusFilter={setStatusFilter}
         />
-        <View>
-          {jobApplications ? (
+        <View style={styles.centeredContent}>
+          {loading ? (
+            <Loader />
+          ) : jobApplications && jobApplications.length > 0 ? (
             jobApplications.map((jobApplication, index) => (
               <JobCard
                 key={jobApplication.id ?? `job-${index}`}
@@ -92,7 +118,7 @@ const ApplicationsScreen = () => {
               />
             ))
           ) : (
-            <Loader />
+            <Text style={styles.noItemsText}>No job applications available.</Text>
           )}
         </View>
         {jobApplications && jobApplications.length > 0 && (
@@ -104,7 +130,6 @@ const ApplicationsScreen = () => {
             }}
           />
         )}
-
       </View>
     </MainView>
   );
@@ -113,6 +138,18 @@ const ApplicationsScreen = () => {
 const styles = StyleSheet.create({
   container: {
     gap: 10
+  },
+  centeredContent: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    minHeight: 200,
+    flex: 1,
+  },
+  noItemsText: {
+    textAlign: 'center',
+    color: '#888',
+    fontSize: 18,
+    marginTop: 32,
   },
 });
 

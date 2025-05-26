@@ -2,9 +2,9 @@ import { Address, AIMatchingType, EmployeeRole, EmploymentType, JobApplicationSt
 
 export type Company = {
     id: number;
-    legalAddress: Address;
-    displayedName: string;
-    picture: string;
+    legalAddressDTO: Address;
+    name: string;
+    // picture: string;
 };
 
 export type UserAccount = {
