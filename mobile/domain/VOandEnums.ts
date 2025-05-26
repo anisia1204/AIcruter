@@ -45,3 +45,4 @@ export enum AIMatchingType {
     BEST_CANDIDATES = "BEST_CANDIDATES",
     RECOMMENDED_JOBS = "RECOMMENDED_JOBS",
 };
+
