@@ -26,7 +26,7 @@ const CompanyCard = ({ company }: CompanyCardProps) => {
                     {company.legalAddressDTO.addressLine}
                 </Text>
                 <Text style={styles.companyDetails}>
-                    {company.legalAddressDTO.city}, {company.legalAddressDTO.state}, {company.legalAddressDTO.country} {company.legalAddressDTO.zipCode}
+                    {company.legalAddressDTO.city}, {company.legalAddressDTO.state}, {company.legalAddressDTO.country} {company.legalAddressDTO.postalCode}
                 </Text>
             </View>
         </View>

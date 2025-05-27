@@ -8,6 +8,19 @@ type PaginationProps = {
 };
 
 const Pagination = ({ currentPage, totalPages, onPageChange }: PaginationProps) => {
+  const getPageNumbers = () => {
+    if (totalPages <= 4) {
+      return Array.from({ length: totalPages }, (_, i) => i);
+    }
+    if (currentPage < 2) {
+      return [0, 1, '...', totalPages - 1];
+    }
+    if (currentPage >= totalPages - 2) {
+      return [0, '...', totalPages - 3, totalPages - 2, totalPages - 1];
+    }
+    return [0, '...', currentPage, '...', totalPages - 1];
+  };
+
   return (
     <View style={styles.container}>
       <TouchableOpacity
@@ -19,20 +32,27 @@ const Pagination = ({ currentPage, totalPages, onPageChange }: PaginationProps) 
       </TouchableOpacity>
 
       <View style={styles.pageNumbers}>
-        {Array.from({ length: totalPages }, (_, index) => (
-          <TouchableOpacity
-            key={index}
-            onPress={() => onPageChange(index)}
-            style={[
-              styles.pageButton,
-              index === currentPage && styles.pageButtonActive,
-            ]}
-          >
-            <Text style={[styles.pageText, index === currentPage && styles.pageTextActive]}>
-              {index + 1}
-            </Text>
-          </TouchableOpacity>
-        ))}
+        {getPageNumbers().map((item, idx) => {
+          if (item === '...') {
+            return (
+              <Text key={`ellipsis-${idx}`} style={styles.ellipsis}>...</Text>
+            );
+          }
+          return (
+            <TouchableOpacity
+              key={item}
+              onPress={() => onPageChange(item as number)}
+              style={[
+                styles.pageButton,
+                item === currentPage && styles.pageButtonActive,
+              ]}
+            >
+              <Text style={[styles.pageText, item === currentPage && styles.pageTextActive]}>
+                {(item as number) + 1}
+              </Text>
+            </TouchableOpacity>
+          );
+        })}
       </View>
 
       <TouchableOpacity
@@ -89,6 +109,11 @@ const styles = StyleSheet.create({
   pageTextActive: {
     color: '#fff',
     fontWeight: '600',
+  },
+  ellipsis: {
+    fontSize: 16,
+    color: '#888',
+    marginHorizontal: 4,
   },
 });
 

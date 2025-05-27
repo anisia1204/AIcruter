@@ -111,6 +111,9 @@ const SignUpScreen = () => {
       const response = await fetch(`${BASE_URL}/api/applicant/register`, {
         method: "POST",
         body: formData,
+        headers: {
+          "ngrok-skip-browser-warning": "69420",
+        },
       });
 
       console.log(BASE_URL);

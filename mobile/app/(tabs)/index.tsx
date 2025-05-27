@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import MainView from '@/components/templates/MainView';
 import { apiGet, apiPost } from '@/lib/api';
 import { EmploymentType, JobLocationType } from '@/domain/VOandEnums';
@@ -11,8 +11,6 @@ import Pagination from '@/components/atoms/Pagination';
 import JobDetailsModal from '@/components/moleculas/modals/JobDetailsModal';
 import FiltersBar from '@/components/moleculas/filters/FiltersBar';
 import JobCard from '@/components/moleculas/cards/JobCard';
-import { useAuth } from '@/providers/AuthContext';
-import { useRouter } from 'expo-router';
 
 export type Filters = {
   title: string;
@@ -29,8 +27,7 @@ type Pagination = {
 };
 
 const JobsScreen = () => {
-  const { isAuthenticated, loading } = useAuth();
-  const router = useRouter();
+
   const [jobApplications, setJobApplications] = useState<JobApplication[] | null>(null);
   const [jobs, setJobs] = useState<Job[] | null>(null);
   const [filters, setFilters] = useState<Filters>({
@@ -48,10 +45,7 @@ const JobsScreen = () => {
     sortOrder: 'desc',
   });
 
-  const [loadingJobs, setLoadingJobs] = useState(false);
-
   const fetchJobs = async () => {
-    setLoadingJobs(true);
     const query = new URLSearchParams();
     if (filters.title) query.append('title', filters.title);
     if (filters.state) query.append('state', filters.state);
@@ -72,10 +66,7 @@ const JobsScreen = () => {
         type: 'error',
         text1: 'Server error',
       });
-      setJobs(null);
       console.error('Failed to fetch jobs', err);
-    } finally {
-      setLoadingJobs(false);
     }
   };
 
@@ -95,23 +86,13 @@ const JobsScreen = () => {
 
 
   useEffect(() => {
-    if (!loading && !isAuthenticated) {
-      router.replace('/sign-in');
-    }
-  }, [loading, isAuthenticated]);
+    fetchJobs();
+    getJobApplications();
+  }, []);
 
   useEffect(() => {
-    if (!loading && isAuthenticated) {
-      fetchJobs();
-      getJobApplications();
-    }
-  }, [loading, isAuthenticated]);
-
-  useEffect(() => {
-    if (!loading && isAuthenticated) {
-      fetchJobs();
-    }
-  }, [filters, pagination, loading, isAuthenticated]);
+    fetchJobs();
+  }, [filters, pagination]);
 
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
@@ -150,14 +131,6 @@ const JobsScreen = () => {
     }
   };
 
-  if (loading || !isAuthenticated) {
-    return (
-      <View style={styles.centeredContent}>
-        <Loader />
-      </View>
-    );
-  }
-
   return (
     <MainView>
       <View style={styles.container}>
@@ -170,10 +143,8 @@ const JobsScreen = () => {
           filters={filters}
           setFilters={setFilters}
         />
-        <View style={styles.centeredContent}>
-          {loadingJobs ? (
-            <Loader />
-          ) : jobs && jobs.length > 0 ? (
+        <View>
+          {jobs ? (
             jobs.map((job, index) => (
               <JobCard
                 key={job.id ?? `job-${index}`}
@@ -188,8 +159,9 @@ const JobsScreen = () => {
                 onPress={() => handleCardPress(job)}
               />
             ))
+
           ) : (
-            <Text style={styles.noItemsText}>No jobs available.</Text>
+            <Loader />
           )}
         </View>
         <JobDetailsModal
@@ -216,19 +188,9 @@ const JobsScreen = () => {
 
 const styles = StyleSheet.create({
   container: {
-    gap: 10
-  },
-  centeredContent: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    minHeight: 200,
-    flex: 1,
-  },
-  noItemsText: {
-    textAlign: 'center',
-    color: '#888',
-    fontSize: 18,
-    marginTop: 32,
+    gap: 10,
+    flexDirection: 'column',
+    justifyContent: 'space-between'
   },
 });
 

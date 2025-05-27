@@ -45,6 +45,7 @@
     "expo-symbols": "~0.2.2",
     "expo-system-ui": "~4.0.9",
     "expo-web-browser": "~14.0.2",
+    "jwt-decode": "^4.0.0",
     "lucide-react-native": "^0.487.0",
     "moment": "^2.30.1",
     "nativewind": "^4.1.23",

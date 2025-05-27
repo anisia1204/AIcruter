@@ -16,19 +16,17 @@ const handleResponse = async (response: Response): Promise<any> => {
     ? response.json()
     : response.text();
 };
-
 const buildHeaders = async (
   isJson: boolean,
   isFormData: boolean
 ): Promise<HeadersInit> => {
-  
   const token = await getToken();
   const headers: HeadersInit = {};
 
   if (token) headers['Authorization'] = `Bearer ${token}`;
   if (isJson) headers['Content-Type'] = 'application/json';
   if (isFormData) delete headers['Content-Type'];
-
+  headers['ngrok-skip-browser-warning'] = '69420';
   return headers;
 };
 
