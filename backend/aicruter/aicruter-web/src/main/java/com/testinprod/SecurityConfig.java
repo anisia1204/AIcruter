@@ -1,6 +1,9 @@
 package com.testinprod;
 
 import com.testinprod.filter.JwtAuthFilter;
+
+import java.util.List;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -29,9 +32,21 @@ public class SecurityConfig {
         public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
                 http
                                 .csrf(AbstractHttpConfigurer::disable)
+                                .cors(cors -> cors
+                                                .configurationSource(request -> {
+                                                        var corsConfig = new org.springframework.web.cors.CorsConfiguration();
+                                                        corsConfig.setAllowedOrigins(List.of("http://localhost:3000"));
+                                                        corsConfig.setAllowedMethods(
+                                                                        List.of("GET", "POST", "PUT", "DELETE",
+                                                                                        "PATCH"));
+                                                        corsConfig.setAllowedHeaders(
+                                                                        List.of("Authorization", "Content-Type"));
+                                                        corsConfig.setAllowCredentials(true);
+                                                        return corsConfig;
+                                                }))
                                 .authorizeHttpRequests(auth -> auth
                                                 .requestMatchers("/api/employer/register", "/api/applicant/register",
-                                                                "/api/user-account/**", "/api/company/dropdown")
+                                                                "/api/user-account/**")
                                                 .permitAll()
                                                 .anyRequest().authenticated())
                                 .sessionManagement(sess -> sess
