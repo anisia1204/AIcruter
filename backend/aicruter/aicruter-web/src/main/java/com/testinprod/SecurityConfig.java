@@ -35,18 +35,18 @@ public class SecurityConfig {
                                 .cors(cors -> cors
                                                 .configurationSource(request -> {
                                                         var corsConfig = new org.springframework.web.cors.CorsConfiguration();
-                                                        corsConfig.setAllowedOrigins(List.of("http://localhost:3000"));
+                                                        corsConfig.setAllowedOrigins(List.of("http://localhost:3000", "https://aicruter-roan.vercel.app"));
                                                         corsConfig.setAllowedMethods(
                                                                         List.of("GET", "POST", "PUT", "DELETE",
                                                                                         "PATCH"));
                                                         corsConfig.setAllowedHeaders(
-                                                                        List.of("Authorization", "Content-Type"));
+                                                                        List.of("Authorization", "Content-Type", "ngrok-skip-browser-warning"));
                                                         corsConfig.setAllowCredentials(true);
                                                         return corsConfig;
                                                 }))
                                 .authorizeHttpRequests(auth -> auth
                                                 .requestMatchers("/api/employer/register", "/api/applicant/register",
-                                                                "/api/user-account/**")
+                                                                "/api/user-account/**", "/api/company/dropdown")
                                                 .permitAll()
                                                 .anyRequest().authenticated())
                                 .sessionManagement(sess -> sess
