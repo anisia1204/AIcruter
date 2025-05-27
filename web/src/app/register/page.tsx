@@ -3,7 +3,7 @@ import { getCompaniesDropdown } from "@/lib/api/company";
 
 export default async function RegisterPage() {
   // Fetch companies on the server side
-  const { data: companies, error } = await getCompaniesDropdown();
+  const { data: companies } = await getCompaniesDropdown();
 
   return (
     <main className="flex justify-center flex-col items-center">
