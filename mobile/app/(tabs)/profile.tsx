@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Text, TouchableOpacity, Alert, TextInput, ScrollView } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity, Alert, TextInput, ScrollView, Modal, Pressable } from 'react-native';
 import { useAuth } from '@/providers/AuthContext';
 import { router } from 'expo-router';
 import { apiGet, apiUpdate } from '@/lib/api';
@@ -11,14 +11,17 @@ import FormField from '@/components/atoms/InputFormField';
 import MainView from '@/components/templates/MainView';
 import { Loader } from '@/components/atoms/Loader';
 import { getToken } from '@/lib/authToken';
+import useAuthTokenGuard from '@/lib/useAuthTokenGuard';
 
 const ProfileScreen = () => {
+  useAuthTokenGuard();
   const { signOut } = useAuth();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [resumeUploading, setResumeUploading] = useState(false);
   const [profile, setProfile] = useState<any>(null);
   const [resumeName, setResumeName] = useState<string | null>(null);
+  const [signOutModalVisible, setSignOutModalVisible] = useState(false);
   const { control, handleSubmit, setValue, getValues, reset } = useForm({
     defaultValues: {
       firstName: '',
@@ -135,15 +138,17 @@ const ProfileScreen = () => {
   };
 
   const handleSignOut = async () => {
-    Alert.alert('Sign Out', 'Are you sure you want to sign out?', [
-      { text: 'Cancel', style: 'cancel' },
-      {
-        text: 'Yes', onPress: () => {
-          signOut();
-          router.replace('../sign-in');
-        }
-      },
-    ]);
+    setSignOutModalVisible(true);
+  };
+
+  const confirmSignOut = async () => {
+    setSignOutModalVisible(false);
+    signOut();
+    router.replace('../sign-in');
+  };
+
+  const cancelSignOut = () => {
+    setSignOutModalVisible(false);
   };
 
   if (loading) {
@@ -166,7 +171,7 @@ const ProfileScreen = () => {
           <View style={styles.sectionHeaderRow}>
             <Text style={styles.sectionHeader}>Profile Details</Text>
           </View>
-        <Controller
+          <Controller
             control={control}
             name="firstName"
             render={({ field: { onChange, value } }) => (
@@ -301,6 +306,27 @@ const ProfileScreen = () => {
         <TouchableOpacity style={styles.signOutBtn} onPress={handleSignOut}>
           <Text style={styles.signOutBtnText}>Sign Out</Text>
         </TouchableOpacity>
+        <Modal
+          visible={signOutModalVisible}
+          transparent
+          animationType="fade"
+          onRequestClose={cancelSignOut}
+        >
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalContent}>
+              <Text style={styles.modalTitle}>Sign Out</Text>
+              <Text style={styles.modalMessage}>Are you sure you want to sign out?</Text>
+              <View style={styles.modalActions}>
+                <Pressable style={[styles.modalBtn, styles.modalCancel]} onPress={cancelSignOut}>
+                  <Text style={styles.modalCancelText}>Cancel</Text>
+                </Pressable>
+                <Pressable style={[styles.modalBtn, styles.modalConfirm]} onPress={confirmSignOut}>
+                  <Text style={styles.modalConfirmText}>Sign Out</Text>
+                </Pressable>
+              </View>
+            </View>
+          </View>
+        </Modal>
       </ScrollView>
     </MainView>
   );
@@ -430,7 +456,68 @@ const styles = StyleSheet.create({
     gap: 2,
     alignItems: 'center',
     marginBottom: 6,
-  }
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.35)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContent: {
+    backgroundColor: '#fff',
+    borderRadius: 18,
+    padding: 28,
+    width: 320,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.18,
+    shadowRadius: 12,
+    elevation: 8,
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: '700',
+    color: '#3F51B5',
+    marginBottom: 10,
+  },
+  modalMessage: {
+    fontSize: 16,
+    color: '#444',
+    marginBottom: 24,
+    textAlign: 'center',
+  },
+  modalActions: {
+    flexDirection: 'row',
+    gap: 16,
+    justifyContent: 'center',
+    width: '100%',
+  },
+  modalBtn: {
+    paddingVertical: 10,
+    paddingHorizontal: 24,
+    borderRadius: 10,
+    minWidth: 100,
+    alignItems: 'center',
+  },
+  modalCancel: {
+    backgroundColor: '#f3f4f6',
+    borderWidth: 1,
+    borderColor: '#bbb',
+  },
+  modalCancelText: {
+    color: '#444',
+    fontWeight: '600',
+    fontSize: 16,
+  },
+  modalConfirm: {
+    backgroundColor: '#3F51B5',
+  },
+  modalConfirmText: {
+    color: '#fff',
+    fontWeight: '600',
+    fontSize: 16,
+  },
 });
 
 export default ProfileScreen;

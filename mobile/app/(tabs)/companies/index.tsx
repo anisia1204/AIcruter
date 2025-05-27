@@ -12,6 +12,7 @@ import Pagination from '@/components/atoms/Pagination';
 
 import DropDownPicker from 'react-native-dropdown-picker';
 import CompanyCard from '@/components/moleculas/cards/CompanyCard';
+import useAuthTokenGuard from '@/lib/useAuthTokenGuard';
 
 type Pagination = {
     page: number;
@@ -21,6 +22,7 @@ type Pagination = {
 };
 
 const CompaniesScreen = () => {
+    useAuthTokenGuard();
     const { isAuthenticated, loading } = useAuth();
     const router = useRouter();
     const [companies, setCompanies] = useState<Company[] | null>(null);
@@ -210,7 +212,7 @@ const styles = StyleSheet.create({
         borderColor: '#e0e0e0',
         borderRadius: 12,
         padding: 8,
-        
+
     },
 
     dropdownLabel: {

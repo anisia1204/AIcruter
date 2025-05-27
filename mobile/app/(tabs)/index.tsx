@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Text } from 'react-native';
 import MainView from '@/components/templates/MainView';
 import { apiGet, apiPost } from '@/lib/api';
 import { EmploymentType, JobLocationType } from '@/domain/VOandEnums';
@@ -11,6 +11,7 @@ import Pagination from '@/components/atoms/Pagination';
 import JobDetailsModal from '@/components/moleculas/modals/JobDetailsModal';
 import FiltersBar from '@/components/moleculas/filters/FiltersBar';
 import JobCard from '@/components/moleculas/cards/JobCard';
+import useAuthTokenGuard from '@/lib/useAuthTokenGuard';
 
 export type Filters = {
   title: string;
@@ -27,6 +28,7 @@ type Pagination = {
 };
 
 const JobsScreen = () => {
+  useAuthTokenGuard();
 
   const [jobApplications, setJobApplications] = useState<JobApplication[] | null>(null);
   const [jobs, setJobs] = useState<Job[] | null>(null);
@@ -144,7 +146,9 @@ const JobsScreen = () => {
           setFilters={setFilters}
         />
         <View>
-          {jobs ? (
+          {jobs === null ? (
+            <Loader />
+          ) : jobs.length > 0 ? (
             jobs.map((job, index) => (
               <JobCard
                 key={job.id ?? `job-${index}`}
@@ -159,9 +163,8 @@ const JobsScreen = () => {
                 onPress={() => handleCardPress(job)}
               />
             ))
-
           ) : (
-            <Loader />
+            <Text style={{ textAlign: 'center', color: '#888', fontSize: 18, marginTop: 32 }}>No jobs available.</Text>
           )}
         </View>
         <JobDetailsModal

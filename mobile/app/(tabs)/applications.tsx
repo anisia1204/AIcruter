@@ -11,6 +11,7 @@ import Pagination from '@/components/atoms/Pagination';
 import JobAppStatusFilter from '@/components/moleculas/filters/JobAppStatusFilter';
 import { useAuth } from '@/providers/AuthContext';
 import { useRouter } from 'expo-router';
+import useAuthTokenGuard from '@/lib/useAuthTokenGuard';
 
 export type Filters = {
   title: string;
@@ -27,6 +28,7 @@ type Pagination = {
 };
 
 const ApplicationsScreen = () => {
+  useAuthTokenGuard();
   const { isAuthenticated, loading: authLoading } = useAuth();
   const router = useRouter();
   const [jobApplications, setJobApplications] = useState<JobApplication[] | null>(null);
