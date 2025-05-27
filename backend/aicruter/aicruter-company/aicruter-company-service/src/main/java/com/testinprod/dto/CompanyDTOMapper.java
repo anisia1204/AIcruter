@@ -26,7 +26,7 @@ public class CompanyDTOMapper {
         companyDTO.setId(company.getId());
         companyDTO.setName(company.getName());
         companyDTO.setLegalAddressDTO(addressDTOMapper.getDTOFromEntity(company.getLegalAddress()));
-        companyDTO.setEmployerVOs(company.getEmployees().stream().map(employerVOMapper::getVOFromEntity).toList());
+        companyDTO.setEmployerVOs(company.getEmployees() != null ? company.getEmployees().stream().map(employerVOMapper::getVOFromEntity).toList() : null);
         return companyDTO;
     }
 
