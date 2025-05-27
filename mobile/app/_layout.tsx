@@ -8,6 +8,7 @@ import RootNavigation from './RootNavigation';
 import { ThemeProvider } from '@/providers/ThemeProvider';
 import Toast from 'react-native-toast-message';
 import { toastConfig } from '@/components/atoms/ToastConfig';
+import useAuthTokenGuard from '@/lib/useAuthTokenGuard';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -24,14 +25,18 @@ export default function RootLayout() {
 
   if (!loaded) return null;
 
+  const AuthGuard = () => {
+    useAuthTokenGuard();
+    return null;
+  }
+
   return (
     <ThemeProvider>
       <AuthProvider>
+        <AuthGuard />
         <RootNavigation />
         <Toast config={toastConfig} />
       </AuthProvider>
-      {/* <StatusBar style="auto"  /> */}
-
     </ThemeProvider>
   );
 }
