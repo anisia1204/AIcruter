@@ -26,14 +26,25 @@ const JobCard = ({ jobTitle, companyName, employmentType, locationType, state, c
   const dateText = isJobApplicationCard ? 'Applied on' : 'Posted on'
 
   const statusColor = {
-      OPEN: '#4ade80', 
-      CLOSED: '#f87171', 
-      NEW: '#60a5fa', 
-      IN_REVIEW: '#facc15',
-      INTERVIEW: '#a78bfa',  
-      ACCEPTED: '#34d399', 
-      REJECTED: '#9ca3af',
+    OPEN: '#dcfce7',
+    CLOSED: '#ffe2e2',
+    NEW: '#dbeafe',
+    IN_REVIEW: '#fef9c2',
+    INTERVIEW: '#f3e8ff',
+    ACCEPTED: '#dcfce7',
+    REJECTED: '#ffe2e2',
   }[status];
+
+  const textColor = {
+    OPEN: '#016630',
+    CLOSED: '#9f0712',
+    NEW: '#193cb8',
+    IN_REVIEW: '#894b00',
+    INTERVIEW: '#6e11b0',
+    ACCEPTED: '#016630',
+    REJECTED: '#9f0712',
+  }[status];
+
 
   return (
     <TouchableOpacity style={styles.card} onPress={onPress}>
@@ -53,7 +64,7 @@ const JobCard = ({ jobTitle, companyName, employmentType, locationType, state, c
       </View>
 
       <View style={[styles.statusPill, { backgroundColor: statusColor }]}>
-        <Text style={styles.statusText}>{status}</Text>
+        <Text style={[styles.statusText, {color: textColor}]}>{status}</Text>
       </View>
     </TouchableOpacity>
   );
@@ -117,6 +128,8 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     paddingVertical: 4,
     paddingHorizontal: 10,
+    borderWidth: 1,
+    borderColor: "#e5e7eb"
   },
   statusText: {
     color: '#fff',
