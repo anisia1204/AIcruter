@@ -60,7 +60,20 @@ const upload = multer({
 // Set up routes
 app.use('/api/chat', chatRoutes);
 app.use('/api/voice', voiceRoutes);
-app.use('/api/document', documentRoutes);
+app.use('/api/documents', documentRoutes);
+
+// Health check endpoint
+app.get('/', (req, res) => {
+  res.json({ 
+    status: 'AI Chatbot server is running',
+    timestamp: new Date().toISOString(),
+    endpoints: [
+      'POST /api/chat',
+      'POST /api/documents/analyze',
+      'POST /api/documents/parse'
+    ]
+  });
+});
 
 // Handle socket connections
 io.on('connection', (socket) => {
@@ -85,9 +98,12 @@ io.on('connection', (socket) => {
 
 // Create uploads directory if it doesn't exist
 const fs = require('fs');
-if (!fs.existsSync('uploads')) {
-  fs.mkdirSync('uploads');
-}
+const uploadDirs = ['uploads', 'uploads/documents', 'uploads/voice'];
+uploadDirs.forEach(dir => {
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+  }
+});
 
 // Start the server
 const PORT = process.env.PORT || 5000;

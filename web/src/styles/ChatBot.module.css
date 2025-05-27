@@ -256,3 +256,176 @@
 .cancelButton:hover {
   text-decoration: underline;
 }
+
+/* Resume Action Buttons Styles */
+.resumeActionsContainer {
+  display: flex;
+  gap: 8px;
+  margin: 12px 0;
+  padding: 0 12px;
+}
+
+.resumeActionButton {
+  flex: 1;
+  background: linear-gradient(135deg, #0070f3, #0051a5);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  text-align: center;
+  min-height: 40px;
+}
+
+.resumeActionButton:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 112, 243, 0.3);
+  background: linear-gradient(135deg, #0051a5, #003d82);
+}
+
+.resumeActionButton:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(0, 112, 243, 0.2);
+}
+
+.resumeActionButton:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.resumeActionButton.primary {
+  background: linear-gradient(135deg, #28a745, #1e7e34);
+}
+
+.resumeActionButton.primary:hover {
+  background: linear-gradient(135deg, #1e7e34, #155724);
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+}
+
+.resumeActionButton.secondary {
+  background: linear-gradient(135deg, #6f42c1, #5a32a3);
+}
+
+.resumeActionButton.secondary:hover {
+  background: linear-gradient(135deg, #5a32a3, #4c2a85);
+  box-shadow: 0 4px 12px rgba(111, 66, 193, 0.3);
+}
+
+/* Loading state for resume buttons */
+.resumeActionButton .loadingSpinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top: 2px solid white;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Enhanced message formatting for resume analysis */
+.analysisResult {
+  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+  border-left: 4px solid #0070f3;
+  padding: 12px 16px;
+  margin: 8px 0;
+  border-radius: 0 8px 8px 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.analysisResult h4 {
+  margin: 0 0 8px 0;
+  color: #0070f3;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.analysisResult .scoreBreakdown {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin: 8px 0;
+}
+
+.analysisResult .scoreItem {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 8px;
+  background: white;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.analysisResult .scoreValue {
+  font-weight: 600;
+  color: #28a745;
+}
+
+.parsedData {
+  background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+  border-left: 4px solid #ffc107;
+  padding: 12px 16px;
+  margin: 8px 0;
+  border-radius: 0 8px 8px 0;
+}
+
+.parsedData h4 {
+  margin: 0 0 8px 0;
+  color: #856404;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.parsedData .dataSection {
+  margin-bottom: 12px;
+}
+
+.parsedData .dataSection:last-child {
+  margin-bottom: 0;
+}
+
+.parsedData .sectionTitle {
+  font-weight: 600;
+  color: #856404;
+  margin-bottom: 4px;
+  font-size: 13px;
+}
+
+.parsedData .sectionContent {
+  font-size: 12px;
+  line-height: 1.4;
+  color: #333;
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 480px) {
+  .chatInterfaceWrapper {
+    width: 320px;
+  }
+  
+  .resumeActionsContainer {
+    flex-direction: column;
+    gap: 6px;
+  }
+  
+  .resumeActionButton {
+    font-size: 11px;
+    padding: 8px 10px;
+  }
+  
+  .analysisResult .scoreBreakdown {
+    grid-template-columns: 1fr;
+  }
+}
