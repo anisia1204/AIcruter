@@ -2,13 +2,17 @@ import { Company } from "@/types/company";
 
 export async function getCompanyByUserId(userId: string, token: string) {
   try {
-    const res = await fetch(`http://localhost:8080/api/company/${userId}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      cache: "no-store",
-    });
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL!}/api/company/${userId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+          "ngrok-skip-browser-warning": "69420",
+        },
+        cache: "no-store",
+      }
+    );
 
     if (!res.ok) {
       console.error("Failed to fetch company data", res.statusText);
@@ -26,11 +30,13 @@ export async function getCompanyByUserId(userId: string, token: string) {
 export async function getCompanyProfile(companyId: string, token: string) {
   try {
     const res = await fetch(
-      `http://localhost:8080/api/company/profile/${companyId}`,
+      `${process.env
+        .NEXT_PUBLIC_BACKEND_BASE_URL!}/api/company/profile/${companyId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
+          "ngrok-skip-browser-warning": "69420",
         },
         cache: "no-store",
       }
@@ -51,14 +57,18 @@ export async function getCompanyProfile(companyId: string, token: string) {
 
 export async function updateCompany(companyData: Company, token: string) {
   try {
-    const res = await fetch(`http://localhost:8080/api/company`, {
-      method: "PUT",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(companyData),
-    });
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL!}/api/company`,
+      {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+          "ngrok-skip-browser-warning": "69420",
+        },
+        body: JSON.stringify(companyData),
+      }
+    );
 
     if (!res.ok) {
       const errors = await res.json();
@@ -76,11 +86,15 @@ export async function updateCompany(companyData: Company, token: string) {
 
 export async function getCompaniesDropdown() {
   try {
-    const res = await fetch(`http://localhost:8080/api/company/dropdown`, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL!}/api/company/dropdown`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "ngrok-skip-browser-warning": "69420",
+        },
+      }
+    );
 
     if (!res.ok) {
       console.error("Failed to fetch companies dropdown", res.statusText);

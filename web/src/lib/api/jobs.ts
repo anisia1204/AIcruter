@@ -4,12 +4,14 @@ import { getUser } from "../auth/getUser";
 export async function getAllJobs(token: string, page = 0, size = 12) {
   try {
     const res = await fetch(
-      `http://localhost:8080/api/job?page=${page}&size=${size}`,
+      `${process.env
+        .NEXT_PUBLIC_BACKEND_BASE_URL!}/api/job?page=${page}&size=${size}`,
       {
         cache: "no-store",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
+          "ngrok-skip-browser-warning": "69420",
         },
       }
     );
@@ -29,12 +31,14 @@ export async function getAllJobs(token: string, page = 0, size = 12) {
 export async function getCompanyJobs(token: string, page = 0, size = 12) {
   try {
     const res = await fetch(
-      `http://localhost:8080/api/job/company?page=${page}&size=${size}`,
+      `${process.env
+        .NEXT_PUBLIC_BACKEND_BASE_URL!}/api/job/company?page=${page}&size=${size}`,
       {
         cache: "no-store",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
+          "ngrok-skip-browser-warning": "69420",
         },
       }
     );
@@ -54,12 +58,14 @@ export async function getCompanyJobs(token: string, page = 0, size = 12) {
 export async function getAllCompanyJobs(token: string) {
   try {
     const res = await fetch(
-      `http://localhost:8080/api/job/company?page=0&size=100`,
+      `${process.env
+        .NEXT_PUBLIC_BACKEND_BASE_URL!}/api/job/company?page=0&size=100`,
       {
         cache: "no-store",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
+          "ngrok-skip-browser-warning": "69420",
         },
       }
     );
@@ -86,13 +92,17 @@ export async function getAllCompanyJobs(token: string) {
 
 export async function getJobById(id: string, token: string) {
   try {
-    const res = await fetch(`http://localhost:8080/api/job/${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      cache: "no-store",
-    });
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL!}/api/job/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+          "ngrok-skip-browser-warning": "69420",
+        },
+        cache: "no-store",
+      }
+    );
 
     if (!res.ok) {
       throw new Error("Failed to fetch job details");
@@ -109,14 +119,18 @@ export async function getJobById(id: string, token: string) {
 export async function updateJobStatus(statusChange: JobStatusChangeDTO) {
   try {
     const { token } = await getUser();
-    const res = await fetch(`http://localhost:8080/api/job/status`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(statusChange),
-    });
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL!}/api/job/status`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+          "ngrok-skip-browser-warning": "69420",
+        },
+        body: JSON.stringify(statusChange),
+      }
+    );
 
     if (!res.ok) {
       throw new Error("Failed to update job status");

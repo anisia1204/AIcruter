@@ -59,17 +59,21 @@ export default function CreateJobForm({
     setIsLoading(true);
 
     try {
-      const jobRes = await fetch("http://localhost:8080/api/job", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          ...data,
-          companyId,
-        }),
-      });
+      const jobRes = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL!}/api/job`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+            "ngrok-skip-browser-warning": "69420",
+          },
+          body: JSON.stringify({
+            ...data,
+            companyId,
+          }),
+        }
+      );
 
       if (!jobRes.ok) throw new Error("Failed to create job");
 

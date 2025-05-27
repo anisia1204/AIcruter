@@ -48,13 +48,17 @@ const LoginPage = () => {
   const onSubmit = async (data: LoginFormValues) => {
     setIsLoading(true);
     toast.promise(
-      fetch("http://localhost:8080/api/user-account/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      }).then(async (response) => {
+      fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL!}/api/user-account/login`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "ngrok-skip-browser-warning": "69420",
+          },
+          body: JSON.stringify(data),
+        }
+      ).then(async (response) => {
         const res = await response.json();
 
         if (!response.ok) {

@@ -22,12 +22,14 @@ export async function getJobApplicationsByJobId(
     }
 
     const res = await fetch(
-      `http://localhost:8080/api/job-application/${jobId}?${params.toString()}`,
+      `${process.env
+        .NEXT_PUBLIC_BACKEND_BASE_URL!}/api/job-application/${jobId}?${params.toString()}`,
       {
         cache: "no-store",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
+          "ngrok-skip-browser-warning": "69420",
         },
       }
     );
@@ -61,12 +63,14 @@ export async function getAllJobApplicationsOfCurrentUser(
     }
 
     const res = await fetch(
-      `http://localhost:8080/api/job-application?${params.toString()}`,
+      `${process.env
+        .NEXT_PUBLIC_BACKEND_BASE_URL!}/api/job-application?${params.toString()}`,
       {
         cache: "no-store",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
+          "ngrok-skip-browser-warning": "69420",
         },
       }
     );
@@ -89,12 +93,14 @@ export async function getAllJobApplicationsForJob(
 ) {
   try {
     const res = await fetch(
-      `http://localhost:8080/api/job-application/${jobId}?page=0&size=100`,
+      `${process.env
+        .NEXT_PUBLIC_BACKEND_BASE_URL!}/api/job-application/${jobId}?page=0&size=100`,
       {
         cache: "no-store",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
+          "ngrok-skip-browser-warning": "69420",
         },
       }
     );
@@ -124,14 +130,18 @@ export async function updateJobApplicationStatus(
 ) {
   try {
     const { token } = await getUser();
-    const res = await fetch(`http://localhost:8080/api/job-application`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(statusChange),
-    });
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL!}/api/job-application`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+          "ngrok-skip-browser-warning": "69420",
+        },
+        body: JSON.stringify(statusChange),
+      }
+    );
 
     if (!res.ok) {
       const errorData = await res.json().catch(() => ({}));
