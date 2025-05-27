@@ -160,11 +160,12 @@ export default function RegistrationForm({
 
     try {
       const response = await fetch(
-        "http://localhost:8080/api/employer/register",
+        `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL!}/api/employer/register`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            "ngrok-skip-browser-warning": "69420",
           },
           body: JSON.stringify(payload),
         }

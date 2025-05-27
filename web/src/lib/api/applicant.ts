@@ -1,11 +1,13 @@
 export async function getApplicantProfile(applicantId: string, token: string) {
   try {
     const res = await fetch(
-      `http://localhost:8080/api/applicant/profile/${applicantId}`,
+      `${process.env
+        .NEXT_PUBLIC_BACKEND_BASE_URL!}/api/applicant/profile/${applicantId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
+          "ngrok-skip-browser-warning": "69420",
         },
         cache: "no-store",
       }
