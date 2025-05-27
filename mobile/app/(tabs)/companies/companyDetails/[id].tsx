@@ -12,8 +12,10 @@ import { EmploymentType, JobLocationType } from '@/domain/VOandEnums';
 import Toast from 'react-native-toast-message';
 import { LinearGradient } from 'expo-linear-gradient';
 import JobDetailsModal from '@/components/moleculas/modals/JobDetailsModal';
+import useAuthTokenGuard from '@/lib/useAuthTokenGuard';
 
 const CompanyScreen = () => {
+    useAuthTokenGuard();
     const { id } = useLocalSearchParams();
     const [company, setCompany] = useState<Company | null>(null);
     const [jobs, setJobs] = useState<Job[] | null>(null);

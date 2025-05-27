@@ -13,7 +13,7 @@ export type Address = {
     state: string;
     city: string;
     addressLine: string;
-    zipCode: string;
+    postalCode: string;
 };
 
 export enum JobApplicationStatus {

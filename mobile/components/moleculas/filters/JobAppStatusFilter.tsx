@@ -17,7 +17,7 @@ const statusOptions = [
     { label: 'In Review', value: 'IN_REVIEW' },
     { label: 'Interview', value: 'INTERVIEW' },
     { label: 'Accepted', value: 'ACCEPTED' },
-    { label: 'Passed', value: 'PASSED' },
+    { label: 'Rejected', value: 'REJECTED' },
 ];
 
 const JobAppStatusFilter = ({ statusFilter, setStatusFilter }: JobAppStatusFilterProps) => {

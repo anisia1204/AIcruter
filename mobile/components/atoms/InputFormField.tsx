@@ -14,6 +14,7 @@ type FormFieldProps = {
   keyboardType?: "default" | "email-address" | "numeric" | "phone-pad";
   autoCapitalize?: "none" | "sentences" | "words" | "characters";
   error?: string | null;
+  editable?: boolean;
 };
 
 const FormField = ({
@@ -25,6 +26,7 @@ const FormField = ({
   keyboardType = 'default',
   autoCapitalize = 'none',
   error,
+  editable = true,
 }: FormFieldProps) => {
 
   const inputRef = useRef<TextInput>(null);
@@ -57,6 +59,8 @@ const FormField = ({
           autoCapitalize={autoCapitalize}
           aria-labelledby={`${label}-label`}
           aria-errormessage={`${label}-error`}
+          style={[{ backgroundColor: '#f9f9f9' }]}
+          editable={editable}
         />
 
         {error && (

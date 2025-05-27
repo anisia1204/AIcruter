@@ -19,15 +19,22 @@ type FormData = {
 
 const SignInScreen = () => {
   const { colors } = useTheme();
-  const { signIn } = useAuth();
+  const { signIn, isAuthenticated } = useAuth();
   const { control, handleSubmit, formState: { errors } } = useForm<FormData>();
 
   const onSubmit = async (data: FormData) => {
     try {
       const response = await apiPost('/api/user-account/login', data);
-      signIn(response.token);
+
+      await signIn(response.token);
       await AsyncStorage.setItem('userId', String(response.id));
-      
+      const checkAuth = setInterval(() => {
+        if (isAuthenticated) {
+          clearInterval(checkAuth);
+          router.replace("./(tabs)");
+        }
+      }, 50);
+
       Toast.show({
         type: 'success',
         text1: 'Login successful!',
