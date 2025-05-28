@@ -9,7 +9,7 @@ The AI-powered job recruitment platform connects job seekers with employers by u
 
 ### 1.1 Post a Job Listing
 **Actors:** Employer
-**Description:** Employers create and post job listings with required skills and qualifications.  
+**Description:** Employers create and post job listings with required skills and qualifications.
 
 ### 1.2 Review Job Applications
 **Actors:** Employer
@@ -27,7 +27,7 @@ The AI-powered job recruitment platform connects job seekers with employers by u
 
 ### 2.1 Create and Manage Profile
 **Actors:** Job Seeker
-**Description:** Job seekers create profiles, upload resumes, and edit personal details.  
+**Description:** Job seekers create profiles, upload resumes, and edit personal details.
 
 ### 2.2 Apply for a Job
 **Actors:** Job Seeker
@@ -41,28 +41,16 @@ The AI-powered job recruitment platform connects job seekers with employers by u
 **Actors:** Job Seeker
 **Description:** Job seekers get notified about application updates.
 
-
-
 ## Running the Application
 
 ### Backend
 
-cd backend\aicruter
-mvn clean 
-mvn install
-mvn spring-boot:run -pl aicruter-web
-
+cd backend\aicruter && mvn clean install && mvn spring-boot:run -pl aicruter-web
 
 ### AI Chatbot
 
-cd ai/ai-chatbot
-npm install
-npm run dev
-
-
+cd ai/ai-chatbot && start-ai-server.bat
 
 ### Frontend
 
-cd web
-npm install
-npm run dev
+cd web && npm install && npm run dev

@@ -1,47 +1,28 @@
-# AI Chatbot for AIcruter
+# AIcruter AI Chatbot Server
 
-This is the backend service for the AI chatbot used in the AIcruter platform. It processes user inputs from text, voice, and document uploads to provide intelligent responses and assistance with job applications and resume analysis.
+This is the AI chatbot backend for the AIcruter platform, providing intelligent resume analysis and career assistance.
 
-## Features
+## Quick Start
 
-- Natural language processing for text conversations
-- Speech-to-text and text-to-speech capabilities
-- Document analysis for resumes and CVs
-- Integration with the main AIcruter platform
+**Option 1: One-click startup**
+- Double-click `start-ai-server.bat` to automatically install dependencies and start the server
 
-## Setup and Running Instructions
+**Option 2: Manual commands**
+```bash
+cd ai/ai-chatbot
+npm install
+npm run dev
+```
 
-1. Navigate to the chatbot directory:
-   ```bash
-   cd ai/ai-chatbot
-   ```
+## Configuration
 
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-
-3. Configure environment variables:
-   - Copy the example file: `cp .env.example .env`
-   - Edit the `.env` file and set the necessary API keys and service connections
-
-4. Start the development server:
-   ```bash
-   npm run dev
-   ```
-
-5. For production deployment:
-   ```bash
-   npm run build
-   npm start
-   ```
+1. Copy `.env.example` to `.env`
+2. Add your OpenAI API key to the `.env` file
 
 ## API Endpoints
 
-- `POST /api/chat` - Text chat interactions
-- `POST /api/voice` - Process voice input and generate voice responses
-- `POST /api/document` - Analyze uploaded documents (resumes, CVs)
+- `POST /api/chat` - Text chat with AI assistant
+- `POST /api/documents/analyze` - Analyze uploaded resumes
+- `POST /api/documents/parse` - Parse resume data
 
-## Integration with AIcruter Platform
-
-This service is designed to work seamlessly with the main AIcruter platform while maintaining its separation for easier maintenance and scaling.
+The server runs on port 5000 by default.
