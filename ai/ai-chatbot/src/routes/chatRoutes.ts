@@ -1,5 +1,5 @@
 import express from 'express';
-import { processWithAI } from '../services/chatService';
+import { processWithAI, processTextChat } from '../services/chatService';
 
 const router = express.Router();
 
@@ -13,9 +13,8 @@ router.post('/', async (req, res) => {
     if (!message) {
       return res.status(400).json({ error: 'Message is required' });
     }
-    
-    console.log('Processing message from user', userId || 'anonymous');
-    const response = await processWithAI(message, userId);
+      console.log('Processing message from user', userId || 'anonymous');
+    const response = await processTextChat(message, userId);
     console.log('AI response generated successfully');
     
     return res.json({ 

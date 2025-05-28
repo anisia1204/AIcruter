@@ -1,0 +1,10 @@
+node_modules
+# Environment files
+.env
+.env.development
+.env.production
+.env.local
+.env.test
+
+# Exclude specific env files you want to commit (if any)
+!.env.example
