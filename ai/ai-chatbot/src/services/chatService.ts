@@ -1,20 +1,27 @@
-import OpenAI from 'openai';
+// Note: Using require for node-fetch in CommonJS module
+const fetch = require('node-fetch');
 
-// Initialize OpenAI client
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY || 'your-openai-api-key-here'
-});
+// Initialize X.AI client
+const XAI_API_KEY = process.env.XAI_API_KEY || 'xai-SJD5HM4wtCO7xKuM9byOMuTrJPmviAo2bhRo9pOOJ3HlCiDIhifJWWXjnojXdUO2QnE7SUdU2EWfHLr1';
+const XAI_API_URL = 'https://api.x.ai/v1/chat/completions';
 
 /**
- * Process a text chat message using AI
+ * Process a text chat message using X.AI
  */
-export async function processWithAI(message: string, userId?: string): Promise<string> {  try {
-    const completion = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo",
-      messages: [
-        {
-          role: "system",
-          content: `You are AIcruter's professional career assistant. You help with:
+export async function processWithAI(message: string, userId?: string): Promise<string> {  
+  try {
+    const response = await fetch(XAI_API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${XAI_API_KEY}`
+      },
+      body: JSON.stringify({
+        model: "grok-3-latest",
+        messages: [
+          {
+            role: "system",
+            content: `You are AIcruter's professional career assistant. You help with:
 - Resume analysis and improvement
 - Job search strategies
 - Interview preparation
@@ -23,16 +30,29 @@ export async function processWithAI(message: string, userId?: string): Promise<s
 
 You are knowledgeable, supportive, and professional. Keep responses concise but helpful.
 Always encourage users to upload their resumes for detailed analysis.`
-        },
-        {
-          role: "user",
-          content: message
-        }
-      ],
-      temperature: 0.7,
-      max_tokens: 300
+          },
+          {
+            role: "user",
+            content: message
+          }
+        ],
+        temperature: 0.7,
+        max_tokens: 300,
+        stream: false
+      })
     });
 
+    if (!response.ok) {
+      throw new Error(`X.AI API error: ${response.status} ${response.statusText}`);
+    }
+
+    const completion = await response.json() as {
+      choices: Array<{
+        message: {
+          content: string;
+        }      }>
+    };
+    
     return completion.choices[0]?.message?.content || "I'm here to help with your career journey!";
   } catch (error) {
     console.warn('AI chat failed, using fallback:', error);
@@ -48,7 +68,7 @@ Always encourage users to upload their resumes for detailed analysis.`
  */
 export async function processTextChat(message: string, userId?: string): Promise<string> {
   // Try AI response first if configured
-  if (process.env.OPENAI_API_KEY && process.env.OPENAI_API_KEY !== 'your-openai-api-key-here') {
+  if (XAI_API_KEY && XAI_API_KEY !== 'your_xai_api_key') {
     const aiResponse = await processWithAI(message, userId);
     if (aiResponse) return aiResponse;
   }

@@ -1,14 +1,13 @@
 import { promises as fs, readFileSync } from 'fs';
 import { extname } from 'path';
-import OpenAI from 'openai';
 const pdfParse = require('pdf-parse');
 const mammoth = require('mammoth');
 const pdfParseNew = require('pdf-parse-new');
+const fetch = require('node-fetch');
 
-// Initialize OpenAI client
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY || 'your-openai-api-key-here'
-});
+// Initialize X.AI client
+const XAI_API_KEY = process.env.XAI_API_KEY || 'xai-SJD5HM4wtCO7xKuM9byOMuTrJPmviAo2bhRo9pOOJ3HlCiDIhifJWWXjnojXdUO2QnE7SUdU2EWfHLr1';
+const XAI_API_URL = 'https://api.x.ai/v1/chat/completions';
 
 export interface ResumeAnalysis {
   overallScore: number;
@@ -124,7 +123,7 @@ async function parseDocumentText(documentPath: string): Promise<string> {
 }
 
 /**
- * AI-powered resume analysis using OpenAI
+ * AI-powered resume analysis using X.AI
  */
 async function analyzeResumeWithAI(text: string): Promise<Partial<ResumeAnalysis>> {
   try {
@@ -158,28 +157,47 @@ Focus on:
 - Industry-specific keywords
 - Career progression and achievements
 - Areas for improvement
-`;
-
-    const completion = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo",
-      messages: [
-        {
-          role: "system",
-          content: "You are an expert HR recruiter and resume analyst. Provide detailed, constructive feedback on resumes."
-        },
-        {
-          role: "user", 
-          content: prompt
-        }
-      ],
-      temperature: 0.3,
-      max_tokens: 1500
+`;    
+    const response = await fetch(XAI_API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${XAI_API_KEY}`
+      },
+      body: JSON.stringify({
+        model: "grok-3-latest",
+        messages: [
+          {
+            role: "system",
+            content: "You are an expert HR recruiter and resume analyst. Provide detailed, constructive feedback on resumes."
+          },
+          {
+            role: "user", 
+            content: prompt
+          }
+        ],
+        temperature: 0.3,
+        max_tokens: 1500,
+        stream: false
+      })
     });
 
-    const response = completion.choices[0]?.message?.content;
-    if (response) {
+    if (!response.ok) {
+      throw new Error(`X.AI API error: ${response.status} ${response.statusText}`);
+    }    
+    
+    const completion = await response.json() as {
+      choices: Array<{
+        message: {
+          content: string;
+        }
+      }>
+    };
+
+    const responseContent = completion.choices[0]?.message?.content;
+    if (responseContent) {
       try {
-        return JSON.parse(response);
+        return JSON.parse(responseContent);
       } catch (parseError) {
         console.warn('Failed to parse AI response, using fallback analysis');
         return {};
@@ -193,7 +211,7 @@ Focus on:
 }
 
 /**
- * AI-powered resume parsing using OpenAI
+ * AI-powered resume parsing using X.AI
  */
 async function parseResumeWithAI(text: string): Promise<Partial<ResumeParsing>> {
   try {
@@ -231,28 +249,47 @@ Please provide a JSON response with the following structure:
 }
 
 Extract as much accurate information as possible from the resume text.
-`;
-
-    const completion = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo",
-      messages: [
-        {
-          role: "system",
-          content: "You are an expert at extracting structured data from resumes. Be precise and accurate."
-        },
-        {
-          role: "user",
-          content: prompt
-        }
-      ],
-      temperature: 0.1,
-      max_tokens: 1000
+`;    
+    const response = await fetch(XAI_API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${XAI_API_KEY}`
+      },
+      body: JSON.stringify({
+        model: "grok-3-latest",
+        messages: [
+          {
+            role: "system",
+            content: "You are an expert at extracting structured data from resumes. Be precise and accurate."
+          },
+          {
+            role: "user",
+            content: prompt
+          }
+        ],
+        temperature: 0.1,
+        max_tokens: 1000,
+        stream: false
+      })
     });
 
-    const response = completion.choices[0]?.message?.content;
-    if (response) {
+    if (!response.ok) {
+      throw new Error(`X.AI API error: ${response.status} ${response.statusText}`);
+    }    
+    
+    const completion = await response.json() as {
+      choices: Array<{
+        message: {
+          content: string;
+        }
+      }>
+    };
+
+    const responseContent = completion.choices[0]?.message?.content;
+    if (responseContent) {
       try {
-        return JSON.parse(response);
+        return JSON.parse(responseContent);
       } catch (parseError) {
         console.warn('Failed to parse AI response, using fallback parsing');
         return {};
@@ -264,6 +301,7 @@ Extract as much accurate information as possible from the resume text.
     return {};
   }
 }
+
 function calculateResumeScore(text: string): ResumeAnalysis['scoreBreakdown'] & { matchedKeywords: string[]; missingKeywords: string[] } {
   const lowerText = text.toLowerCase();
   const words = lowerText.split(/\s+/);
@@ -738,7 +776,7 @@ export async function analyzeDocument(documentPath: string): Promise<ResumeAnaly
     
     // Try AI analysis first, fallback to rule-based analysis
     let aiAnalysis: Partial<ResumeAnalysis> = {};
-    if (process.env.OPENAI_API_KEY && process.env.OPENAI_API_KEY !== 'your-openai-api-key-here') {
+    if (XAI_API_KEY && XAI_API_KEY !== 'your_xai_api_key') {
       console.log('Using AI-powered analysis...');
       aiAnalysis = await analyzeResumeWithAI(text);
     } else {
@@ -808,7 +846,7 @@ export async function parseResume(documentPath: string): Promise<ResumeParsing> 
     
     // Try AI parsing first, fallback to rule-based parsing
     let aiParsedData: Partial<ResumeParsing> = {};
-    if (process.env.OPENAI_API_KEY && process.env.OPENAI_API_KEY !== 'your-openai-api-key-here') {
+    if (XAI_API_KEY && XAI_API_KEY !== 'your_xai_api_key') {
       console.log('Using AI-powered parsing...');
       aiParsedData = await parseResumeWithAI(text);
     } else {
