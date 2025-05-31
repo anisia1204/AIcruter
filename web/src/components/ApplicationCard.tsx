@@ -39,7 +39,7 @@ export function ApplicationCard({ application }: ApplicationCardProps) {
 
   return (
     <div className="border rounded-lg p-4">
-      <div className="flex items-start justify-between mb-3">
+      <div className="flex items-start justify-between mb-3 w-full relative">
         <div>
           <h4 className="font-semibold flex items-center gap-2">
             <User className="w-4 h-4" />
@@ -60,7 +60,9 @@ export function ApplicationCard({ application }: ApplicationCardProps) {
             )}
           </div>
         </div>
-        <Badge className={JOB_APPLICATION_STATUS_COLORS[currentStatus]}>
+        <Badge
+          className={`${JOB_APPLICATION_STATUS_COLORS[currentStatus]} absolute right-0 top-0`}
+        >
           {JOB_APPLICATION_STATUS_LABELS[currentStatus]}
         </Badge>
       </div>
