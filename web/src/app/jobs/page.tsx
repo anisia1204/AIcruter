@@ -30,6 +30,18 @@ export default async function JobListingPage() {
           </Button>
         </Link>
       </div>
+      {jobs.length === 0 ? (
+        <div className="text-center">
+          <h2 className="text-2xl font-bold mb-4">
+            <FileBox className="inline-block w-8 h-8 mr-2" />
+            No Jobs Found
+          </h2>
+          <p className="text-gray-600 mb-4">
+            Create a new job by clicking the button above.
+          </p>
+        </div>
+      ) : null}
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {jobs.map((job) => (
           <JobCard key={job.id} job={job} />
