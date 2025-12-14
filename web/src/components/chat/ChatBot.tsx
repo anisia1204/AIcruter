@@ -13,14 +13,15 @@ const ChatBot: React.FC = () => {
   };
   
   return (
-    <div className={styles.chatbotContainer}>
-      {isOpen && (
-        <div className={styles.chatInterfaceWrapper}>
-          <ChatInterface onClose={toggleChat} />
-        </div>
-      )}
-      <ChatBubble isOpen={isOpen} toggleChat={toggleChat} />
-    </div>
+    // <div className={styles.chatbotContainer}>
+    //   {isOpen && (
+    //     <div className={styles.chatInterfaceWrapper}>
+    //       <ChatInterface onClose={toggleChat} />
+    //     </div>
+    //   )}
+    //   <ChatBubble isOpen={isOpen} toggleChat={toggleChat} />
+    // </div>
+    <></>
   );
 };
 
